@@ -1,0 +1,4 @@
+# Eagle sch, brd, lbr backup files
+*.s#*
+*.b#*
+*.l#*
