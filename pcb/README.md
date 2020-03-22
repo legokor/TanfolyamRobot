@@ -86,7 +86,7 @@ _I know this looks terrible, but it's my only workaround for GitHub's alternatin
 |||||
 | ESP8266       | `RX`, `TX`             | UART             | Any UART                                      |
 |||||
-| SWD connector | `SWCLK`, `SWDIO, `SWO` | Debug            | Corresponding debugger pins                   |
+| SWD connector | `SWCLK`, `SWDIO`, `SWO`| Debug            | Corresponding debugger pins                   |
 |||||
 | FT232RL       | `RX`, `TX`             | UART             | UART1                                         |
 
