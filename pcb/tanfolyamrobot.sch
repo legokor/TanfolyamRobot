@@ -27503,186 +27503,6 @@ Source: Sibalco Kycon KUSBVX-BS1N-xxx.pdf</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="SparkFun-Jumpers" urn="urn:adsk.eagle:library:528">
-<description>&lt;h3&gt;SparkFun Jumpers&lt;/h3&gt;
-In this library you'll find jumpers, or other semipermanent means of changing current paths. The least permanent form is the solder jumper. These can be changed by adding, removing, or moving solder. In cases that are less likely to be changed we have jumpers that are connected with traces. These can be cut with a razor, or reconnected with solder. Reference designator JP.
-&lt;br&gt;
-&lt;br&gt;
-We've spent an enormous amount of time creating and checking these footprints and parts, but it is &lt;b&gt; the end user's responsibility&lt;/b&gt; to ensure correctness and suitablity for a given componet or application. 
-&lt;br&gt;
-&lt;br&gt;If you enjoy using this library, please buy one of our products at &lt;a href=" www.sparkfun.com"&gt;SparkFun.com&lt;/a&gt;.
-&lt;br&gt;
-&lt;br&gt;
-&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
-&lt;br&gt;
-&lt;br&gt;
-You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
-<packages>
-<package name="SMT-JUMPER_2_NO_NO-SILK" urn="urn:adsk.eagle:footprint:39252/1" library_version="1">
-<text x="0" y="1.143" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.143" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
-<smd name="1" x="-0.4064" y="0" dx="0.635" dy="1.27" layer="1" cream="no"/>
-<smd name="2" x="0.4064" y="0" dx="0.635" dy="1.27" layer="1" cream="no"/>
-</package>
-<package name="SMT-JUMPER_2_NO_NO-SILK_ROUND" urn="urn:adsk.eagle:footprint:39253/1" library_version="1">
-<smd name="1" x="-1.27" y="0" dx="0.3048" dy="0.1524" layer="1" roundness="20" rot="R270" stop="no" thermals="no" cream="no"/>
-<smd name="2" x="1.27" y="0" dx="0.3048" dy="0.1524" layer="1" roundness="20" rot="R90" stop="no" thermals="no" cream="no"/>
-<text x="0" y="1.9685" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.9685" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
-<polygon width="0.00508125" layer="1">
-<vertex x="0.111125" y="-1.42875" curve="85"/>
-<vertex x="1.381125" y="0" curve="85"/>
-<vertex x="0.111125" y="1.42875"/>
-</polygon>
-<polygon width="0.00508125" layer="1">
-<vertex x="-0.111125" y="1.42875"/>
-<vertex x="-0.111125" y="-1.42875" curve="-85"/>
-<vertex x="-1.381125" y="0" curve="-85"/>
-</polygon>
-<polygon width="0.2032" layer="29">
-<vertex x="0" y="1.42875" curve="-90"/>
-<vertex x="1.42875" y="0" curve="-90"/>
-<vertex x="0" y="-1.42875" curve="-90"/>
-<vertex x="-1.42875" y="0" curve="-90"/>
-</polygon>
-</package>
-<package name="SMT-JUMPER_2_NO_SILK" urn="urn:adsk.eagle:footprint:39254/1" library_version="1">
-<text x="0" y="1.143" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.143" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
-<wire x1="0.8636" y1="-1.016" x2="-0.8636" y2="-1.016" width="0.1524" layer="21"/>
-<wire x1="0.8636" y1="1.016" x2="1.1176" y2="0.762" width="0.1524" layer="21" curve="-90"/>
-<wire x1="-1.1176" y1="0.762" x2="-0.8636" y2="1.016" width="0.1524" layer="21" curve="-90"/>
-<wire x1="-1.1176" y1="-0.762" x2="-0.8636" y2="-1.016" width="0.1524" layer="21" curve="90"/>
-<wire x1="0.8636" y1="-1.016" x2="1.1176" y2="-0.762" width="0.1524" layer="21" curve="90"/>
-<wire x1="1.1176" y1="-0.762" x2="1.1176" y2="0.762" width="0.1524" layer="21"/>
-<wire x1="-1.1176" y1="-0.762" x2="-1.1176" y2="0.762" width="0.1524" layer="21"/>
-<wire x1="-0.8636" y1="1.016" x2="0.8636" y2="1.016" width="0.1524" layer="21"/>
-<smd name="1" x="-0.4064" y="0" dx="0.635" dy="1.27" layer="1" cream="no"/>
-<smd name="2" x="0.4064" y="0" dx="0.635" dy="1.27" layer="1" cream="no"/>
-</package>
-<package name="SMT-JUMPER_2_NO_SILK_ROUND" urn="urn:adsk.eagle:footprint:39255/1" library_version="1">
-<smd name="1" x="-1.27" y="0" dx="0.3048" dy="0.1524" layer="1" roundness="20" rot="R270" stop="no" thermals="no" cream="no"/>
-<smd name="2" x="1.27" y="0" dx="0.3048" dy="0.1524" layer="1" roundness="20" rot="R90" stop="no" thermals="no" cream="no"/>
-<text x="0" y="1.9685" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.9685" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
-<polygon width="0.00508125" layer="1">
-<vertex x="0.111125" y="-1.42875" curve="85"/>
-<vertex x="1.381125" y="0" curve="85"/>
-<vertex x="0.111125" y="1.42875"/>
-</polygon>
-<polygon width="0.00508125" layer="1">
-<vertex x="-0.111125" y="1.42875"/>
-<vertex x="-0.111125" y="-1.42875" curve="-85"/>
-<vertex x="-1.381125" y="0" curve="-85"/>
-</polygon>
-<polygon width="0.2032" layer="29">
-<vertex x="0" y="1.42875" curve="-90"/>
-<vertex x="1.42875" y="0" curve="-90"/>
-<vertex x="0" y="-1.42875" curve="-90"/>
-<vertex x="-1.42875" y="0" curve="-90"/>
-</polygon>
-<circle x="0" y="0" radius="1.74625" width="0.2032" layer="21"/>
-</package>
-</packages>
-<packages3d>
-<package3d name="SMT-JUMPER_2_NO_NO-SILK" urn="urn:adsk.eagle:package:39277/1" type="box" library_version="1">
-<packageinstances>
-<packageinstance name="SMT-JUMPER_2_NO_NO-SILK"/>
-</packageinstances>
-</package3d>
-<package3d name="SMT-JUMPER_2_NO_NO-SILK_ROUND" urn="urn:adsk.eagle:package:39278/1" type="box" library_version="1">
-<packageinstances>
-<packageinstance name="SMT-JUMPER_2_NO_NO-SILK_ROUND"/>
-</packageinstances>
-</package3d>
-<package3d name="SMT-JUMPER_2_NO_SILK" urn="urn:adsk.eagle:package:39279/1" type="box" library_version="1">
-<packageinstances>
-<packageinstance name="SMT-JUMPER_2_NO_SILK"/>
-</packageinstances>
-</package3d>
-<package3d name="SMT-JUMPER_2_NO_SILK_ROUND" urn="urn:adsk.eagle:package:39280/1" type="box" library_version="1">
-<packageinstances>
-<packageinstance name="SMT-JUMPER_2_NO_SILK_ROUND"/>
-</packageinstances>
-</package3d>
-</packages3d>
-<symbols>
-<symbol name="SMT-JUMPER_2_NO" urn="urn:adsk.eagle:symbol:39251/1" library_version="1">
-<wire x1="0.381" y1="0.635" x2="0.381" y2="-0.635" width="1.27" layer="94" curve="-180" cap="flat"/>
-<wire x1="-0.381" y1="-0.635" x2="-0.381" y2="0.635" width="1.27" layer="94" curve="-180" cap="flat"/>
-<wire x1="2.54" y1="0" x2="1.651" y2="0" width="0.1524" layer="94"/>
-<wire x1="-2.54" y1="0" x2="-1.651" y2="0" width="0.1524" layer="94"/>
-<text x="-2.54" y="2.54" size="1.778" layer="95" font="vector">&gt;NAME</text>
-<text x="-2.54" y="-2.54" size="1.778" layer="96" font="vector" align="top-left">&gt;VALUE</text>
-<pin name="2" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="JUMPER-SMT_2_NO" urn="urn:adsk.eagle:component:39297/1" prefix="JP" library_version="1">
-<description>&lt;h3&gt;Normally open jumper&lt;/h3&gt;
-&lt;p&gt;This jumper has two pads in close proximity to each other. Apply solder to close the connection.&lt;/p&gt;
-
-&lt;p&gt;Round pads are easier to solder for beginners, but are a lot larger.&lt;/p&gt;
-&lt;p&gt;SparkFun Product that uses the round pads:
-&lt;ul&gt;&lt;li&gt;&lt;a href="https://www.sparkfun.com/products/12781"&gt;SparkFun EL Sequencer&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/p&gt;</description>
-<gates>
-<gate name="G$1" symbol="SMT-JUMPER_2_NO" x="0" y="0"/>
-</gates>
-<devices>
-<device name="_NO-SILK" package="SMT-JUMPER_2_NO_NO-SILK">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39277/1"/>
-</package3dinstances>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="_NO-SILK_ROUND" package="SMT-JUMPER_2_NO_NO-SILK_ROUND">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39278/1"/>
-</package3dinstances>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="_SILK" package="SMT-JUMPER_2_NO_SILK">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39279/1"/>
-</package3dinstances>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="_SILK_ROUND" package="SMT-JUMPER_2_NO_SILK_ROUND">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39280/1"/>
-</package3dinstances>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 </libraries>
 <attributes>
 </attributes>
@@ -27806,18 +27626,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="R10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
 <part name="C18" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
 <part name="GND28" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="JP2" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP3" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP4" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP5" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP8" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP9" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP10" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP11" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP12" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP13" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP14" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
-<part name="JP15" library="SparkFun-Jumpers" library_urn="urn:adsk.eagle:library:528" deviceset="JUMPER-SMT_2_NO" device="_NO-SILK" package3d_urn="urn:adsk.eagle:package:39277/1"/>
 <part name="IC5" library="v-reg" library_urn="urn:adsk.eagle:library:409" deviceset="LD117A?*" device="S" package3d_urn="urn:adsk.eagle:package:30370/1" technology="33TR"/>
 <part name="JP16" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="/90" package3d_urn="urn:adsk.eagle:package:22459/2"/>
 <part name="JP17" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X4" device="/90" package3d_urn="urn:adsk.eagle:package:22465/2"/>
@@ -27835,6 +27643,18 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="C17" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="2u2"/>
 <part name="R9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
 <part name="GND35" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R12" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R13" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R14" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R15" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R16" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R17" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R18" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R19" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R26" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R27" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
+<part name="R28" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
 </parts>
 <sheets>
 <sheet>
@@ -27857,13 +27677,13 @@ SENSORS</text>
 <text x="167.64" y="7.62" size="5.08" layer="97">POWER, 
 FTDI</text>
 <text x="353.06" y="25.4" size="1.778" layer="97">COLOR_OEn</text>
-<text x="144.78" y="254" size="1.778" layer="97">Briefly pull down RSTN
+<text x="116.84" y="302.26" size="1.778" layer="97">Briefly pull down RSTN
 when USB is connected</text>
 <text x="132.08" y="271.78" size="1.778" layer="97">Enable DFU when
 USB is connected</text>
-<text x="50.8" y="264.16" size="1.778" layer="97">Solder jumpers for connecting
-FTDI output pins to the RESET 
-and BOOT0 circuitry</text>
+<text x="48.26" y="264.16" size="1.778" layer="97">Populate 0R resistor or appropriate 
+capacitor to connect FTDI output to 
+the RESET and/or BOOT0 circuitry</text>
 <text x="297.18" y="210.82" size="1.778" layer="150">Button's pin is 
 pulled up internally</text>
 <text x="429.26" y="83.82" size="1.778" layer="150">Check if backlight resistor is 
@@ -28314,42 +28134,6 @@ is actually active-low.</text>
 <instance part="GND28" gate="1" x="469.9" y="233.68" smashed="yes">
 <attribute name="VALUE" x="467.36" y="231.14" size="1.778" layer="96"/>
 </instance>
-<instance part="JP2" gate="G$1" x="63.5" y="335.28" smashed="yes">
-<attribute name="NAME" x="60.96" y="337.82" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP3" gate="G$1" x="63.5" y="330.2" smashed="yes">
-<attribute name="NAME" x="60.96" y="332.74" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP4" gate="G$1" x="63.5" y="322.58" smashed="yes">
-<attribute name="NAME" x="60.96" y="325.12" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP5" gate="G$1" x="63.5" y="317.5" smashed="yes">
-<attribute name="NAME" x="60.96" y="320.04" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP8" gate="G$1" x="63.5" y="307.34" smashed="yes">
-<attribute name="NAME" x="60.96" y="309.88" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP9" gate="G$1" x="63.5" y="302.26" smashed="yes">
-<attribute name="NAME" x="60.96" y="304.8" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP10" gate="G$1" x="63.5" y="294.64" smashed="yes">
-<attribute name="NAME" x="60.96" y="297.18" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP11" gate="G$1" x="63.5" y="289.56" smashed="yes">
-<attribute name="NAME" x="60.96" y="292.1" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP12" gate="G$1" x="63.5" y="281.94" smashed="yes">
-<attribute name="NAME" x="60.96" y="284.48" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP13" gate="G$1" x="63.5" y="276.86" smashed="yes">
-<attribute name="NAME" x="60.96" y="279.4" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP14" gate="G$1" x="134.62" y="314.96" smashed="yes">
-<attribute name="NAME" x="132.08" y="317.5" size="1.778" layer="95" font="vector"/>
-</instance>
-<instance part="JP15" gate="G$1" x="142.24" y="279.4" smashed="yes">
-<attribute name="NAME" x="139.7" y="281.94" size="1.778" layer="95" font="vector"/>
-</instance>
 <instance part="IC5" gate="G$1" x="124.46" y="48.26" smashed="yes">
 <attribute name="NAME" x="127" y="40.64" size="1.778" layer="95"/>
 <attribute name="VALUE" x="127" y="38.1" size="1.778" layer="96"/>
@@ -28408,6 +28192,54 @@ is actually active-low.</text>
 </instance>
 <instance part="GND35" gate="1" x="152.4" y="299.72" smashed="yes">
 <attribute name="VALUE" x="149.86" y="297.18" size="1.778" layer="96"/>
+</instance>
+<instance part="R11" gate="G$1" x="63.5" y="335.28" smashed="yes">
+<attribute name="NAME" x="59.69" y="336.7786" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="336.804" size="1.778" layer="96"/>
+</instance>
+<instance part="R12" gate="G$1" x="63.5" y="330.2" smashed="yes">
+<attribute name="NAME" x="59.69" y="331.6986" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="331.724" size="1.778" layer="96"/>
+</instance>
+<instance part="R13" gate="G$1" x="63.5" y="322.58" smashed="yes">
+<attribute name="NAME" x="59.69" y="324.0786" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="324.104" size="1.778" layer="96"/>
+</instance>
+<instance part="R14" gate="G$1" x="63.5" y="317.5" smashed="yes">
+<attribute name="NAME" x="59.69" y="318.9986" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="319.024" size="1.778" layer="96"/>
+</instance>
+<instance part="R15" gate="G$1" x="63.5" y="307.34" smashed="yes">
+<attribute name="NAME" x="59.69" y="308.8386" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="308.864" size="1.778" layer="96"/>
+</instance>
+<instance part="R16" gate="G$1" x="63.5" y="302.26" smashed="yes">
+<attribute name="NAME" x="59.69" y="303.7586" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="303.784" size="1.778" layer="96"/>
+</instance>
+<instance part="R17" gate="G$1" x="63.5" y="294.64" smashed="yes">
+<attribute name="NAME" x="59.69" y="296.1386" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="296.164" size="1.778" layer="96"/>
+</instance>
+<instance part="R18" gate="G$1" x="63.5" y="289.56" smashed="yes">
+<attribute name="NAME" x="59.69" y="291.0586" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="291.084" size="1.778" layer="96"/>
+</instance>
+<instance part="R19" gate="G$1" x="63.5" y="281.94" smashed="yes">
+<attribute name="NAME" x="59.69" y="283.4386" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="283.464" size="1.778" layer="96"/>
+</instance>
+<instance part="R26" gate="G$1" x="63.5" y="276.86" smashed="yes">
+<attribute name="NAME" x="59.69" y="278.3586" size="1.778" layer="95"/>
+<attribute name="VALUE" x="65.786" y="278.384" size="1.778" layer="96"/>
+</instance>
+<instance part="R27" gate="G$1" x="134.62" y="314.96" smashed="yes">
+<attribute name="NAME" x="130.81" y="316.4586" size="1.778" layer="95"/>
+<attribute name="VALUE" x="136.906" y="316.484" size="1.778" layer="96"/>
+</instance>
+<instance part="R28" gate="G$1" x="142.24" y="279.4" smashed="yes">
+<attribute name="NAME" x="138.43" y="280.8986" size="1.778" layer="95"/>
+<attribute name="VALUE" x="144.526" y="280.924" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -28844,8 +28676,8 @@ is actually active-low.</text>
 <label x="88.9" y="223.52" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="149.86" y1="325.12" x2="119.38" y2="325.12" width="0.1524" layer="91"/>
-<label x="119.38" y="325.12" size="1.778" layer="95"/>
+<wire x1="149.86" y1="325.12" x2="116.84" y2="325.12" width="0.1524" layer="91"/>
+<label x="116.84" y="325.12" size="1.778" layer="95"/>
 <pinref part="D6" gate="G$1" pin="C"/>
 </segment>
 </net>
@@ -28962,8 +28794,8 @@ is actually active-low.</text>
 <wire x1="55.88" y1="330.2" x2="55.88" y2="335.28" width="0.1524" layer="91"/>
 <junction x="55.88" y="335.28"/>
 <label x="35.56" y="335.28" size="1.778" layer="95"/>
-<pinref part="JP2" gate="G$1" pin="1"/>
-<pinref part="JP3" gate="G$1" pin="1"/>
+<pinref part="R11" gate="G$1" pin="1"/>
+<pinref part="R12" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="+5V" class="0">
@@ -29066,9 +28898,9 @@ is actually active-low.</text>
 <pinref part="D7" gate="G$1" pin="A"/>
 </segment>
 <segment>
-<wire x1="129.54" y1="314.96" x2="119.38" y2="314.96" width="0.1524" layer="91"/>
-<label x="119.38" y="314.96" size="1.778" layer="95"/>
-<pinref part="JP14" gate="G$1" pin="1"/>
+<wire x1="129.54" y1="314.96" x2="116.84" y2="314.96" width="0.1524" layer="91"/>
+<label x="116.84" y="314.96" size="1.778" layer="95"/>
+<pinref part="R27" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="FTDI_RSTN" class="0">
@@ -29083,9 +28915,9 @@ is actually active-low.</text>
 <label x="91.44" y="139.7" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="137.16" y1="279.4" x2="119.38" y2="279.4" width="0.1524" layer="91"/>
-<label x="119.38" y="279.4" size="1.778" layer="95"/>
-<pinref part="JP15" gate="G$1" pin="1"/>
+<wire x1="137.16" y1="279.4" x2="116.84" y2="279.4" width="0.1524" layer="91"/>
+<label x="116.84" y="279.4" size="1.778" layer="95"/>
+<pinref part="R28" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="N$5" class="0">
@@ -29493,8 +29325,8 @@ is actually active-low.</text>
 <wire x1="55.88" y1="317.5" x2="55.88" y2="322.58" width="0.1524" layer="91"/>
 <junction x="55.88" y="322.58"/>
 <label x="35.56" y="322.58" size="1.778" layer="95"/>
-<pinref part="JP4" gate="G$1" pin="1"/>
-<pinref part="JP5" gate="G$1" pin="1"/>
+<pinref part="R13" gate="G$1" pin="1"/>
+<pinref part="R14" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="FTDI_RSTN_OUT" class="0">
@@ -29514,12 +29346,12 @@ is actually active-low.</text>
 <wire x1="68.58" y1="281.94" x2="71.12" y2="281.94" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="281.94" x2="71.12" y2="294.64" width="0.1524" layer="91"/>
 <junction x="71.12" y="294.64"/>
-<pinref part="JP2" gate="G$1" pin="2"/>
-<pinref part="JP4" gate="G$1" pin="2"/>
-<pinref part="JP8" gate="G$1" pin="2"/>
-<pinref part="JP10" gate="G$1" pin="2"/>
-<pinref part="JP12" gate="G$1" pin="2"/>
 <wire x1="149.86" y1="335.28" x2="71.12" y2="335.28" width="0.1524" layer="91"/>
+<pinref part="R11" gate="G$1" pin="2"/>
+<pinref part="R13" gate="G$1" pin="2"/>
+<pinref part="R15" gate="G$1" pin="2"/>
+<pinref part="R17" gate="G$1" pin="2"/>
+<pinref part="R19" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="RSTN" class="0">
@@ -29569,8 +29401,8 @@ is actually active-low.</text>
 <wire x1="55.88" y1="289.56" x2="55.88" y2="294.64" width="0.1524" layer="91"/>
 <junction x="55.88" y="294.64"/>
 <label x="35.56" y="294.64" size="1.778" layer="95"/>
-<pinref part="JP10" gate="G$1" pin="1"/>
-<pinref part="JP11" gate="G$1" pin="1"/>
+<pinref part="R17" gate="G$1" pin="1"/>
+<pinref part="R18" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="FTDI_CBUS4" class="0">
@@ -29586,8 +29418,8 @@ is actually active-low.</text>
 <wire x1="55.88" y1="276.86" x2="55.88" y2="281.94" width="0.1524" layer="91"/>
 <junction x="55.88" y="281.94"/>
 <label x="35.56" y="281.94" size="1.778" layer="95"/>
-<pinref part="JP12" gate="G$1" pin="1"/>
-<pinref part="JP13" gate="G$1" pin="1"/>
+<pinref part="R19" gate="G$1" pin="1"/>
+<pinref part="R26" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="FTDI_CBUS2" class="0">
@@ -29603,8 +29435,8 @@ is actually active-low.</text>
 <wire x1="55.88" y1="302.26" x2="55.88" y2="307.34" width="0.1524" layer="91"/>
 <junction x="55.88" y="307.34"/>
 <label x="35.56" y="307.34" size="1.778" layer="95"/>
-<pinref part="JP8" gate="G$1" pin="1"/>
-<pinref part="JP9" gate="G$1" pin="1"/>
+<pinref part="R15" gate="G$1" pin="1"/>
+<pinref part="R16" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="FTDI_BOOT0_OUT" class="0">
@@ -29623,14 +29455,14 @@ is actually active-low.</text>
 <wire x1="68.58" y1="276.86" x2="73.66" y2="276.86" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="276.86" x2="73.66" y2="287.02" width="0.1524" layer="91"/>
 <junction x="73.66" y="289.56"/>
-<pinref part="JP3" gate="G$1" pin="2"/>
-<pinref part="JP5" gate="G$1" pin="2"/>
-<pinref part="JP9" gate="G$1" pin="2"/>
-<pinref part="JP11" gate="G$1" pin="2"/>
-<pinref part="JP13" gate="G$1" pin="2"/>
 <wire x1="73.66" y1="287.02" x2="73.66" y2="289.56" width="0.1524" layer="91"/>
 <wire x1="172.72" y1="287.02" x2="73.66" y2="287.02" width="0.1524" layer="91"/>
 <junction x="73.66" y="287.02"/>
+<pinref part="R12" gate="G$1" pin="2"/>
+<pinref part="R14" gate="G$1" pin="2"/>
+<pinref part="R16" gate="G$1" pin="2"/>
+<pinref part="R18" gate="G$1" pin="2"/>
+<pinref part="R26" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="ENC1_A_3V3" class="0">
@@ -29691,7 +29523,7 @@ is actually active-low.</text>
 <segment>
 <wire x1="147.32" y1="279.4" x2="172.72" y2="279.4" width="0.1524" layer="91"/>
 <pinref part="D5" gate="G$1" pin="A"/>
-<pinref part="JP15" gate="G$1" pin="2"/>
+<pinref part="R28" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="ESP_TX" class="0">
@@ -29860,7 +29692,7 @@ is actually active-low.</text>
 <segment>
 <pinref part="C17" gate="G$1" pin="1"/>
 <wire x1="142.24" y1="314.96" x2="139.7" y2="314.96" width="0.1524" layer="91"/>
-<pinref part="JP14" gate="G$1" pin="2"/>
+<pinref part="R27" gate="G$1" pin="2"/>
 </segment>
 </net>
 </nets>
