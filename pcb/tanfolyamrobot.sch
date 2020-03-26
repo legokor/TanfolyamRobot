@@ -27792,7 +27792,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="S2" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1" value=""/>
 <part name="X6" library="con-kycon" library_urn="urn:adsk.eagle:library:157" deviceset="KUSBVX-BS1N" device="" package3d_urn="urn:adsk.eagle:package:7681/1"/>
 <part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
-<part name="R29" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3"/>
+<part name="R29" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
 <part name="+3V11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="D3" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="MICROMELF-W" package3d_urn="urn:adsk.eagle:package:43441/2" value="BAS85"/>
 <part name="C17" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="22n"/>
@@ -27831,6 +27831,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="P+14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND31" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND32" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="C15" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
+<part name="GND33" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -27864,6 +27866,8 @@ and BOOT0 circuitry</text>
 pulled up internally</text>
 <text x="429.26" y="83.82" size="1.778" layer="150">Check if backlight resistor is 
 required for the used module</text>
+<text x="480.06" y="228.6" size="1.778" layer="97">The ESP8266's reset signal 
+is actually active-low.</text>
 </plain>
 <instances>
 <instance part="IC1" gate="PORTA_L" x="322.58" y="264.16" smashed="yes">
@@ -27893,9 +27897,9 @@ required for the used module</text>
 <instance part="IC1" gate="AN_POWER" x="414.02" y="327.66" smashed="yes" rot="MR0">
 <attribute name="NAME" x="419.1" y="335.28" size="1.27" layer="95" rot="MR0"/>
 </instance>
-<instance part="IC1" gate="RESET" x="215.9" y="302.26" smashed="yes" rot="MR0">
-<attribute name="VALUE" x="220.98" y="294.64" size="1.27" layer="95" rot="MR0"/>
-<attribute name="NAME" x="220.98" y="307.34" size="1.27" layer="95" rot="MR0"/>
+<instance part="IC1" gate="RESET" x="223.52" y="302.26" smashed="yes" rot="MR0">
+<attribute name="VALUE" x="228.6" y="294.64" size="1.27" layer="95" rot="MR0"/>
+<attribute name="NAME" x="228.6" y="307.34" size="1.27" layer="95" rot="MR0"/>
 </instance>
 <instance part="+3V1" gate="G$1" x="304.8" y="350.52" smashed="yes">
 <attribute name="VALUE" x="302.26" y="345.44" size="1.778" layer="96" rot="R90"/>
@@ -28230,12 +28234,12 @@ required for the used module</text>
 <attribute name="NAME" x="477.52" y="93.98" size="1.778" layer="95"/>
 <attribute name="VALUE" x="477.52" y="91.44" size="1.778" layer="96"/>
 </instance>
-<instance part="R7" gate="G$1" x="193.04" y="269.24" smashed="yes" rot="R270">
-<attribute name="NAME" x="194.5386" y="273.05" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="189.738" y="273.05" size="1.778" layer="96" rot="R270"/>
+<instance part="R7" gate="G$1" x="200.66" y="269.24" smashed="yes" rot="R270">
+<attribute name="NAME" x="202.1586" y="273.05" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="197.358" y="273.05" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="GND24" gate="1" x="193.04" y="261.62" smashed="yes">
-<attribute name="VALUE" x="190.5" y="259.08" size="1.778" layer="96"/>
+<instance part="GND24" gate="1" x="200.66" y="261.62" smashed="yes">
+<attribute name="VALUE" x="198.12" y="259.08" size="1.778" layer="96"/>
 </instance>
 <instance part="D5" gate="G$1" x="175.26" y="279.4" smashed="yes">
 <attribute name="NAME" x="177.8" y="279.8826" size="1.778" layer="95"/>
@@ -28261,7 +28265,7 @@ required for the used module</text>
 </instance>
 <instance part="R29" gate="G$1" x="180.34" y="332.74" smashed="yes" rot="R270">
 <attribute name="NAME" x="181.8386" y="334.01" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="177.038" y="336.55" size="1.778" layer="96" rot="R270"/>
+<attribute name="VALUE" x="177.038" y="334.01" size="1.778" layer="96" rot="R270"/>
 </instance>
 <instance part="+3V11" gate="G$1" x="180.34" y="340.36" smashed="yes">
 <attribute name="VALUE" x="177.8" y="335.28" size="1.778" layer="96" rot="R90"/>
@@ -28388,6 +28392,13 @@ required for the used module</text>
 </instance>
 <instance part="GND32" gate="1" x="474.98" y="81.28" smashed="yes">
 <attribute name="VALUE" x="472.44" y="78.74" size="1.778" layer="96"/>
+</instance>
+<instance part="C15" gate="G$1" x="190.5" y="314.96" smashed="yes">
+<attribute name="NAME" x="192.024" y="315.341" size="1.778" layer="95"/>
+<attribute name="VALUE" x="192.024" y="310.261" size="1.778" layer="96"/>
+</instance>
+<instance part="GND33" gate="1" x="190.5" y="302.26" smashed="yes">
+<attribute name="VALUE" x="187.96" y="299.72" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -28671,6 +28682,11 @@ required for the used module</text>
 <segment>
 <pinref part="Q4" gate="G$1" pin="S"/>
 <pinref part="GND31" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="C15" gate="G$1" pin="2"/>
+<pinref part="GND33" gate="1" pin="GND"/>
+<wire x1="190.5" y1="304.8" x2="190.5" y2="309.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -29497,9 +29513,10 @@ required for the used module</text>
 <pinref part="IC1" gate="RESET" pin="NRST"/>
 <wire x1="154.94" y1="325.12" x2="162.56" y2="325.12" width="0.1524" layer="91"/>
 <wire x1="162.56" y1="325.12" x2="180.34" y2="325.12" width="0.1524" layer="91"/>
-<wire x1="180.34" y1="325.12" x2="193.04" y2="325.12" width="0.1524" layer="91"/>
-<wire x1="193.04" y1="325.12" x2="193.04" y2="304.8" width="0.1524" layer="91"/>
-<wire x1="193.04" y1="304.8" x2="205.74" y2="304.8" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="325.12" x2="190.5" y2="325.12" width="0.1524" layer="91"/>
+<wire x1="190.5" y1="325.12" x2="200.66" y2="325.12" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="325.12" x2="200.66" y2="304.8" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="304.8" x2="213.36" y2="304.8" width="0.1524" layer="91"/>
 <pinref part="S1" gate="G$1" pin="2"/>
 <wire x1="180.34" y1="320.04" x2="180.34" y2="325.12" width="0.1524" layer="91"/>
 <junction x="180.34" y="325.12"/>
@@ -29512,9 +29529,12 @@ required for the used module</text>
 <wire x1="154.94" y1="335.28" x2="162.56" y2="335.28" width="0.1524" layer="91"/>
 <wire x1="162.56" y1="335.28" x2="162.56" y2="325.12" width="0.1524" layer="91"/>
 <pinref part="D6" gate="G$1" pin="A"/>
-<wire x1="193.04" y1="325.12" x2="223.52" y2="325.12" width="0.1524" layer="91"/>
-<junction x="193.04" y="325.12"/>
-<label x="223.52" y="325.12" size="1.778" layer="95" rot="MR0"/>
+<wire x1="200.66" y1="325.12" x2="231.14" y2="325.12" width="0.1524" layer="91"/>
+<junction x="200.66" y="325.12"/>
+<label x="231.14" y="325.12" size="1.778" layer="95" rot="MR0"/>
+<pinref part="C15" gate="G$1" pin="1"/>
+<wire x1="190.5" y1="317.5" x2="190.5" y2="325.12" width="0.1524" layer="91"/>
+<junction x="190.5" y="325.12"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="RST"/>
@@ -29647,17 +29667,17 @@ required for the used module</text>
 <net name="BOOT0" class="0">
 <segment>
 <pinref part="IC1" gate="RESET" pin="BOOT0"/>
-<wire x1="205.74" y1="299.72" x2="193.04" y2="299.72" width="0.1524" layer="91"/>
-<wire x1="193.04" y1="299.72" x2="193.04" y2="287.02" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="299.72" x2="200.66" y2="299.72" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="299.72" x2="200.66" y2="287.02" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G$1" pin="1"/>
-<wire x1="193.04" y1="287.02" x2="193.04" y2="279.4" width="0.1524" layer="91"/>
-<wire x1="193.04" y1="274.32" x2="193.04" y2="279.4" width="0.1524" layer="91"/>
-<junction x="193.04" y="279.4"/>
-<wire x1="177.8" y1="279.4" x2="193.04" y2="279.4" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="287.02" x2="200.66" y2="279.4" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="274.32" x2="200.66" y2="279.4" width="0.1524" layer="91"/>
+<junction x="200.66" y="279.4"/>
+<wire x1="177.8" y1="279.4" x2="200.66" y2="279.4" width="0.1524" layer="91"/>
 <pinref part="D5" gate="G$1" pin="C"/>
 <pinref part="D3" gate="G$1" pin="C"/>
-<wire x1="177.8" y1="287.02" x2="193.04" y2="287.02" width="0.1524" layer="91"/>
-<junction x="193.04" y="287.02"/>
+<wire x1="177.8" y1="287.02" x2="200.66" y2="287.02" width="0.1524" layer="91"/>
+<junction x="200.66" y="287.02"/>
 </segment>
 </net>
 <net name="N$8" class="0">
