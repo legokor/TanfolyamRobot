@@ -4,13 +4,13 @@ _Note: schematic net and pin names are formatted like_ `this`.
 
 ## Microcontroller
 
-The main MCU is an STM32F103 in TQFP64 package. There's an option to add an ESP8266 module which communicates with the main MCU via UART.
+The main MCU is an STM32F103C8T6 in TQFP64 package. There's an option to add an ESP8266 module which communicates with the main MCU via UART.
 
 **The full STM32 pinout and pin assignments can be found in [STM32F103_pin_assignment.xls](STM32F103_pin_assignment.xls)**
 
 ### Programming
 
-The STM32 can be programmed using the Serial Wire Debug interface or the integrated Device Firmware Updater. The F103's DFU only supports USART1, so that's connected to and FTDI FT232RL USB UART converter.
+The STM32 can be programmed using the Serial Wire Debug interface or the integrated Device Firmware Updater. The F103's DFU only supports USART1, so that's connected to an FTDI FT232RL USB-UART converter.
 
 In order to use the DFU, the MCU must be booted in System memory mode by pulling the `BOOT0` pin high at reset.
 `BOOT0` is controlled by:
