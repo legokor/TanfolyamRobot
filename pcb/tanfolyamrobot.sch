@@ -27795,7 +27795,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="R29" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
 <part name="+3V11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="D3" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="MICROMELF-W" package3d_urn="urn:adsk.eagle:package:43441/2" value="BAS85"/>
-<part name="C17" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="22n"/>
 <part name="D4" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="MICROMELF-W" package3d_urn="urn:adsk.eagle:package:43441/2" value="BAS85"/>
 <part name="D6" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="MICROMELF-W" package3d_urn="urn:adsk.eagle:package:43441/2" value="BAS85"/>
 <part name="D7" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="DO-214AC" package3d_urn="urn:adsk.eagle:package:43416/2" value="BAS85"/>
@@ -27833,6 +27832,9 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="GND32" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="C15" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
 <part name="GND33" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="C17" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="2u2"/>
+<part name="R9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
+<part name="GND35" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -27855,7 +27857,7 @@ SENSORS</text>
 <text x="167.64" y="7.62" size="5.08" layer="97">POWER, 
 FTDI</text>
 <text x="353.06" y="25.4" size="1.778" layer="97">COLOR_OEn</text>
-<text x="129.54" y="299.72" size="1.778" layer="97">Briefly pull down RSTN
+<text x="144.78" y="254" size="1.778" layer="97">Briefly pull down RSTN
 when USB is connected</text>
 <text x="132.08" y="271.78" size="1.778" layer="97">Enable DFU when
 USB is connected</text>
@@ -28153,12 +28155,12 @@ is actually active-low.</text>
 <attribute name="NAME" x="374.65" y="121.285" size="1.778" layer="95" rot="MR180"/>
 <attribute name="VALUE" x="374.65" y="132.08" size="1.778" layer="96" rot="MR180"/>
 </instance>
-<instance part="Q2" gate="G$1" x="162.56" y="309.88" smashed="yes">
-<attribute name="NAME" x="165.1" y="309.88" size="1.778" layer="95"/>
-<attribute name="VALUE" x="165.1" y="307.34" size="1.778" layer="96"/>
+<instance part="Q2" gate="G$1" x="162.56" y="317.5" smashed="yes">
+<attribute name="NAME" x="165.1" y="317.5" size="1.778" layer="95"/>
+<attribute name="VALUE" x="165.1" y="314.96" size="1.778" layer="96"/>
 </instance>
-<instance part="GND18" gate="1" x="162.56" y="302.26" smashed="yes">
-<attribute name="VALUE" x="160.02" y="299.72" size="1.778" layer="96"/>
+<instance part="GND18" gate="1" x="162.56" y="299.72" smashed="yes">
+<attribute name="VALUE" x="160.02" y="297.18" size="1.778" layer="96"/>
 </instance>
 <instance part="C16" gate="G$1" x="330.2" y="157.48" smashed="yes">
 <attribute name="NAME" x="323.723" y="157.9626" size="1.778" layer="95"/>
@@ -28249,8 +28251,8 @@ is actually active-low.</text>
 <attribute name="NAME" x="178.816" y="314.96" size="1.778" layer="95" font="vector" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="180.848" y="314.96" size="1.778" layer="96" font="vector" rot="R90" align="top-center"/>
 </instance>
-<instance part="GND26" gate="1" x="180.34" y="302.26" smashed="yes">
-<attribute name="VALUE" x="177.8" y="299.72" size="1.778" layer="96"/>
+<instance part="GND26" gate="1" x="180.34" y="299.72" smashed="yes">
+<attribute name="VALUE" x="177.8" y="297.18" size="1.778" layer="96"/>
 </instance>
 <instance part="S2" gate="G$1" x="292.1" y="215.9" smashed="yes" rot="R90">
 <attribute name="NAME" x="290.576" y="215.9" size="1.778" layer="95" font="vector" rot="R90" align="bottom-center"/>
@@ -28273,10 +28275,6 @@ is actually active-low.</text>
 <instance part="D3" gate="G$1" x="175.26" y="287.02" smashed="yes">
 <attribute name="NAME" x="177.8" y="287.5026" size="1.778" layer="95"/>
 <attribute name="VALUE" x="177.8" y="284.7086" size="1.778" layer="96"/>
-</instance>
-<instance part="C17" gate="G$1" x="162.56" y="320.04" smashed="yes">
-<attribute name="NAME" x="164.084" y="320.421" size="1.778" layer="95"/>
-<attribute name="VALUE" x="164.084" y="315.341" size="1.778" layer="96"/>
 </instance>
 <instance part="D4" gate="G$1" x="152.4" y="335.28" smashed="yes" rot="R180">
 <attribute name="NAME" x="149.86" y="334.7974" size="1.778" layer="95" rot="R180"/>
@@ -28346,8 +28344,8 @@ is actually active-low.</text>
 <instance part="JP13" gate="G$1" x="63.5" y="276.86" smashed="yes">
 <attribute name="NAME" x="60.96" y="279.4" size="1.778" layer="95" font="vector"/>
 </instance>
-<instance part="JP14" gate="G$1" x="142.24" y="307.34" smashed="yes">
-<attribute name="NAME" x="139.7" y="309.88" size="1.778" layer="95" font="vector"/>
+<instance part="JP14" gate="G$1" x="134.62" y="314.96" smashed="yes">
+<attribute name="NAME" x="132.08" y="317.5" size="1.778" layer="95" font="vector"/>
 </instance>
 <instance part="JP15" gate="G$1" x="142.24" y="279.4" smashed="yes">
 <attribute name="NAME" x="139.7" y="281.94" size="1.778" layer="95" font="vector"/>
@@ -28397,8 +28395,19 @@ is actually active-low.</text>
 <attribute name="NAME" x="192.024" y="315.341" size="1.778" layer="95"/>
 <attribute name="VALUE" x="192.024" y="310.261" size="1.778" layer="96"/>
 </instance>
-<instance part="GND33" gate="1" x="190.5" y="302.26" smashed="yes">
-<attribute name="VALUE" x="187.96" y="299.72" size="1.778" layer="96"/>
+<instance part="GND33" gate="1" x="190.5" y="299.72" smashed="yes">
+<attribute name="VALUE" x="187.96" y="297.18" size="1.778" layer="96"/>
+</instance>
+<instance part="C17" gate="G$1" x="144.78" y="314.96" smashed="yes" rot="R90">
+<attribute name="NAME" x="144.399" y="316.484" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="149.479" y="316.484" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="R9" gate="G$1" x="152.4" y="307.34" smashed="yes" rot="R270">
+<attribute name="NAME" x="153.8986" y="308.61" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="149.098" y="308.61" size="1.778" layer="96" rot="R270"/>
+</instance>
+<instance part="GND35" gate="1" x="152.4" y="299.72" smashed="yes">
+<attribute name="VALUE" x="149.86" y="297.18" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -28621,6 +28630,7 @@ is actually active-low.</text>
 <segment>
 <pinref part="Q2" gate="G$1" pin="S"/>
 <pinref part="GND18" gate="1" pin="GND"/>
+<wire x1="162.56" y1="312.42" x2="162.56" y2="302.26" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C16" gate="G$1" pin="-"/>
@@ -28651,7 +28661,7 @@ is actually active-low.</text>
 <segment>
 <pinref part="S1" gate="G$1" pin="1"/>
 <pinref part="GND26" gate="1" pin="GND"/>
-<wire x1="180.34" y1="304.8" x2="180.34" y2="309.88" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="302.26" x2="180.34" y2="309.88" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND"/>
@@ -28686,7 +28696,11 @@ is actually active-low.</text>
 <segment>
 <pinref part="C15" gate="G$1" pin="2"/>
 <pinref part="GND33" gate="1" pin="GND"/>
-<wire x1="190.5" y1="304.8" x2="190.5" y2="309.88" width="0.1524" layer="91"/>
+<wire x1="190.5" y1="302.26" x2="190.5" y2="309.88" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R9" gate="G$1" pin="2"/>
+<pinref part="GND35" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -29052,8 +29066,8 @@ is actually active-low.</text>
 <pinref part="D7" gate="G$1" pin="A"/>
 </segment>
 <segment>
-<wire x1="137.16" y1="307.34" x2="119.38" y2="307.34" width="0.1524" layer="91"/>
-<label x="119.38" y="307.34" size="1.778" layer="95"/>
+<wire x1="129.54" y1="314.96" x2="119.38" y2="314.96" width="0.1524" layer="91"/>
+<label x="119.38" y="314.96" size="1.778" layer="95"/>
 <pinref part="JP14" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -29522,7 +29536,6 @@ is actually active-low.</text>
 <junction x="180.34" y="325.12"/>
 <pinref part="R29" gate="G$1" pin="2"/>
 <wire x1="180.34" y1="325.12" x2="180.34" y2="327.66" width="0.1524" layer="91"/>
-<pinref part="C17" gate="G$1" pin="1"/>
 <wire x1="162.56" y1="322.58" x2="162.56" y2="325.12" width="0.1524" layer="91"/>
 <junction x="162.56" y="325.12"/>
 <pinref part="D4" gate="G$1" pin="A"/>
@@ -29535,18 +29548,12 @@ is actually active-low.</text>
 <pinref part="C15" gate="G$1" pin="1"/>
 <wire x1="190.5" y1="317.5" x2="190.5" y2="325.12" width="0.1524" layer="91"/>
 <junction x="190.5" y="325.12"/>
+<pinref part="Q2" gate="G$1" pin="D"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="RST"/>
 <wire x1="474.98" y1="254" x2="457.2" y2="254" width="0.1524" layer="91"/>
 <label x="457.2" y="254" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="Q2" gate="G$1" pin="G"/>
-<wire x1="147.32" y1="307.34" x2="157.48" y2="307.34" width="0.1524" layer="91"/>
-<pinref part="JP14" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="FTDI_CBUS3" class="0">
@@ -29685,12 +29692,6 @@ is actually active-low.</text>
 <wire x1="147.32" y1="279.4" x2="172.72" y2="279.4" width="0.1524" layer="91"/>
 <pinref part="D5" gate="G$1" pin="A"/>
 <pinref part="JP15" gate="G$1" pin="2"/>
-</segment>
-</net>
-<net name="N$9" class="0">
-<segment>
-<pinref part="Q2" gate="G$1" pin="D"/>
-<pinref part="C17" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="ESP_TX" class="0">
@@ -29842,6 +29843,24 @@ is actually active-low.</text>
 <pinref part="IC1" gate="PORTA_H" pin="PA8"/>
 <label x="307.34" y="241.3" size="1.778" layer="95"/>
 <wire x1="314.96" y1="241.3" x2="304.8" y2="241.3" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="C17" gate="G$1" pin="2"/>
+<wire x1="149.86" y1="314.96" x2="152.4" y2="314.96" width="0.1524" layer="91"/>
+<pinref part="R9" gate="G$1" pin="1"/>
+<wire x1="152.4" y1="314.96" x2="157.48" y2="314.96" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="312.42" x2="152.4" y2="314.96" width="0.1524" layer="91"/>
+<junction x="152.4" y="314.96"/>
+<pinref part="Q2" gate="G$1" pin="G"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="C17" gate="G$1" pin="1"/>
+<wire x1="142.24" y1="314.96" x2="139.7" y2="314.96" width="0.1524" layer="91"/>
+<pinref part="JP14" gate="G$1" pin="2"/>
 </segment>
 </net>
 </nets>
