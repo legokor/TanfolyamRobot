@@ -26636,6 +26636,8 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="SUPPLY2" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
 <part name="SUPPLY3" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
 <part name="SUPPLY4" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
+<part name="R30" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
+<part name="P+10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -26665,8 +26667,9 @@ USB is connected</text>
 <text x="48.26" y="264.16" size="1.778" layer="97">Populate 0R resistor or appropriate 
 capacitor to connect FTDI output to 
 the RESET and/or BOOT0 circuitry</text>
-<text x="297.18" y="210.82" size="1.778" layer="150">Button's pin is 
-pulled up internally</text>
+<text x="327.66" y="203.2" size="1.778" layer="150">Notes:
+ - BUTTON's pin must be pulled up internally
+ - US_TRIG must be operated as open drain output</text>
 <text x="429.26" y="83.82" size="1.778" layer="150">Check if backlight resistor is 
 required for the used module</text>
 <text x="480.06" y="228.6" size="1.778" layer="97">The ESP8266's reset signal 
@@ -26834,8 +26837,8 @@ is actually active-low.</text>
 <instance part="+3V8" gate="G$1" x="454.66" y="111.76" smashed="yes">
 <attribute name="VALUE" x="452.12" y="109.22" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="P+4" gate="1" x="317.5" y="45.72" smashed="yes">
-<attribute name="VALUE" x="314.96" y="40.64" size="1.778" layer="96" rot="R90"/>
+<instance part="P+4" gate="1" x="317.5" y="48.26" smashed="yes">
+<attribute name="VALUE" x="314.96" y="43.18" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="GND13" gate="1" x="317.5" y="15.24" smashed="yes">
 <attribute name="VALUE" x="314.96" y="12.7" size="1.778" layer="96"/>
@@ -27218,6 +27221,13 @@ is actually active-low.</text>
 </instance>
 <instance part="SUPPLY4" gate="G$1" x="114.3" y="317.5" smashed="yes">
 <attribute name="VALUE" x="111.125" y="314.325" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="R30" gate="G$1" x="307.34" y="38.1" smashed="yes" rot="R270">
+<attribute name="NAME" x="308.8386" y="41.91" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="304.038" y="41.91" size="1.778" layer="96" rot="R270"/>
+</instance>
+<instance part="P+10" gate="1" x="307.34" y="48.26" smashed="yes">
+<attribute name="VALUE" x="304.8" y="43.18" size="1.778" layer="96" rot="R90"/>
 </instance>
 </instances>
 <busses>
@@ -27759,7 +27769,7 @@ is actually active-low.</text>
 <segment>
 <pinref part="P+4" gate="1" pin="+5V"/>
 <wire x1="325.12" y1="33.02" x2="317.5" y2="33.02" width="0.1524" layer="91"/>
-<wire x1="317.5" y1="33.02" x2="317.5" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="317.5" y1="33.02" x2="317.5" y2="45.72" width="0.1524" layer="91"/>
 <pinref part="US" gate="A" pin="1"/>
 </segment>
 <segment>
@@ -27811,6 +27821,11 @@ is actually active-low.</text>
 <pinref part="D1" gate="G$1" pin="VDD"/>
 <wire x1="96.52" y1="119.38" x2="96.52" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="111.76" x2="91.44" y2="111.76" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R30" gate="G$1" pin="1"/>
+<pinref part="P+10" gate="1" pin="+5V"/>
+<wire x1="307.34" y1="43.18" x2="307.34" y2="45.72" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="FTDI_RSTN" class="0">
@@ -27944,9 +27959,13 @@ is actually active-low.</text>
 </net>
 <net name="US_TRIG" class="0">
 <segment>
-<wire x1="325.12" y1="30.48" x2="294.64" y2="30.48" width="0.1524" layer="91"/>
-<label x="294.64" y="30.48" size="1.778" layer="95"/>
+<wire x1="325.12" y1="30.48" x2="307.34" y2="30.48" width="0.1524" layer="91"/>
+<label x="292.1" y="30.48" size="1.778" layer="95"/>
 <pinref part="US" gate="A" pin="2"/>
+<pinref part="R30" gate="G$1" pin="2"/>
+<wire x1="307.34" y1="30.48" x2="292.1" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="307.34" y1="33.02" x2="307.34" y2="30.48" width="0.1524" layer="91"/>
+<junction x="307.34" y="30.48"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="PORTB_L" pin="PB7"/>
@@ -27956,8 +27975,8 @@ is actually active-low.</text>
 </net>
 <net name="US_ECHO" class="0">
 <segment>
-<wire x1="325.12" y1="27.94" x2="294.64" y2="27.94" width="0.1524" layer="91"/>
-<label x="294.64" y="27.94" size="1.778" layer="95"/>
+<wire x1="325.12" y1="27.94" x2="292.1" y2="27.94" width="0.1524" layer="91"/>
+<label x="292.1" y="27.94" size="1.778" layer="95"/>
 <pinref part="US" gate="A" pin="3"/>
 </segment>
 <segment>
