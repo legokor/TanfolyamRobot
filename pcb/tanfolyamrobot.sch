@@ -20517,25 +20517,6 @@ Based on the following sources:
 &lt;/ul&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="SOT23" urn="urn:adsk.eagle:footprint:43155/1" library_version="7">
-<description>&lt;B&gt;DIODE&lt;/B&gt;</description>
-<wire x1="1.4224" y1="0.6604" x2="1.4224" y2="-0.6604" width="0.1524" layer="51"/>
-<wire x1="1.4224" y1="-0.6604" x2="-1.4224" y2="-0.6604" width="0.1524" layer="51"/>
-<wire x1="-1.4224" y1="-0.6604" x2="-1.4224" y2="0.6604" width="0.1524" layer="51"/>
-<wire x1="-1.4224" y1="0.6604" x2="1.4224" y2="0.6604" width="0.1524" layer="51"/>
-<wire x1="-1.4224" y1="-0.1524" x2="-1.4224" y2="0.6604" width="0.1524" layer="21"/>
-<wire x1="-1.4224" y1="0.6604" x2="-0.8636" y2="0.6604" width="0.1524" layer="21"/>
-<wire x1="1.4224" y1="0.6604" x2="1.4224" y2="-0.1524" width="0.1524" layer="21"/>
-<wire x1="0.8636" y1="0.6604" x2="1.4224" y2="0.6604" width="0.1524" layer="21"/>
-<smd name="3" x="0" y="1.1" dx="1" dy="1.4" layer="1"/>
-<smd name="2" x="0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
-<smd name="1" x="-0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
-<text x="-1.905" y="1.905" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.905" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
-<rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
-<rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
-</package>
 <package name="DO41-10" urn="urn:adsk.eagle:footprint:43094/1" library_version="8">
 <description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;
 diameter 2.54 mm, horizontal, grid 10.16 mm</description>
@@ -22003,12 +21984,6 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 </package>
 </packages>
 <packages3d>
-<package3d name="SOT23" urn="urn:adsk.eagle:package:43389/2" type="model" library_version="7">
-<description>DIODE</description>
-<packageinstances>
-<packageinstance name="SOT23"/>
-</packageinstances>
-</package3d>
 <package3d name="DO41-10" urn="urn:adsk.eagle:package:43336/1" type="box" library_version="8">
 <description>DIODE
 diameter 2.54 mm, horizontal, grid 10.16 mm</description>
@@ -22423,37 +22398,6 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 </package3d>
 </packages3d>
 <symbols>
-<symbol name="SDD_KAAK" urn="urn:adsk.eagle:symbol:43229/2" library_version="7">
-<wire x1="-1.27" y1="-1.27" x2="-3.81" y2="0" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="1.27" x2="-1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="1.27" x2="3.81" y2="0" width="0.254" layer="94"/>
-<wire x1="3.81" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-4.445" y1="1.016" x2="-4.445" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-4.445" y1="1.27" x2="-3.81" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="1.27" x2="-3.81" y2="0" width="0.254" layer="94"/>
-<wire x1="-3.175" y1="-1.016" x2="-3.175" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="0" x2="-3.81" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="-1.27" x2="-3.175" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="3.175" y1="-1.016" x2="3.175" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="3.175" y1="-1.27" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="-1.27" x2="3.81" y2="0" width="0.254" layer="94"/>
-<wire x1="4.445" y1="1.016" x2="4.445" y2="1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="0" x2="3.81" y2="1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="1.27" x2="4.445" y2="1.27" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="0" x2="-5.08" y2="0" width="0.1524" layer="94"/>
-<wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.1524" layer="94"/>
-<wire x1="-1.27" y1="0" x2="1.27" y2="0" width="0.1524" layer="94"/>
-<circle x="0" y="0" radius="0.127" width="0.4064" layer="94"/>
-<text x="0.762" y="2.0066" size="1.778" layer="95">&gt;NAME</text>
-<text x="-4.318" y="-3.9624" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="K1" x="-5.08" y="0" visible="off" length="point" direction="pas" swaplevel="1"/>
-<pin name="K2" x="5.08" y="0" visible="off" length="point" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="AA" x="0" y="2.54" visible="off" length="short" direction="pas" rot="R270"/>
-</symbol>
 <symbol name="D" urn="urn:adsk.eagle:symbol:43091/2" library_version="8">
 <wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
 <wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
@@ -22472,28 +22416,6 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="BAS40-06" urn="urn:adsk.eagle:component:43603/3" prefix="D" library_version="7">
-<description>&lt;b&gt;Silicon Schottky Diodes&lt;/b&gt;&lt;p&gt;
-General-purpose diode for high-speed switching</description>
-<gates>
-<gate name="G$1" symbol="SDD_KAAK" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SOT23">
-<connects>
-<connect gate="G$1" pin="AA" pad="3"/>
-<connect gate="G$1" pin="K1" pad="1"/>
-<connect gate="G$1" pin="K2" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:43389/2"/>
-</package3dinstances>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="DIODE-" urn="urn:adsk.eagle:component:43657/21" prefix="D" uservalue="yes" library_version="8">
 <description>&lt;b&gt;DIODE&lt;/b&gt;</description>
 <gates>
@@ -26237,6 +26159,331 @@ Source: Sibalco Kycon KUSBVX-BS1N-xxx.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="Wurth_EMC Components_WE-TVS" urn="urn:adsk.eagle:library:14282971">
+<description>&lt;BR&gt;Wurth Elektronik - EMC Components - ESD Protection - WE-TVS&lt;br&gt;&lt;Hr&gt;
+
+&lt;BR&gt;
+&lt;TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0&gt;
+&lt;TR&gt;   
+&lt;TD BGCOLOR="#cccccc" ALIGN=CENTER&gt;&lt;FONT FACE=ARIAL SIZE=3&gt;&lt;BR&gt;&lt;br&gt;
+      &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&lt;BR&gt;
+       &lt;BR&gt;
+       &lt;BR&gt;
+       &lt;BR&gt;&lt;BR&gt;&lt;/FONT&gt;
+    &lt;/TD&gt;
+&lt;TD BGCOLOR="#cccccc" ALIGN=CENTER&gt;&lt;FONT FACE=ARIAL SIZE=3&gt;&lt;br&gt;
+      -----&lt;BR&gt;
+      -----&lt;BR&gt;
+      -----&lt;BR&gt;
+      -----&lt;BR&gt;
+      -----&lt;BR&gt;&lt;BR&gt;&lt;/FONT&gt;
+    &lt;/TD&gt;
+    &lt;TD BGCOLOR="#cccccc" ALIGN=CENTER&gt; &lt;FONT FACE=ARIAL SIZE=3&gt;&lt;br&gt;
+      ---------------------------&lt;BR&gt;
+&lt;B&gt;&lt;I&gt;&lt;span style='font-size:26pt;
+  color:#FF6600;'&gt;WE &lt;/span&gt;&lt;/i&gt;&lt;/b&gt;
+&lt;BR&gt;
+      ---------------------------&lt;BR&gt;&lt;b&gt;Würth Elektronik&lt;/b&gt;&lt;/FONT&gt;
+    &lt;/TD&gt;
+    &lt;TD BGCOLOR="#cccccc" ALIGN=CENTER&gt;&lt;FONT FACE=ARIAL SIZE=3&gt;&lt;br&gt;
+      ---------O---&lt;BR&gt;
+      ----O--------&lt;BR&gt;
+      ---------O---&lt;BR&gt;
+      ----O--------&lt;BR&gt;
+      ---------O---&lt;BR&gt;&lt;BR&gt;&lt;/FONT&gt;
+    &lt;/TD&gt;
+   
+&lt;TD BGCOLOR="#cccccc" ALIGN=CENTER&gt;&lt;FONT FACE=ARIAL SIZE=3&gt;&lt;BR&gt;
+      &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&lt;BR&gt;
+       &lt;BR&gt;
+       &lt;BR&gt;
+       &lt;BR&gt;
+       &lt;BR&gt;&lt;BR&gt;&lt;/FONT&gt;
+    &lt;/TD&gt;
+  &lt;/TR&gt;
+
+  &lt;TR&gt;
+    &lt;TD COLSPAN=7&gt;&amp;nbsp;
+    &lt;/TD&gt;
+  &lt;/TR&gt;
+  
+&lt;/TABLE&gt;
+&lt;B&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;More than you expect&lt;BR&gt;&lt;BR&gt;&lt;BR&gt;&lt;/B&gt;
+
+&lt;HR&gt;&lt;BR&gt;
+&lt;b&gt;Würth Elektronik eiSos GmbH &amp; Co. KG&lt;/b&gt;&lt;br&gt;
+EMC &amp; Inductive Solutions&lt;br&gt;
+
+Max-Eyth-Str.1&lt;br&gt;
+D-74638 Waldenburg&lt;br&gt;
+&lt;br&gt;
+Tel: +49 (0)7942-945-0&lt;br&gt;
+Fax:+49 (0)7942-945-5000&lt;br&gt;
+&lt;br&gt;
+&lt;a href="http://www.we-online.com/web/en/electronic_components/produkte_pb/bauteilebibliotheken/eagle_4.php"&gt;www.we-online.com/eagle&lt;/a&gt;&lt;br&gt;
+&lt;a href="mailto:libraries@we-online.com"&gt;libraries@we-online.com&lt;/a&gt; &lt;BR&gt;&lt;BR&gt;
+&lt;br&gt;&lt;HR&gt;&lt;BR&gt;
+Neither Autodesk nor Würth Elektronik eiSos does warrant that this library is error-free or &lt;br&gt;
+that it meets your specific requirements.&lt;br&gt;&lt;BR&gt;
+Please contact us for more information.&lt;br&gt;
+&lt;HR&gt;
+&lt;br&gt;Eagle Version 9, Library Revision 2019a, 2019-09-26&lt;br&gt;
+&lt;HR&gt;
+Copyright: Würth Elektronik</description>
+<packages>
+<package name="WE-TVS_SOT23-6L" urn="urn:adsk.eagle:footprint:12152346/2" library_version="1">
+<description>&lt;b&gt;WE-TVS TVS Diode
+&lt;br&gt;&lt;/b&gt;Size:  SOT23-6L
+&lt;BR&gt;L X W X H = 2.8mm X 2.9mm X 1.16mm</description>
+<wire x1="-1.45" y1="-0.8" x2="1.45" y2="-0.8" width="0.1" layer="51"/>
+<wire x1="1.45" y1="-0.8" x2="1.45" y2="0.8" width="0.1" layer="51"/>
+<wire x1="1.45" y1="0.8" x2="-0.75" y2="0.8" width="0.1" layer="51"/>
+<wire x1="-0.75" y1="0.8" x2="-1.15" y2="0.8" width="0.1" layer="51"/>
+<wire x1="-1.15" y1="0.8" x2="-1.45" y2="0.8" width="0.1" layer="51"/>
+<wire x1="-1.45" y1="0.8" x2="-1.45" y2="-0.8" width="0.1" layer="51"/>
+<wire x1="-1.55" y1="-0.9" x2="-1.55" y2="0.9" width="0.2" layer="21"/>
+<wire x1="1.55" y1="-0.9" x2="1.55" y2="0.9" width="0.2" layer="21"/>
+<wire x1="-0.75" y1="-0.8" x2="-0.75" y2="-1.4" width="0.1" layer="51"/>
+<wire x1="-0.75" y1="-1.4" x2="-1.15" y2="-1.4" width="0.1" layer="51"/>
+<wire x1="-1.15" y1="-1.4" x2="-1.15" y2="-0.8" width="0.1" layer="51"/>
+<wire x1="1.15" y1="-0.8" x2="1.15" y2="-1.4" width="0.1" layer="51"/>
+<wire x1="1.15" y1="-1.4" x2="0.75" y2="-1.4" width="0.1" layer="51"/>
+<wire x1="0.75" y1="-1.4" x2="0.75" y2="-0.8" width="0.1" layer="51"/>
+<wire x1="0.2" y1="-0.8" x2="0.2" y2="-1.4" width="0.1" layer="51"/>
+<wire x1="0.2" y1="-1.4" x2="-0.2" y2="-1.4" width="0.1" layer="51"/>
+<wire x1="-0.2" y1="-1.4" x2="-0.2" y2="-0.8" width="0.1" layer="51"/>
+<wire x1="0.75" y1="0.8" x2="0.75" y2="1.4" width="0.1" layer="51"/>
+<wire x1="0.75" y1="1.4" x2="1.15" y2="1.4" width="0.1" layer="51"/>
+<wire x1="1.15" y1="1.4" x2="1.15" y2="0.8" width="0.1" layer="51"/>
+<wire x1="-1.15" y1="0.8" x2="-1.15" y2="1.4" width="0.1" layer="51"/>
+<wire x1="-1.15" y1="1.4" x2="-0.75" y2="1.4" width="0.1" layer="51"/>
+<wire x1="-0.75" y1="1.4" x2="-0.75" y2="0.8" width="0.1" layer="51"/>
+<wire x1="-0.2" y1="0.8" x2="-0.2" y2="1.4" width="0.1" layer="51"/>
+<wire x1="-0.2" y1="1.4" x2="0.2" y2="1.4" width="0.1" layer="51"/>
+<wire x1="0.2" y1="1.4" x2="0.2" y2="0.8" width="0.1" layer="51"/>
+<smd name="6" x="-0.95" y="1.25" dx="0.6" dy="1.1" layer="1"/>
+<smd name="5" x="0" y="1.25" dx="0.6" dy="1.1" layer="1"/>
+<smd name="4" x="0.95" y="1.25" dx="0.6" dy="1.1" layer="1"/>
+<smd name="3" x="0.95" y="-1.25" dx="0.6" dy="1.1" layer="1"/>
+<smd name="1" x="-0.95" y="-1.25" dx="0.6" dy="1.1" layer="1"/>
+<smd name="2" x="0" y="-1.25" dx="0.6" dy="1.1" layer="1"/>
+<text x="0" y="2.3" size="0.6096" layer="25" align="bottom-center">&gt;NAME</text>
+<text x="-1.6" y="-2.8" size="0.6096" layer="27">&gt;VALUE</text>
+<circle x="-1.665" y="-1.433" radius="0.05" width="0.1" layer="21"/>
+<polygon width="0.1" layer="39" spacing="0.2">
+<vertex x="-1.75" y="-2"/>
+<vertex x="-1.75" y="2"/>
+<vertex x="1.75" y="2"/>
+<vertex x="1.75" y="-2"/>
+</polygon>
+</package>
+</packages>
+<packages3d>
+<package3d name="WE-TVS_SOT23-6L" urn="urn:adsk.eagle:package:12152378/3" type="model" library_version="1">
+<description>&lt;b&gt;WE-TVS TVS Diode
+&lt;br&gt;&lt;/b&gt;Size:  SOT23-6L
+&lt;BR&gt;L X W X H = 2.8mm X 2.9mm X 1.16mm</description>
+<packageinstances>
+<packageinstance name="WE-TVS_SOT23-6L"/>
+</packageinstances>
+</package3d>
+</packages3d>
+<symbols>
+<symbol name="WE-TVS_6RTR4FD" urn="urn:adsk.eagle:symbol:14282980/1" library_version="1">
+<wire x1="-2.794" y1="2.54" x2="-3.302" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="1.397" y1="2.54" x2="1.905" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="-2.794" y1="-2.54" x2="-3.302" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="1.397" y1="-2.54" x2="1.905" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="2.54" x2="1.905" y2="0" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="0" x2="1.905" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="0.635" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="-0.635" width="0.254" layer="94"/>
+<wire x1="0" y1="-0.635" x2="0.508" y2="-1.143" width="0.254" layer="94"/>
+<wire x1="0" y1="0.635" x2="-0.508" y2="1.143" width="0.254" layer="94"/>
+<wire x1="2.921" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="0" x2="1.905" y2="0" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="0" x2="0" y2="0" width="0.1524" layer="94"/>
+<wire x1="0.127" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="2.54" x2="-1.524" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="0.127" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="-2.54" x2="-1.524" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="-3.302" y1="2.54" x2="-3.302" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="5.08" x2="-5.08" y2="5.08" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="-5.08" x2="-5.08" y2="-5.08" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="-2.54" x2="-0.635" y2="-5.08" width="0.1524" layer="94"/>
+<wire x1="1.397" y1="3.175" x2="1.397" y2="2.54" width="0.254" layer="94"/>
+<wire x1="1.397" y1="2.54" x2="1.397" y2="1.905" width="0.254" layer="94"/>
+<wire x1="1.397" y1="-1.905" x2="1.397" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="1.397" y1="-2.54" x2="1.397" y2="-3.175" width="0.254" layer="94"/>
+<wire x1="-1.397" y1="-1.905" x2="-1.397" y2="-3.175" width="0.254" layer="94"/>
+<wire x1="-1.397" y1="3.175" x2="-1.397" y2="1.905" width="0.254" layer="94"/>
+<wire x1="2.794" y1="-0.635" x2="2.794" y2="0.635" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="0" x2="-5.08" y2="0" width="0.1524" layer="94"/>
+<wire x1="5.08" y1="5.842" x2="5.08" y2="5.08" width="0.254" layer="94" style="shortdash"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="0" width="0.254" layer="94" style="shortdash"/>
+<wire x1="5.08" y1="0" x2="5.08" y2="-5.08" width="0.254" layer="94" style="shortdash"/>
+<wire x1="5.08" y1="-5.08" x2="5.08" y2="-5.842" width="0.254" layer="94" style="shortdash"/>
+<wire x1="5.08" y1="-5.842" x2="-5.08" y2="-5.842" width="0.254" layer="94" style="shortdash"/>
+<wire x1="-5.08" y1="-5.842" x2="-5.08" y2="-5.08" width="0.254" layer="94" style="shortdash"/>
+<wire x1="-5.08" y1="-5.08" x2="-5.08" y2="0" width="0.254" layer="94" style="shortdash"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="5.08" width="0.254" layer="94" style="shortdash"/>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="5.842" width="0.254" layer="94" style="shortdash"/>
+<wire x1="-5.08" y1="5.842" x2="5.08" y2="5.842" width="0.254" layer="94" style="shortdash"/>
+<wire x1="5.08" y1="5.08" x2="-0.635" y2="5.08" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="-5.08" x2="5.08" y2="-5.08" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="5.08" x2="-0.635" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="5.08" y1="0" x2="2.921" y2="0" width="0.1524" layer="94"/>
+<text x="0" y="7.41" size="1.778" layer="95" align="bottom-center">&gt;NAME</text>
+<text x="-5.08" y="-9.02" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-6.4" y="4.448" size="0.4064" layer="94" align="bottom-right">I/O1</text>
+<text x="-6.55" y="-0.692" size="0.4064" layer="94" align="bottom-right">GND</text>
+<text x="-6.42" y="-5.812" size="0.4064" layer="94" align="bottom-right">I/O2</text>
+<text x="6.3" y="4.448" size="0.4064" layer="94">I/O1</text>
+<text x="6.3" y="-0.632" size="0.4064" layer="94">VDD</text>
+<text x="6.28" y="-5.812" size="0.4064" layer="94">I/O2</text>
+<pin name="VDD" x="7.62" y="0" visible="pad" length="short" direction="pwr" rot="R180"/>
+<pin name="I/O1" x="-7.62" y="5.08" visible="pad" length="short"/>
+<pin name="I/O2" x="-7.62" y="-5.08" visible="pad" length="short"/>
+<pin name="GND" x="-7.62" y="0" visible="pad" length="short" direction="pwr"/>
+<pin name="I/O3" x="7.62" y="5.08" visible="pad" length="short" rot="R180"/>
+<pin name="I/O4" x="7.62" y="-5.08" visible="pad" length="short" rot="R180"/>
+<polygon width="0.254" layer="94">
+<vertex x="-1.27" y="0.635"/>
+<vertex x="0" y="0"/>
+<vertex x="-1.27" y="-0.635"/>
+</polygon>
+<polygon width="0.254" layer="94">
+<vertex x="0.127" y="3.175"/>
+<vertex x="1.397" y="2.54"/>
+<vertex x="0.127" y="1.905"/>
+</polygon>
+<polygon width="0.254" layer="94">
+<vertex x="0.127" y="-1.905"/>
+<vertex x="1.397" y="-2.54"/>
+<vertex x="0.127" y="-3.175"/>
+</polygon>
+<polygon width="0.254" layer="94">
+<vertex x="-2.667" y="-1.905"/>
+<vertex x="-1.397" y="-2.54"/>
+<vertex x="-2.667" y="-3.175"/>
+</polygon>
+<polygon width="0.254" layer="94">
+<vertex x="-2.667" y="3.175"/>
+<vertex x="-1.397" y="2.54"/>
+<vertex x="-2.667" y="1.905"/>
+</polygon>
+<polygon width="0.254" layer="94">
+<vertex x="4.064" y="-0.635"/>
+<vertex x="2.794" y="0"/>
+<vertex x="4.064" y="0.635"/>
+</polygon>
+<circle x="1.905" y="0" radius="0.381" width="0" layer="94"/>
+<circle x="-0.635" y="2.54" radius="0.381" width="0" layer="94"/>
+<circle x="-0.635" y="-2.54" radius="0.381" width="0" layer="94"/>
+<circle x="-3.302" y="0" radius="0.381" width="0" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="WE-TVS-HS_SOT23-6L_82400102" urn="urn:adsk.eagle:component:14282999/1" prefix="D" library_version="1">
+<description>&lt;b&gt;WE-TVS TVS Diode – High Speed Series
+&lt;br&gt;
+
+&lt;br&gt;&lt;b&gt; Characteristics
+&lt;br&gt;
+&lt;br&gt;&lt;/b&gt;&lt;/b&gt;Low clamping voltage
+&lt;br&gt;Sturdy design
+&lt;br&gt;Very low capacitance
+&lt;br&gt;Flow Thru Design for a simple layout
+&lt;br&gt;Rail to Rail protection
+&lt;br&gt;Epoxy flame resistant UL94-V0
+&lt;br&gt;RoHS, REACH and free of halogens
+
+&lt;br&gt;
+&lt;br&gt;&lt;b&gt; Applications
+&lt;br&gt;
+&lt;br&gt;&lt;/b&gt;Very fast data lines
+&lt;br&gt;USB 2.0
+&lt;br&gt;Ethernet
+&lt;br&gt;PoE
+&lt;br&gt;VGA
+&lt;br&gt;Sim Cards
+&lt;br&gt;Keypads
+&lt;br&gt;&lt;br&gt;&lt;B&gt;HS = High Speed
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;a href="https://katalog.we-online.com/media/images/v2/o14883v209%20Family_WE-TVS_HIGHSPEED." title="Enlarge picture"&gt;
+&lt;img src="https://katalog.we-online.com/media/images/v2/o14883v209%20Family_WE-TVS_HIGHSPEED." width="320"&gt;&lt;/a&gt;&lt;p&gt;
+Details see: &lt;a href="https://katalog.we-online.com/en/pbs/WE-TVS-HS"&gt;https://katalog.we-online.com/en/pbs/WE-TVS-HS&lt;/a&gt;&lt;p&gt;
+&lt;br&gt;
+&lt;/b&gt;Updated  by  Ella Wu  2019-07-12&lt;br&gt;
+&lt;/b&gt;2019 (C) Wurth Elektronik</description>
+<gates>
+<gate name="G$1" symbol="WE-TVS_6RTR4FD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="WE-TVS_SOT23-6L">
+<connects>
+<connect gate="G$1" pin="GND" pad="2"/>
+<connect gate="G$1" pin="I/O1" pad="1"/>
+<connect gate="G$1" pin="I/O2" pad="3"/>
+<connect gate="G$1" pin="I/O3" pad="6"/>
+<connect gate="G$1" pin="I/O4" pad="4"/>
+<connect gate="G$1" pin="VDD" pad="5"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:12152378/3"/>
+</package3dinstances>
+<technologies>
+<technology name="">
+<attribute name="C-CH" value="2pF" constant="no"/>
+<attribute name="CHANNELS" value="2+1" constant="no"/>
+<attribute name="DATASHEET-URL" value="https://katalog.we-online.com/pbs/datasheet/82400102.pdf" constant="no"/>
+<attribute name="IPEAK" value="6A" constant="no"/>
+<attribute name="MOUNT" value="SMT" constant="no"/>
+<attribute name="PART-NUMBER" value=" 82400102 " constant="no"/>
+<attribute name="VALUE" value="5Vdc" constant="no"/>
+<attribute name="VBR" value="6V" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+<library name="supply2" urn="urn:adsk.eagle:library:372">
+<description>&lt;b&gt;Supply Symbols&lt;/b&gt;&lt;p&gt;
+GND, VCC, 0V, +5V, -5V, etc.&lt;p&gt;
+Please keep in mind, that these devices are necessary for the
+automatic wiring of the supply signals.&lt;p&gt;
+The pin name defined in the symbol is identical to the net which is to be wired automatically.&lt;p&gt;
+In this library the device names are the same as the pin names of the symbols, therefore the correct signal names appear next to the supply symbols in the schematic.&lt;p&gt;
+&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="+05V/1" urn="urn:adsk.eagle:symbol:27021/1" library_version="2">
+<wire x1="-0.635" y1="1.27" x2="0.635" y2="1.27" width="0.1524" layer="94"/>
+<wire x1="0" y1="0.635" x2="0" y2="1.905" width="0.1524" layer="94"/>
+<circle x="0" y="1.27" radius="1.27" width="0.254" layer="94"/>
+<text x="-3.175" y="3.175" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="+5V/1" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="+5V/1" urn="urn:adsk.eagle:component:27068/1" prefix="SUPPLY" library_version="2">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="+05V/1" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -26275,7 +26522,6 @@ Source: Sibalco Kycon KUSBVX-BS1N-xxx.pdf</description>
 <part name="LED2" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0603" package3d_urn="urn:adsk.eagle:package:15819/3"/>
 <part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3"/>
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3"/>
-<part name="D1" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="BAS40-06" device="" package3d_urn="urn:adsk.eagle:package:43389/2" value=""/>
 <part name="GND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="LCD1" library="SparkFun-Displays" library_urn="urn:adsk.eagle:library:515" deviceset="LCD-16X2" device="NOSILK" package3d_urn="urn:adsk.eagle:package:38514/1"/>
 <part name="VR1" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="TRIMPOT" device="-SMD-3MM-CLOSED-1/8W-20%" package3d_urn="urn:adsk.eagle:package:39665/1" value="10k"/>
@@ -26349,8 +26595,6 @@ Source: Sibalco Kycon KUSBVX-BS1N-xxx.pdf</description>
 <part name="D7" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="DO-214AC" package3d_urn="urn:adsk.eagle:package:43416/2" value="BAS85"/>
 <part name="+3V12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="GND27" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="P+10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
-<part name="P+11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND25" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
 <part name="C18" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
@@ -26386,6 +26630,12 @@ Source: Sibalco Kycon KUSBVX-BS1N-xxx.pdf</description>
 <part name="R28" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="0R"/>
 <part name="X1" library="resonator" deviceset="MURATA_CSTCE" device="" value="CSTCE08M"/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="D1" library="Wurth_EMC Components_WE-TVS" library_urn="urn:adsk.eagle:library:14282971" deviceset="WE-TVS-HS_SOT23-6L_82400102" device="" package3d_urn="urn:adsk.eagle:package:12152378/3" value="5Vdc"/>
+<part name="P+15" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
+<part name="SUPPLY1" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
+<part name="SUPPLY2" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
+<part name="SUPPLY3" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
+<part name="SUPPLY4" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V/1" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -26408,7 +26658,7 @@ SENSORS</text>
 <text x="167.64" y="7.62" size="5.08" layer="97">POWER, 
 FTDI</text>
 <text x="353.06" y="25.4" size="1.778" layer="97">COLOR_OEn</text>
-<text x="116.84" y="302.26" size="1.778" layer="97">Briefly pull down RSTN
+<text x="114.3" y="304.8" size="1.778" layer="97">Briefly pull down RSTN
 when USB is connected</text>
 <text x="132.08" y="271.78" size="1.778" layer="97">Enable DFU when
 USB is connected</text>
@@ -26550,12 +26800,8 @@ is actually active-low.</text>
 <attribute name="NAME" x="189.23" y="120.4214" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="189.23" y="125.222" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="D1" gate="G$1" x="73.66" y="106.68" smashed="yes" rot="R180">
-<attribute name="NAME" x="72.898" y="104.6734" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="77.978" y="110.6424" size="1.778" layer="96" rot="R180"/>
-</instance>
-<instance part="GND10" gate="1" x="73.66" y="96.52" smashed="yes">
-<attribute name="VALUE" x="71.12" y="93.98" size="1.778" layer="96"/>
+<instance part="GND10" gate="1" x="73.66" y="93.98" smashed="yes">
+<attribute name="VALUE" x="71.12" y="91.44" size="1.778" layer="96"/>
 </instance>
 <instance part="LCD1" gate="G$1" x="505.46" y="129.54" smashed="yes">
 <attribute name="NAME" x="497.84" y="152.908" size="1.778" layer="95"/>
@@ -26795,8 +27041,8 @@ is actually active-low.</text>
 <attribute name="NAME" x="49.53" y="117.348" size="1.778" layer="95" rot="MR0"/>
 <attribute name="VALUE" x="49.53" y="105.918" size="1.778" layer="96" rot="MR0"/>
 </instance>
-<instance part="P+9" gate="1" x="58.42" y="162.56" smashed="yes">
-<attribute name="VALUE" x="55.88" y="157.48" size="1.778" layer="96" rot="R90"/>
+<instance part="P+9" gate="1" x="68.58" y="162.56" smashed="yes">
+<attribute name="VALUE" x="66.04" y="157.48" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R29" gate="G$1" x="180.34" y="332.74" smashed="yes" rot="R270">
 <attribute name="NAME" x="181.8386" y="334.01" size="1.778" layer="95" rot="R270"/>
@@ -26817,21 +27063,15 @@ is actually active-low.</text>
 <attribute name="NAME" x="149.86" y="324.6374" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="149.86" y="327.4314" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="D7" gate="G$1" x="58.42" y="147.32" smashed="yes" rot="R90">
-<attribute name="NAME" x="57.9374" y="149.86" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="60.7314" y="149.86" size="1.778" layer="96" rot="R90"/>
+<instance part="D7" gate="G$1" x="68.58" y="147.32" smashed="yes" rot="R90">
+<attribute name="NAME" x="68.0974" y="149.86" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="70.8914" y="149.86" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="+3V12" gate="G$1" x="474.98" y="271.78" smashed="yes">
 <attribute name="VALUE" x="472.44" y="266.7" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="GND27" gate="1" x="510.54" y="241.3" smashed="yes">
 <attribute name="VALUE" x="508" y="238.76" size="1.778" layer="96"/>
-</instance>
-<instance part="P+10" gate="1" x="193.04" y="139.7" smashed="yes">
-<attribute name="VALUE" x="190.5" y="134.62" size="1.778" layer="96" rot="R90"/>
-</instance>
-<instance part="P+11" gate="1" x="200.66" y="139.7" smashed="yes">
-<attribute name="VALUE" x="198.12" y="134.62" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="GND25" gate="1" x="292.1" y="208.28" smashed="yes">
 <attribute name="VALUE" x="289.56" y="205.74" size="1.778" layer="96"/>
@@ -26961,6 +27201,24 @@ is actually active-low.</text>
 <instance part="GND2" gate="1" x="487.68" y="309.88" smashed="yes">
 <attribute name="VALUE" x="485.14" y="307.34" size="1.778" layer="96"/>
 </instance>
+<instance part="D1" gate="G$1" x="83.82" y="111.76" smashed="yes">
+<attribute name="NAME" x="83.82" y="119.17" size="1.778" layer="95" align="bottom-center"/>
+</instance>
+<instance part="P+15" gate="1" x="96.52" y="121.92" smashed="yes">
+<attribute name="VALUE" x="93.98" y="116.84" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="SUPPLY1" gate="G$1" x="58.42" y="160.02" smashed="yes">
+<attribute name="VALUE" x="55.245" y="156.845" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="SUPPLY2" gate="G$1" x="193.04" y="137.16" smashed="yes">
+<attribute name="VALUE" x="189.865" y="133.985" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="SUPPLY3" gate="G$1" x="200.66" y="137.16" smashed="yes">
+<attribute name="VALUE" x="197.485" y="133.985" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="SUPPLY4" gate="G$1" x="114.3" y="317.5" smashed="yes">
+<attribute name="VALUE" x="111.125" y="314.325" size="1.778" layer="96" rot="R90"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -27068,11 +27326,6 @@ is actually active-low.</text>
 <segment>
 <pinref part="R1" gate="G$1" pin="1"/>
 <pinref part="GND9" gate="1" pin="GND"/>
-</segment>
-<segment>
-<pinref part="GND10" gate="1" pin="GND"/>
-<pinref part="D1" gate="G$1" pin="AA"/>
-<wire x1="73.66" y1="99.06" x2="73.66" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="VR1" gate="R?" pin="CW"/>
@@ -27249,6 +27502,12 @@ is actually active-low.</text>
 <segment>
 <pinref part="X1" gate="G$1" pin="2"/>
 <pinref part="GND2" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="GND10" gate="1" pin="GND"/>
+<pinref part="D1" gate="G$1" pin="GND"/>
+<wire x1="73.66" y1="96.52" x2="73.66" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="111.76" x2="76.2" y2="111.76" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -27429,32 +27688,13 @@ is actually active-low.</text>
 <wire x1="114.3" y1="119.38" x2="114.3" y2="106.68" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="USB_DP_FTDI" class="0">
-<segment>
-<pinref part="IC4" gate="1" pin="USBDP"/>
-<wire x1="124.46" y1="114.3" x2="96.52" y2="114.3" width="0.1524" layer="91"/>
-<wire x1="55.88" y1="111.76" x2="66.04" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="66.04" y1="111.76" x2="93.98" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="111.76" x2="96.52" y2="114.3" width="0.1524" layer="91"/>
-<pinref part="X6" gate="G$1" pin="3"/>
-<pinref part="D1" gate="G$1" pin="K2"/>
-<wire x1="68.58" y1="106.68" x2="66.04" y2="106.68" width="0.1524" layer="91"/>
-<wire x1="66.04" y1="106.68" x2="66.04" y2="111.76" width="0.1524" layer="91"/>
-<junction x="66.04" y="111.76"/>
-</segment>
-</net>
 <net name="USB_DM_FTDI" class="0">
 <segment>
+<pinref part="D1" gate="G$1" pin="I/O4"/>
+<wire x1="91.44" y1="106.68" x2="99.06" y2="106.68" width="0.1524" layer="91"/>
 <pinref part="IC4" gate="1" pin="USBDM"/>
-<wire x1="124.46" y1="111.76" x2="96.52" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="55.88" y1="114.3" x2="81.28" y2="114.3" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="114.3" x2="93.98" y2="114.3" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="114.3" x2="96.52" y2="111.76" width="0.1524" layer="91"/>
-<pinref part="X6" gate="G$1" pin="2"/>
-<pinref part="D1" gate="G$1" pin="K1"/>
-<wire x1="78.74" y1="106.68" x2="81.28" y2="106.68" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="106.68" x2="81.28" y2="114.3" width="0.1524" layer="91"/>
-<junction x="81.28" y="114.3"/>
+<wire x1="124.46" y1="111.76" x2="99.06" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="111.76" x2="99.06" y2="106.68" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="FTDI_TXLEDN" class="0">
@@ -27546,18 +27786,8 @@ is actually active-low.</text>
 </segment>
 <segment>
 <pinref part="P+9" gate="1" pin="+5V"/>
-<wire x1="58.42" y1="160.02" x2="58.42" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="160.02" x2="68.58" y2="149.86" width="0.1524" layer="91"/>
 <pinref part="D7" gate="G$1" pin="C"/>
-</segment>
-<segment>
-<pinref part="LED2" gate="G$1" pin="A"/>
-<wire x1="200.66" y1="137.16" x2="200.66" y2="134.62" width="0.1524" layer="91"/>
-<pinref part="P+11" gate="1" pin="+5V"/>
-</segment>
-<segment>
-<pinref part="LED1" gate="G$1" pin="A"/>
-<wire x1="193.04" y1="137.16" x2="193.04" y2="134.62" width="0.1524" layer="91"/>
-<pinref part="P+10" gate="1" pin="+5V"/>
 </segment>
 <segment>
 <pinref part="JP17" gate="A" pin="6"/>
@@ -27576,23 +27806,11 @@ is actually active-low.</text>
 <pinref part="P+13" gate="1" pin="+5V"/>
 <wire x1="447.04" y1="71.12" x2="447.04" y2="68.58" width="0.1524" layer="91"/>
 </segment>
-</net>
-<net name="5V_USB" class="0">
 <segment>
-<wire x1="55.88" y1="116.84" x2="58.42" y2="116.84" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="116.84" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
-<pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="76.2" y1="139.7" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
-<label x="63.5" y="139.7" size="1.778" layer="95"/>
-<pinref part="X6" gate="G$1" pin="1"/>
-<wire x1="58.42" y1="144.78" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
-<junction x="58.42" y="139.7"/>
-<pinref part="D7" gate="G$1" pin="A"/>
-</segment>
-<segment>
-<wire x1="129.54" y1="314.96" x2="116.84" y2="314.96" width="0.1524" layer="91"/>
-<label x="116.84" y="314.96" size="1.778" layer="95"/>
-<pinref part="R27" gate="G$1" pin="1"/>
+<pinref part="P+15" gate="1" pin="+5V"/>
+<pinref part="D1" gate="G$1" pin="VDD"/>
+<wire x1="96.52" y1="119.38" x2="96.52" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="111.76" x2="91.44" y2="111.76" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="FTDI_RSTN" class="0">
@@ -27612,7 +27830,7 @@ is actually active-low.</text>
 <pinref part="R28" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$5" class="0">
+<net name="FTDI_TXLEDN_R" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="190.5" y1="124.46" x2="193.04" y2="124.46" width="0.1524" layer="91"/>
@@ -27620,7 +27838,7 @@ is actually active-low.</text>
 <wire x1="193.04" y1="124.46" x2="193.04" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$7" class="0">
+<net name="FTDI_RXLEDN_R" class="0">
 <segment>
 <pinref part="R4" gate="G$1" pin="1"/>
 <pinref part="LED2" gate="G$1" pin="C"/>
@@ -28403,6 +28621,67 @@ is actually active-low.</text>
 <pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="495.3" y1="111.76" x2="474.98" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="474.98" y1="111.76" x2="474.98" y2="109.22" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="USB_DP_FTDI" class="0">
+<segment>
+<pinref part="D1" gate="G$1" pin="I/O3"/>
+<wire x1="91.44" y1="116.84" x2="99.06" y2="116.84" width="0.1524" layer="91"/>
+<pinref part="IC4" gate="1" pin="USBDP"/>
+<wire x1="99.06" y1="116.84" x2="99.06" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="114.3" x2="124.46" y2="114.3" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="USB_DM" class="0">
+<segment>
+<pinref part="X6" gate="G$1" pin="2"/>
+<wire x1="55.88" y1="114.3" x2="60.96" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="114.3" x2="63.5" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="111.76" x2="68.58" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="111.76" x2="68.58" y2="106.68" width="0.1524" layer="91"/>
+<pinref part="D1" gate="G$1" pin="I/O2"/>
+<wire x1="68.58" y1="106.68" x2="76.2" y2="106.68" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="USB_DP" class="0">
+<segment>
+<pinref part="X6" gate="G$1" pin="3"/>
+<wire x1="55.88" y1="111.76" x2="60.96" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="111.76" x2="63.5" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="114.3" x2="68.58" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="114.3" x2="68.58" y2="116.84" width="0.1524" layer="91"/>
+<pinref part="D1" gate="G$1" pin="I/O1"/>
+<wire x1="68.58" y1="116.84" x2="76.2" y2="116.84" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="+5V/1" class="0">
+<segment>
+<pinref part="SUPPLY1" gate="G$1" pin="+5V/1"/>
+<wire x1="58.42" y1="157.48" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="116.84" x2="58.42" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="116.84" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="R2" gate="G$1" pin="2"/>
+<wire x1="76.2" y1="139.7" x2="68.58" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="X6" gate="G$1" pin="1"/>
+<wire x1="68.58" y1="139.7" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
+<junction x="58.42" y="139.7"/>
+<pinref part="D7" gate="G$1" pin="A"/>
+<wire x1="68.58" y1="144.78" x2="68.58" y2="139.7" width="0.1524" layer="91"/>
+<junction x="68.58" y="139.7"/>
+</segment>
+<segment>
+<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="SUPPLY2" gate="G$1" pin="+5V/1"/>
+</segment>
+<segment>
+<pinref part="LED2" gate="G$1" pin="A"/>
+<pinref part="SUPPLY3" gate="G$1" pin="+5V/1"/>
+</segment>
+<segment>
+<pinref part="SUPPLY4" gate="G$1" pin="+5V/1"/>
+<wire x1="114.3" y1="314.96" x2="116.84" y2="314.96" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="314.96" x2="114.3" y2="314.96" width="0.1524" layer="91"/>
+<pinref part="R27" gate="G$1" pin="1"/>
 </segment>
 </net>
 </nets>
