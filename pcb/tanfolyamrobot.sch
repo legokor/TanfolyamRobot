@@ -28455,7 +28455,7 @@ is actually active-low.</text>
 <wire x1="292.1" y1="223.52" x2="314.96" y2="223.52" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$3" class="0">
+<net name="ESP_CHPD" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="CH_PD"/>
 <wire x1="474.98" y1="251.46" x2="469.9" y2="251.46" width="0.1524" layer="91"/>
