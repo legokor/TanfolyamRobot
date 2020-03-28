@@ -6,9 +6,9 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="25" unitdist="mil" unit="mm" style="dots" multiple="1" display="yes" altdistance="6.125" altunitdist="mil" altunit="mil"/>
+<grid distance="25" unitdist="mil" unit="mil" style="dots" multiple="1" display="yes" altdistance="6.125" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
 <layer number="3" name="Route3" color="17" fill="1" visible="no" active="no"/>
 <layer number="4" name="Route4" color="18" fill="1" visible="no" active="no"/>
@@ -23,15 +23,15 @@
 <layer number="13" name="Route13" color="21" fill="1" visible="no" active="no"/>
 <layer number="14" name="Route14" color="22" fill="1" visible="no" active="no"/>
 <layer number="15" name="Route15" color="23" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="23" name="tOrigins" color="13" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="13" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="13" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="13" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
@@ -58,8 +58,8 @@
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
 <layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
@@ -2999,7 +2999,7 @@ design rules under a new name.</description>
 <attribute name="SF_SKU" value="COM-00097" x="38.989" y="6.35" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="VALUE" x="38.989" y="9.525" size="0.6096" layer="27" font="vector" ratio="20" rot="R180" align="top-center"/>
 </element>
-<element name="X6" library="con-kycon" library_urn="urn:adsk.eagle:library:157" package="KUSBVX-BS1N" package3d_urn="urn:adsk.eagle:package:7681/1" value="KUSBVX-BS1N" x="73.66" y="11.684" smashed="yes" rot="R270">
+<element name="X6" library="con-kycon" library_urn="urn:adsk.eagle:library:157" package="KUSBVX-BS1N" package3d_urn="urn:adsk.eagle:package:7681/1" value="" x="73.66" y="11.684" smashed="yes" rot="R270">
 <attribute name="NAME" x="78.644" y="20.305" size="1.27" layer="25" rot="R180"/>
 <attribute name="POPULARITY" value="0" x="73.66" y="11.684" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="VALUE" x="67.16" y="17.684" size="1.27" layer="27" rot="R270"/>
@@ -3178,6 +3178,12 @@ design rules under a new name.</description>
 <attribute name="SPICEPREFIX" value="R" x="67.7164" y="52.71135" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="VALUE" x="68.3514" y="54.61635" size="1.27" layer="27" rot="R180"/>
 </element>
+<element name="C5" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n" x="63.31585" y="41.56075" smashed="yes" rot="R180">
+<attribute name="NAME" x="63.95085" y="40.92575" size="1.27" layer="25" rot="R180"/>
+<attribute name="POPULARITY" value="73" x="63.31585" y="41.56075" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="SPICEPREFIX" value="C" x="63.31585" y="41.56075" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="VALUE" x="63.95085" y="43.46575" size="1.27" layer="27" rot="R180"/>
+</element>
 </elements>
 <signals>
 <signal name="GND">
@@ -3334,6 +3340,8 @@ design rules under a new name.</description>
 <via x="31.75" y="45.72" extent="1-16" drill="0.35"/>
 <via x="29.845" y="41.91" extent="1-16" drill="0.35"/>
 <contactref element="D1" pad="2"/>
+<contactref element="C5" pad="2"/>
+<via x="56.515" y="39.37" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="+3V3">
 <contactref element="C4" pad="1"/>
@@ -3381,13 +3389,8 @@ design rules under a new name.</description>
 <wire x1="44.03" y1="31.535" x2="41.91" y2="31.535" width="0.2032" layer="1"/>
 <via x="44.45" y="31.115" extent="1-16" drill="0.35"/>
 <wire x1="44.45" y1="31.115" x2="45.72" y2="32.385" width="0.3048" layer="16"/>
-<wire x1="65.14" y1="36.645" x2="65.14" y2="37.73" width="0.3048" layer="1"/>
-<wire x1="65.405" y1="45.15485" x2="63.56985" y2="46.99" width="0.3048" layer="1"/>
+<wire x1="63.56985" y1="46.99" x2="65.405" y2="45.15485" width="0.3048" layer="1"/>
 <wire x1="63.56985" y1="46.99" x2="63.5" y2="46.99" width="0.3048" layer="1"/>
-<wire x1="65.14" y1="37.73" x2="63.5" y2="39.37" width="0.3048" layer="1"/>
-<wire x1="63.5" y1="39.37" x2="63.5" y2="40.64" width="0.3048" layer="1"/>
-<wire x1="63.5" y1="40.64" x2="65.405" y2="42.545" width="0.3048" layer="1"/>
-<wire x1="65.405" y1="42.545" x2="65.405" y2="45.15485" width="0.3048" layer="1"/>
 <wire x1="45.07" y1="5.095" x2="45.1625" y2="5.095" width="0.3048" layer="16"/>
 <wire x1="40.005" y1="6.35" x2="43.815" y2="6.35" width="0.3048" layer="16"/>
 <wire x1="43.815" y1="6.35" x2="45.07" y2="5.095" width="0.3048" layer="16"/>
@@ -3461,6 +3464,13 @@ design rules under a new name.</description>
 <wire x1="44.45" y1="22.86" x2="44.45" y2="29.21" width="0.3048" layer="16"/>
 <wire x1="45.72" y1="40.005" x2="48.895" y2="43.18" width="0.3048" layer="16"/>
 <wire x1="45.72" y1="32.385" x2="45.72" y2="40.005" width="0.3048" layer="16"/>
+<contactref element="C5" pad="1"/>
+<wire x1="64.16585" y1="41.56075" x2="64.16585" y2="42.57585" width="0.3048" layer="1"/>
+<wire x1="65.405" y1="43.815" x2="64.16585" y2="42.57585" width="0.3048" layer="1"/>
+<wire x1="65.405" y1="45.15485" x2="65.405" y2="43.815" width="0.3048" layer="1"/>
+<wire x1="65.14" y1="36.645" x2="65.14" y2="37.73" width="0.3048" layer="1"/>
+<wire x1="64.16585" y1="38.70415" x2="64.16585" y2="41.56075" width="0.3048" layer="1"/>
+<wire x1="65.14" y1="37.73" x2="64.16585" y2="38.70415" width="0.3048" layer="1"/>
 </signal>
 <signal name="SWD_SWO">
 <contactref element="JP1" pad="6"/>
@@ -3575,15 +3585,19 @@ design rules under a new name.</description>
 </signal>
 <signal name="FTDI_RTSN">
 <contactref element="IC4" pad="3"/>
-<via x="64.516" y="39.37" extent="1-16" drill="0.35"/>
-<wire x1="65.79" y1="38.096" x2="65.79" y2="36.645" width="0.2032" layer="1"/>
-<wire x1="64.516" y1="39.37" x2="65.79" y2="38.096" width="0.2032" layer="1"/>
+<via x="65.151" y="39.37" extent="1-16" drill="0.35"/>
 <contactref element="R11" pad="1"/>
 <contactref element="R12" pad="1"/>
 <wire x1="64.44615" y1="40.605975" x2="64.516" y2="40.536125" width="0.3048" layer="16"/>
-<wire x1="64.516" y1="40.536125" x2="64.516" y2="39.37" width="0.3048" layer="16"/>
-<wire x1="64.516" y1="39.37" x2="64.516" y2="38.229275" width="0.3048" layer="16"/>
 <wire x1="64.516" y1="38.229275" x2="64.44615" y2="38.159425" width="0.3048" layer="16"/>
+<wire x1="65.79" y1="36.645" x2="65.79" y2="38.1087" width="0.2032" layer="1"/>
+<wire x1="65.79" y1="38.1087" x2="65.151" y2="38.7477" width="0.2032" layer="1"/>
+<wire x1="65.151" y1="38.7477" x2="65.151" y2="39.37" width="0.2032" layer="1"/>
+<wire x1="64.44615" y1="38.159425" x2="64.44615" y2="38.820725" width="0.2032" layer="16"/>
+<wire x1="64.995425" y1="39.37" x2="64.44615" y2="38.820725" width="0.2032" layer="16"/>
+<wire x1="64.44615" y1="40.605975" x2="64.44615" y2="39.919275" width="0.2032" layer="16"/>
+<wire x1="64.995425" y1="39.37" x2="64.44615" y2="39.919275" width="0.2032" layer="16"/>
+<wire x1="64.995425" y1="39.37" x2="65.151" y2="39.37" width="0.2032" layer="16"/>
 </signal>
 <signal name="+5V">
 <contactref element="C9" pad="1"/>
@@ -4101,17 +4115,18 @@ design rules under a new name.</description>
 </signal>
 <signal name="FTDI_CBUS4">
 <contactref element="IC4" pad="12"/>
-<via x="62.484" y="39.37" extent="1-16" drill="0.35"/>
-<wire x1="59.94" y1="36.645" x2="59.94" y2="38.02615" width="0.2032" layer="1"/>
-<wire x1="59.94" y1="38.02615" x2="60.3377" y2="38.42385" width="0.2032" layer="1"/>
-<wire x1="60.3377" y1="38.42385" x2="61.53785" y2="38.42385" width="0.2032" layer="1"/>
-<wire x1="61.53785" y1="38.42385" x2="62.484" y2="39.37" width="0.2032" layer="1"/>
+<via x="61.8617" y="39.37" extent="1-16" drill="0.35"/>
 <contactref element="R19" pad="1"/>
 <contactref element="R26" pad="1"/>
-<wire x1="62.385575" y1="40.605975" x2="62.484" y2="40.50755" width="0.3048" layer="16"/>
-<wire x1="62.484" y1="40.50755" x2="62.484" y2="39.37" width="0.3048" layer="16"/>
-<wire x1="62.484" y1="39.37" x2="62.484" y2="38.25785" width="0.3048" layer="16"/>
 <wire x1="62.484" y1="38.25785" x2="62.385575" y2="38.159425" width="0.3048" layer="16"/>
+<wire x1="59.94" y1="36.645" x2="59.94" y2="38.02615" width="0.2032" layer="1"/>
+<wire x1="59.94" y1="38.02615" x2="60.3377" y2="38.42385" width="0.2032" layer="1"/>
+<wire x1="60.3377" y1="38.42385" x2="60.91555" y2="38.42385" width="0.2032" layer="1"/>
+<wire x1="60.91555" y1="38.42385" x2="61.8617" y2="39.37" width="0.2032" layer="1"/>
+<wire x1="61.8617" y1="39.37" x2="62.385575" y2="39.893875" width="0.2032" layer="16"/>
+<wire x1="62.385575" y1="39.893875" x2="62.385575" y2="40.605975" width="0.2032" layer="16"/>
+<wire x1="62.385575" y1="38.159425" x2="62.385575" y2="38.846125" width="0.2032" layer="16"/>
+<wire x1="62.385575" y1="38.846125" x2="61.8617" y2="39.37" width="0.2032" layer="16"/>
 </signal>
 <signal name="FTDI_CBUS2">
 <contactref element="IC4" pad="13"/>
