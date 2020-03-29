@@ -28,7 +28,7 @@ Both controllers are connected to the same reset signal, which is a combination 
 
 ## Power supply
 
-The battery input connects to the `VCC` rail, which drives the motors and the 5V regulator. Therefore the battery voltage must be at least 5V + the regulator's dropout voltage, and can be as high as the motors' and the motor driver's maximum operating voltage.
+The battery input connects through a polarity protection MOSFET to the `VCC` rail, which drives the motors and the 5V regulator. Therefore the battery voltage must be at least 5V + the regulator's dropout voltage, and can be as high as the motors' and the motor driver's maximum operating voltage. The polarity protection MOSFET's absolute maximum V<sub>GS</sub> and V<sub>DS</sub> must be higher than the supply voltage.
 
 The `+5V` rail powers the FTDI chip, LCD, ultrasonic sensor, motor encoders, and the servo motor. Therefore the ultrasonic sensor and motor encoder outputs shall be connected to a 5V tolerant MCU pin or level-shifted to 3.3V.
 
