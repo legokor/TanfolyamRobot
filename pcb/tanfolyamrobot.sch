@@ -26768,8 +26768,6 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <plain>
 <text x="68.58" y="144.78" size="1.778" layer="97">Keep FTDI in reset when 
 USB is not connected</text>
-<text x="360.68" y="5.08" size="2.54" layer="150">TODO: connector type
-             VCC should be 5V?</text>
 <text x="429.26" y="227.838" size="1.778" layer="203" rot="MR0">NC</text>
 <text x="429.26" y="222.758" size="1.778" layer="203" rot="MR0">NC</text>
 <text x="429.26" y="225.298" size="1.778" layer="203" rot="MR0">NC</text>
