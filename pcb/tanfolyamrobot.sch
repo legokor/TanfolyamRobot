@@ -26696,8 +26696,6 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="GND20" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND21" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND22" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R24" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
-<part name="+3V10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="R25" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
 <part name="GND23" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="Q3" library="transistor-small-signal" library_urn="urn:adsk.eagle:library:401" deviceset="BSS123" device="" package3d_urn="urn:adsk.eagle:package:28738/2"/>
@@ -26792,9 +26790,10 @@ USB is connected</text>
 <text x="48.26" y="264.16" size="1.778" layer="97">Populate 0R resistor or appropriate 
 capacitor to connect FTDI output to 
 the RESET and/or BOOT0 circuitry</text>
-<text x="327.66" y="203.2" size="1.778" layer="150">Notes:
+<text x="327.66" y="200.66" size="1.778" layer="150">Notes:
  - BUTTON's pin must be pulled up internally
- - US_TRIG must be operated as open drain output</text>
+ - US_TRIG must be operated as open drain output
+ - MOTOR_FAULTN must be pulled up internally</text>
 <text x="429.26" y="83.82" size="1.778" layer="150">Check if backlight resistor is 
 required for the used module</text>
 <text x="480.06" y="228.6" size="1.778" layer="97">The ESP8266's reset signal 
@@ -27124,13 +27123,6 @@ is actually active-low.</text>
 </instance>
 <instance part="GND22" gate="1" x="368.3" y="248.92" smashed="yes">
 <attribute name="VALUE" x="365.76" y="246.38" size="1.778" layer="96"/>
-</instance>
-<instance part="R24" gate="G$1" x="373.38" y="152.4" smashed="yes" rot="R270">
-<attribute name="NAME" x="374.8786" y="153.67" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="370.078" y="153.67" size="1.778" layer="96" rot="R270"/>
-</instance>
-<instance part="+3V10" gate="G$1" x="373.38" y="160.02" smashed="yes">
-<attribute name="VALUE" x="370.84" y="154.94" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R25" gate="G$1" x="307.34" y="137.16" smashed="yes" rot="R90">
 <attribute name="NAME" x="305.8414" y="133.35" size="1.778" layer="95" rot="R90"/>
@@ -27775,10 +27767,6 @@ is actually active-low.</text>
 <pinref part="IC5" gate="G$1" pin="OUT"/>
 </segment>
 <segment>
-<pinref part="R24" gate="G$1" pin="1"/>
-<pinref part="+3V10" gate="G$1" pin="+3V3"/>
-</segment>
-<segment>
 <pinref part="R29" gate="G$1" pin="1"/>
 <pinref part="+3V11" gate="G$1" pin="+3V3"/>
 </segment>
@@ -28291,12 +28279,8 @@ is actually active-low.</text>
 <net name="MOTOR_FAULTN" class="0">
 <segment>
 <pinref part="M1" gate="G$1" pin="!FAULT"/>
-<wire x1="363.22" y1="144.78" x2="373.38" y2="144.78" width="0.1524" layer="91"/>
 <label x="378.46" y="144.78" size="1.778" layer="95"/>
-<pinref part="R24" gate="G$1" pin="2"/>
-<wire x1="373.38" y1="144.78" x2="398.78" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="373.38" y1="147.32" x2="373.38" y2="144.78" width="0.1524" layer="91"/>
-<junction x="373.38" y="144.78"/>
+<wire x1="363.22" y1="144.78" x2="398.78" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="PORTC_L" pin="PC4"/>
