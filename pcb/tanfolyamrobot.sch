@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.4.2">
+<eagle version="9.6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -26723,7 +26723,7 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="GND28" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="IC5" library="v-reg" library_urn="urn:adsk.eagle:library:409" deviceset="LD117A?*" device="S" package3d_urn="urn:adsk.eagle:package:30370/1" technology="33TR"/>
 <part name="JP16" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="/90" package3d_urn="urn:adsk.eagle:package:22459/2"/>
-<part name="JP17" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X4" device="/90" package3d_urn="urn:adsk.eagle:package:22465/2"/>
+<part name="ENCODER" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X4" device="/90" package3d_urn="urn:adsk.eagle:package:22465/2"/>
 <part name="P+12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND29" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND30" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -26762,15 +26762,18 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="P+10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="C5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
 <part name="Q1" library="transistor-fet" library_urn="urn:adsk.eagle:library:396" deviceset="BSO201SP" device="" package3d_urn="urn:adsk.eagle:package:28532/2" value="AO4407A"/>
+<part name="R31" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
+<part name="R32" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
+<part name="R33" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="20K"/>
+<part name="R34" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="20K"/>
+<part name="GND3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="GND34" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="66.04" y="147.32" size="1.778" layer="97">Keep FTDI in reset when 
 USB is not connected</text>
-<text x="429.26" y="227.838" size="1.778" layer="203" rot="MR0">NC</text>
-<text x="429.26" y="222.758" size="1.778" layer="203" rot="MR0">NC</text>
-<text x="429.26" y="225.298" size="1.778" layer="203" rot="MR0">NC</text>
 <text x="180.34" y="101.6" size="1.778" layer="97">RTSn, DTRn, CBUS2, CBUS3, CBUS4 
 can be connected to control STM32
 RESET and BOOT0.</text>
@@ -26985,11 +26988,11 @@ is actually active-low.</text>
 <instance part="GND15" gate="1" x="335.28" y="114.3" smashed="yes">
 <attribute name="VALUE" x="332.74" y="111.76" size="1.778" layer="96"/>
 </instance>
-<instance part="GND16" gate="1" x="355.6" y="78.74" smashed="yes">
-<attribute name="VALUE" x="353.06" y="76.2" size="1.778" layer="96"/>
+<instance part="GND16" gate="1" x="340.36" y="73.66" smashed="yes">
+<attribute name="VALUE" x="337.82" y="71.12" size="1.778" layer="96"/>
 </instance>
-<instance part="P+6" gate="1" x="355.6" y="104.14" smashed="yes">
-<attribute name="VALUE" x="353.06" y="99.06" size="1.778" layer="96" rot="R90"/>
+<instance part="P+6" gate="1" x="340.36" y="99.06" smashed="yes">
+<attribute name="VALUE" x="337.82" y="93.98" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="US" gate="A" x="327.66" y="27.94" smashed="yes">
 <attribute name="NAME" x="321.31" y="36.195" size="1.778" layer="95"/>
@@ -27097,27 +27100,27 @@ is actually active-low.</text>
 <attribute name="LAST_DATE_TIME" x="486.41" y="10.16" size="2.286" layer="94"/>
 <attribute name="SHEET" x="499.745" y="5.08" size="2.54" layer="94"/>
 </instance>
-<instance part="R20" gate="G$1" x="327.66" y="93.98" smashed="yes" rot="R180">
-<attribute name="NAME" x="326.39" y="97.5614" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="331.47" y="97.536" size="1.778" layer="96" rot="R180"/>
+<instance part="R20" gate="G$1" x="330.2" y="88.9" smashed="yes" rot="R180">
+<attribute name="NAME" x="328.93" y="92.4814" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="334.01" y="92.456" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="R21" gate="G$1" x="327.66" y="91.44" smashed="yes" rot="R180">
-<attribute name="NAME" x="326.39" y="89.9414" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="331.47" y="89.916" size="1.778" layer="96" rot="R180"/>
+<instance part="R21" gate="G$1" x="330.2" y="86.36" smashed="yes" rot="R180">
+<attribute name="NAME" x="328.93" y="84.8614" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="334.01" y="84.836" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="R22" gate="G$1" x="320.04" y="83.82" smashed="yes" rot="R270">
-<attribute name="NAME" x="316.4586" y="82.55" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="316.484" y="87.63" size="1.778" layer="96" rot="R270"/>
+<instance part="R22" gate="G$1" x="322.58" y="78.74" smashed="yes" rot="R270">
+<attribute name="NAME" x="318.9986" y="77.47" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="319.024" y="82.55" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="R23" gate="G$1" x="314.96" y="83.82" smashed="yes" rot="R270">
-<attribute name="NAME" x="311.3786" y="82.55" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="311.404" y="87.63" size="1.778" layer="96" rot="R270"/>
+<instance part="R23" gate="G$1" x="317.5" y="78.74" smashed="yes" rot="R270">
+<attribute name="NAME" x="313.9186" y="77.47" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="313.944" y="82.55" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="GND20" gate="1" x="314.96" y="76.2" smashed="yes">
-<attribute name="VALUE" x="312.42" y="73.66" size="1.778" layer="96"/>
+<instance part="GND20" gate="1" x="317.5" y="71.12" smashed="yes">
+<attribute name="VALUE" x="314.96" y="68.58" size="1.778" layer="96"/>
 </instance>
-<instance part="GND21" gate="1" x="320.04" y="76.2" smashed="yes">
-<attribute name="VALUE" x="317.5" y="73.66" size="1.778" layer="96"/>
+<instance part="GND21" gate="1" x="322.58" y="71.12" smashed="yes">
+<attribute name="VALUE" x="320.04" y="68.58" size="1.778" layer="96"/>
 </instance>
 <instance part="GND22" gate="1" x="368.3" y="248.92" smashed="yes">
 <attribute name="VALUE" x="365.76" y="246.38" size="1.778" layer="96"/>
@@ -27220,15 +27223,15 @@ is actually active-low.</text>
 <attribute name="NAME" x="468.63" y="59.055" size="1.778" layer="95"/>
 <attribute name="VALUE" x="468.63" y="45.72" size="1.778" layer="96"/>
 </instance>
-<instance part="JP17" gate="A" x="363.22" y="88.9" smashed="yes">
-<attribute name="NAME" x="356.87" y="97.155" size="1.778" layer="95"/>
-<attribute name="VALUE" x="356.87" y="81.28" size="1.778" layer="96"/>
+<instance part="ENCODER" gate="A" x="347.98" y="83.82" smashed="yes">
+<attribute name="NAME" x="341.63" y="92.075" size="1.778" layer="95"/>
+<attribute name="VALUE" x="341.63" y="76.2" size="1.778" layer="96"/>
 </instance>
-<instance part="P+12" gate="1" x="373.38" y="104.14" smashed="yes">
-<attribute name="VALUE" x="370.84" y="99.06" size="1.778" layer="96" rot="R90"/>
+<instance part="P+12" gate="1" x="358.14" y="99.06" smashed="yes">
+<attribute name="VALUE" x="355.6" y="93.98" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="GND29" gate="1" x="373.38" y="78.74" smashed="yes">
-<attribute name="VALUE" x="370.84" y="76.2" size="1.778" layer="96"/>
+<instance part="GND29" gate="1" x="358.14" y="73.66" smashed="yes">
+<attribute name="VALUE" x="355.6" y="71.12" size="1.778" layer="96"/>
 </instance>
 <instance part="GND30" gate="1" x="467.36" y="40.64" smashed="yes">
 <attribute name="VALUE" x="464.82" y="38.1" size="1.778" layer="96"/>
@@ -27358,6 +27361,28 @@ is actually active-low.</text>
 <instance part="Q1" gate="G$1" x="71.12" y="55.88" smashed="yes" rot="MR90">
 <attribute name="VALUE" x="67.31" y="64.77" size="1.778" layer="96" rot="MR180"/>
 <attribute name="NAME" x="67.31" y="67.31" size="1.778" layer="95" rot="MR180"/>
+</instance>
+<instance part="R31" gate="G$1" x="368.3" y="88.9" smashed="yes" rot="MR180">
+<attribute name="NAME" x="369.57" y="92.4814" size="1.778" layer="95" rot="MR180"/>
+<attribute name="VALUE" x="364.49" y="92.456" size="1.778" layer="96" rot="MR180"/>
+</instance>
+<instance part="R32" gate="G$1" x="368.3" y="86.36" smashed="yes" rot="MR180">
+<attribute name="NAME" x="369.57" y="84.8614" size="1.778" layer="95" rot="MR180"/>
+<attribute name="VALUE" x="364.49" y="84.836" size="1.778" layer="96" rot="MR180"/>
+</instance>
+<instance part="R33" gate="G$1" x="375.92" y="78.74" smashed="yes" rot="MR270">
+<attribute name="NAME" x="379.5014" y="77.47" size="1.778" layer="95" rot="MR270"/>
+<attribute name="VALUE" x="379.476" y="82.55" size="1.778" layer="96" rot="MR270"/>
+</instance>
+<instance part="R34" gate="G$1" x="381" y="78.74" smashed="yes" rot="MR270">
+<attribute name="NAME" x="384.5814" y="77.47" size="1.778" layer="95" rot="MR270"/>
+<attribute name="VALUE" x="384.556" y="82.55" size="1.778" layer="96" rot="MR270"/>
+</instance>
+<instance part="GND3" gate="1" x="381" y="71.12" smashed="yes" rot="MR0">
+<attribute name="VALUE" x="383.54" y="68.58" size="1.778" layer="96" rot="MR0"/>
+</instance>
+<instance part="GND34" gate="1" x="375.92" y="71.12" smashed="yes" rot="MR0">
+<attribute name="VALUE" x="378.46" y="68.58" size="1.778" layer="96" rot="MR0"/>
 </instance>
 </instances>
 <busses>
@@ -27531,10 +27556,10 @@ is actually active-low.</text>
 <wire x1="335.28" y1="124.46" x2="335.28" y2="116.84" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<wire x1="360.68" y1="86.36" x2="355.6" y2="86.36" width="0.1524" layer="91"/>
-<wire x1="355.6" y1="86.36" x2="355.6" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="345.44" y1="81.28" x2="340.36" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="340.36" y1="81.28" x2="340.36" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="GND16" gate="1" pin="GND"/>
-<pinref part="JP17" gate="A" pin="7"/>
+<pinref part="ENCODER" gate="A" pin="7"/>
 </segment>
 <segment>
 <pinref part="GND17" gate="1" pin="GND"/>
@@ -27623,10 +27648,10 @@ is actually active-low.</text>
 <pinref part="GND28" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="JP17" gate="A" pin="8"/>
-<wire x1="368.3" y1="86.36" x2="373.38" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="ENCODER" gate="A" pin="8"/>
+<wire x1="353.06" y1="81.28" x2="358.14" y2="81.28" width="0.1524" layer="91"/>
 <pinref part="GND29" gate="1" pin="GND"/>
-<wire x1="373.38" y1="86.36" x2="373.38" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="81.28" x2="358.14" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP16" gate="A" pin="3"/>
@@ -27656,6 +27681,14 @@ is actually active-low.</text>
 <pinref part="D1" gate="G$1" pin="GND"/>
 <wire x1="60.96" y1="93.98" x2="60.96" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="60.96" y1="109.22" x2="63.5" y2="109.22" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R34" gate="G$1" pin="2"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="R33" gate="G$1" pin="2"/>
+<pinref part="GND34" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -27914,10 +27947,10 @@ is actually active-low.</text>
 <pinref part="US" gate="A" pin="1"/>
 </segment>
 <segment>
-<wire x1="355.6" y1="88.9" x2="355.6" y2="101.6" width="0.1524" layer="91"/>
-<wire x1="360.68" y1="88.9" x2="355.6" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="340.36" y1="83.82" x2="340.36" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="345.44" y1="83.82" x2="340.36" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="P+6" gate="1" pin="+5V"/>
-<pinref part="JP17" gate="A" pin="5"/>
+<pinref part="ENCODER" gate="A" pin="5"/>
 </segment>
 <segment>
 <pinref part="IC2" gate="G$1" pin="OUT"/>
@@ -27941,10 +27974,10 @@ is actually active-low.</text>
 <pinref part="D7" gate="G$1" pin="C"/>
 </segment>
 <segment>
-<pinref part="JP17" gate="A" pin="6"/>
-<wire x1="368.3" y1="88.9" x2="373.38" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="ENCODER" gate="A" pin="6"/>
+<wire x1="353.06" y1="83.82" x2="358.14" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="P+12" gate="1" pin="+5V"/>
-<wire x1="373.38" y1="88.9" x2="373.38" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="83.82" x2="358.14" y2="96.52" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP16" gate="A" pin="2"/>
@@ -28022,9 +28055,9 @@ is actually active-low.</text>
 <label x="431.8" y="124.46" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_L" pin="PC3"/>
-<wire x1="431.8" y1="264.16" x2="408.94" y2="264.16" width="0.1524" layer="91"/>
-<label x="408.94" y="264.16" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTC_L" pin="PC0"/>
+<wire x1="431.8" y1="271.78" x2="408.94" y2="271.78" width="0.1524" layer="91"/>
+<label x="408.94" y="271.78" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LCD_D5" class="0">
@@ -28034,9 +28067,9 @@ is actually active-low.</text>
 <label x="431.8" y="121.92" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_L" pin="PC2"/>
-<wire x1="431.8" y1="266.7" x2="408.94" y2="266.7" width="0.1524" layer="91"/>
-<label x="408.94" y="266.7" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTC_H" pin="PC15"/>
+<wire x1="431.8" y1="223.52" x2="408.94" y2="223.52" width="0.1524" layer="91"/>
+<label x="408.94" y="223.52" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LCD_D6" class="0">
@@ -28046,9 +28079,9 @@ is actually active-low.</text>
 <label x="431.8" y="119.38" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_L" pin="PC1"/>
-<wire x1="431.8" y1="269.24" x2="408.94" y2="269.24" width="0.1524" layer="91"/>
-<label x="408.94" y="269.24" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTC_H" pin="PC14"/>
+<wire x1="431.8" y1="226.06" x2="408.94" y2="226.06" width="0.1524" layer="91"/>
+<label x="408.94" y="226.06" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LCD_D7" class="0">
@@ -28058,9 +28091,9 @@ is actually active-low.</text>
 <label x="431.8" y="116.84" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_L" pin="PC0"/>
-<wire x1="431.8" y1="271.78" x2="408.94" y2="271.78" width="0.1524" layer="91"/>
-<label x="408.94" y="271.78" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTC_H" pin="PC13"/>
+<wire x1="431.8" y1="228.6" x2="408.94" y2="228.6" width="0.1524" layer="91"/>
+<label x="408.94" y="228.6" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LCD_EN" class="0">
@@ -28070,9 +28103,9 @@ is actually active-low.</text>
 <label x="431.8" y="137.16" size="1.778" layer="95"/>
 </segment>
 <segment>
-<label x="292.1" y="266.7" size="1.778" layer="95"/>
-<wire x1="314.96" y1="266.7" x2="292.1" y2="266.7" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="PORTA_L" pin="PA2"/>
+<pinref part="IC1" gate="PORTC_L" pin="PC1"/>
+<wire x1="431.8" y1="269.24" x2="408.94" y2="269.24" width="0.1524" layer="91"/>
+<label x="408.94" y="269.24" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LCD_RST" class="0">
@@ -28082,9 +28115,9 @@ is actually active-low.</text>
 <label x="431.8" y="142.24" size="1.778" layer="95"/>
 </segment>
 <segment>
-<label x="292.1" y="264.16" size="1.778" layer="95"/>
-<pinref part="IC1" gate="PORTA_L" pin="PA3"/>
-<wire x1="314.96" y1="264.16" x2="292.1" y2="264.16" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="PORTC_L" pin="PC2"/>
+<wire x1="431.8" y1="266.7" x2="408.94" y2="266.7" width="0.1524" layer="91"/>
+<label x="408.94" y="266.7" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LCD_BACKLIGHT" class="0">
@@ -28243,42 +28276,16 @@ is actually active-low.</text>
 </net>
 <net name="ENC1_A_5V" class="0">
 <segment>
-<wire x1="360.68" y1="93.98" x2="332.74" y2="93.98" width="0.1524" layer="91"/>
-<label x="337.82" y="93.98" size="1.778" layer="95"/>
+<wire x1="345.44" y1="88.9" x2="335.28" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="R20" gate="G$1" pin="1"/>
-<pinref part="JP17" gate="A" pin="1"/>
+<pinref part="ENCODER" gate="A" pin="1"/>
 </segment>
 </net>
 <net name="ENC1_B_5V" class="0">
 <segment>
-<wire x1="360.68" y1="91.44" x2="332.74" y2="91.44" width="0.1524" layer="91"/>
-<label x="337.82" y="91.44" size="1.778" layer="95"/>
+<wire x1="345.44" y1="86.36" x2="335.28" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="R21" gate="G$1" pin="1"/>
-<pinref part="JP17" gate="A" pin="3"/>
-</segment>
-</net>
-<net name="ENC2_A_5V" class="0">
-<segment>
-<wire x1="368.3" y1="93.98" x2="393.7" y2="93.98" width="0.1524" layer="91"/>
-<label x="378.46" y="93.98" size="1.778" layer="95"/>
-<pinref part="JP17" gate="A" pin="2"/>
-</segment>
-<segment>
-<pinref part="IC1" gate="PORTB_H" pin="PB13"/>
-<wire x1="370.84" y1="228.6" x2="347.98" y2="228.6" width="0.1524" layer="91"/>
-<label x="347.98" y="228.6" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="ENC2_B_5V" class="0">
-<segment>
-<wire x1="368.3" y1="91.44" x2="393.7" y2="91.44" width="0.1524" layer="91"/>
-<label x="378.46" y="91.44" size="1.778" layer="95"/>
-<pinref part="JP17" gate="A" pin="4"/>
-</segment>
-<segment>
-<pinref part="IC1" gate="PORTB_H" pin="PB14"/>
-<wire x1="370.84" y1="226.06" x2="347.98" y2="226.06" width="0.1524" layer="91"/>
-<label x="347.98" y="226.06" size="1.778" layer="95"/>
+<pinref part="ENCODER" gate="A" pin="3"/>
 </segment>
 </net>
 <net name="MOTOR_FAULTN" class="0">
@@ -28304,9 +28311,9 @@ is actually active-low.</text>
 <label x="317.5" y="139.7" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_L" pin="PC6"/>
-<wire x1="431.8" y1="256.54" x2="408.94" y2="256.54" width="0.1524" layer="91"/>
-<label x="408.94" y="256.54" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTB_H" pin="PB13"/>
+<wire x1="370.84" y1="228.6" x2="347.98" y2="228.6" width="0.1524" layer="91"/>
+<label x="347.98" y="228.6" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="MOTOR1_IN2" class="0">
@@ -28328,9 +28335,9 @@ is actually active-low.</text>
 <label x="317.5" y="134.62" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_L" pin="PC7"/>
-<wire x1="431.8" y1="254" x2="408.94" y2="254" width="0.1524" layer="91"/>
-<label x="408.94" y="254" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTB_H" pin="PB14"/>
+<wire x1="370.84" y1="226.06" x2="347.98" y2="226.06" width="0.1524" layer="91"/>
+<label x="347.98" y="226.06" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="MOTOR2_IN2" class="0">
@@ -28535,12 +28542,12 @@ is actually active-low.</text>
 <net name="ENC1_A_3V3" class="0">
 <segment>
 <pinref part="R20" gate="G$1" pin="2"/>
-<wire x1="322.58" y1="93.98" x2="320.04" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="325.12" y1="88.9" x2="322.58" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="R22" gate="G$1" pin="1"/>
-<wire x1="320.04" y1="93.98" x2="297.18" y2="93.98" width="0.1524" layer="91"/>
-<wire x1="320.04" y1="88.9" x2="320.04" y2="93.98" width="0.1524" layer="91"/>
-<junction x="320.04" y="93.98"/>
-<label x="297.18" y="93.98" size="1.778" layer="95"/>
+<wire x1="322.58" y1="88.9" x2="299.72" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="322.58" y1="83.82" x2="322.58" y2="88.9" width="0.1524" layer="91"/>
+<junction x="322.58" y="88.9"/>
+<label x="299.72" y="88.9" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="PORTA_L" pin="PA0"/>
@@ -28551,12 +28558,12 @@ is actually active-low.</text>
 <net name="ENC1_B_3V3" class="0">
 <segment>
 <pinref part="R21" gate="G$1" pin="2"/>
-<wire x1="322.58" y1="91.44" x2="314.96" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="325.12" y1="86.36" x2="317.5" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="R23" gate="G$1" pin="1"/>
-<wire x1="314.96" y1="91.44" x2="297.18" y2="91.44" width="0.1524" layer="91"/>
-<wire x1="314.96" y1="88.9" x2="314.96" y2="91.44" width="0.1524" layer="91"/>
-<junction x="314.96" y="91.44"/>
-<label x="297.18" y="91.44" size="1.778" layer="95"/>
+<wire x1="317.5" y1="86.36" x2="299.72" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="317.5" y1="83.82" x2="317.5" y2="86.36" width="0.1524" layer="91"/>
+<junction x="317.5" y="86.36"/>
+<label x="299.72" y="86.36" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="PORTA_L" pin="PA1"/>
@@ -28631,18 +28638,36 @@ is actually active-low.</text>
 <junction x="469.9" y="251.46"/>
 </segment>
 </net>
-<net name="PA6" class="0">
+<net name="ENC2_A_3V3" class="0">
 <segment>
 <pinref part="IC1" gate="PORTA_L" pin="PA6"/>
-<wire x1="314.96" y1="256.54" x2="304.8" y2="256.54" width="0.1524" layer="91"/>
-<label x="307.34" y="256.54" size="1.778" layer="95"/>
+<wire x1="314.96" y1="256.54" x2="292.1" y2="256.54" width="0.1524" layer="91"/>
+<label x="292.1" y="256.54" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R31" gate="G$1" pin="2"/>
+<wire x1="373.38" y1="88.9" x2="375.92" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="R33" gate="G$1" pin="1"/>
+<wire x1="375.92" y1="88.9" x2="398.78" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="375.92" y1="83.82" x2="375.92" y2="88.9" width="0.1524" layer="91"/>
+<junction x="375.92" y="88.9"/>
+<label x="398.78" y="88.9" size="1.778" layer="95" rot="MR0"/>
 </segment>
 </net>
-<net name="PA7" class="0">
+<net name="ENC2_B_3V3" class="0">
 <segment>
 <pinref part="IC1" gate="PORTA_L" pin="PA7"/>
-<wire x1="314.96" y1="254" x2="304.8" y2="254" width="0.1524" layer="91"/>
-<label x="307.34" y="254" size="1.778" layer="95"/>
+<wire x1="314.96" y1="254" x2="292.1" y2="254" width="0.1524" layer="91"/>
+<label x="292.1" y="254" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R32" gate="G$1" pin="2"/>
+<wire x1="373.38" y1="86.36" x2="381" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="R34" gate="G$1" pin="1"/>
+<wire x1="381" y1="86.36" x2="398.78" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="381" y1="83.82" x2="381" y2="86.36" width="0.1524" layer="91"/>
+<junction x="381" y="86.36"/>
+<label x="398.78" y="86.36" size="1.778" layer="95" rot="MR0"/>
 </segment>
 </net>
 <net name="PA11" class="0">
@@ -28843,6 +28868,41 @@ is actually active-low.</text>
 <pinref part="X2" gate="-1" pin="K"/>
 <pinref part="Q1" gate="G$1" pin="D"/>
 <wire x1="58.42" y1="58.42" x2="66.04" y2="58.42" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PC6" class="0">
+<segment>
+<pinref part="IC1" gate="PORTC_L" pin="PC6"/>
+<wire x1="431.8" y1="256.54" x2="421.64" y2="256.54" width="0.1524" layer="91"/>
+<label x="424.18" y="256.54" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PC7" class="0">
+<segment>
+<pinref part="IC1" gate="PORTC_L" pin="PC7"/>
+<wire x1="431.8" y1="254" x2="421.64" y2="254" width="0.1524" layer="91"/>
+<label x="424.18" y="254" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PC3" class="0">
+<segment>
+<pinref part="IC1" gate="PORTC_L" pin="PC3"/>
+<wire x1="431.8" y1="264.16" x2="421.64" y2="264.16" width="0.1524" layer="91"/>
+<label x="424.18" y="264.16" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="ENC2_B_5V" class="0">
+<segment>
+<wire x1="353.06" y1="86.36" x2="363.22" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="R32" gate="G$1" pin="1"/>
+<pinref part="ENCODER" gate="A" pin="4"/>
+</segment>
+</net>
+<net name="ENC2_A_5V" class="0">
+<segment>
+<wire x1="353.06" y1="88.9" x2="363.22" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="R31" gate="G$1" pin="1"/>
+<pinref part="ENCODER" gate="A" pin="2"/>
 </segment>
 </net>
 </nets>
