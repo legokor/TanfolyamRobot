@@ -26766,6 +26766,10 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="R34" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="20K"/>
 <part name="GND3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND34" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="R24" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="27K"/>
+<part name="R35" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="6K8"/>
+<part name="P+11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
+<part name="GND36" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -27336,8 +27340,8 @@ is actually active-low.</text>
 <instance part="SUPPLY3" gate="G$1" x="200.66" y="137.16" smashed="yes">
 <attribute name="VALUE" x="197.485" y="133.985" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="SUPPLY4" gate="G$1" x="114.3" y="317.5" smashed="yes">
-<attribute name="VALUE" x="111.125" y="314.325" size="1.778" layer="96" rot="R90"/>
+<instance part="SUPPLY4" gate="G$1" x="116.84" y="317.5" smashed="yes">
+<attribute name="VALUE" x="113.665" y="314.325" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R30" gate="G$1" x="307.34" y="38.1" smashed="yes" rot="R270">
 <attribute name="NAME" x="308.8386" y="41.91" size="1.778" layer="95" rot="R270"/>
@@ -27375,6 +27379,20 @@ is actually active-low.</text>
 </instance>
 <instance part="GND34" gate="1" x="375.92" y="71.12" smashed="yes" rot="MR0">
 <attribute name="VALUE" x="378.46" y="68.58" size="1.778" layer="96" rot="MR0"/>
+</instance>
+<instance part="R24" gate="G$1" x="223.52" y="58.42" smashed="yes" rot="R270">
+<attribute name="NAME" x="225.0186" y="59.69" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="220.218" y="59.69" size="1.778" layer="96" rot="R270"/>
+</instance>
+<instance part="R35" gate="G$1" x="223.52" y="43.18" smashed="yes" rot="R270">
+<attribute name="NAME" x="225.0186" y="44.45" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="220.218" y="44.45" size="1.778" layer="96" rot="R270"/>
+</instance>
+<instance part="P+11" gate="VCC" x="223.52" y="66.04" smashed="yes">
+<attribute name="VALUE" x="220.98" y="63.5" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="GND36" gate="1" x="223.52" y="35.56" smashed="yes">
+<attribute name="VALUE" x="220.98" y="33.02" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -27681,6 +27699,10 @@ is actually active-low.</text>
 <segment>
 <pinref part="R33" gate="G$1" pin="2"/>
 <pinref part="GND34" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="R35" gate="G$1" pin="2"/>
+<pinref part="GND36" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -28239,6 +28261,10 @@ is actually active-low.</text>
 <pinref part="Q1" gate="G$1" pin="S"/>
 <wire x1="76.2" y1="58.42" x2="96.52" y2="58.42" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="R24" gate="G$1" pin="1"/>
+<pinref part="P+11" gate="VCC" pin="VCC"/>
+</segment>
 </net>
 <net name="N$14" class="0">
 <segment>
@@ -28703,13 +28729,6 @@ is actually active-low.</text>
 <label x="307.34" y="261.62" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="PA5" class="0">
-<segment>
-<pinref part="IC1" gate="PORTA_L" pin="PA5"/>
-<wire x1="314.96" y1="259.08" x2="304.8" y2="259.08" width="0.1524" layer="91"/>
-<label x="307.34" y="259.08" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="SERVO_5V" class="0">
 <segment>
 <pinref part="R8" gate="G$1" pin="2"/>
@@ -28842,8 +28861,7 @@ is actually active-low.</text>
 </segment>
 <segment>
 <pinref part="SUPPLY4" gate="G$1" pin="+5V/1"/>
-<wire x1="114.3" y1="314.96" x2="116.84" y2="314.96" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="314.96" x2="114.3" y2="314.96" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="314.96" x2="116.84" y2="314.96" width="0.1524" layer="91"/>
 <pinref part="R27" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -28887,6 +28905,22 @@ is actually active-low.</text>
 <wire x1="353.06" y1="88.9" x2="363.22" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="R31" gate="G$1" pin="1"/>
 <pinref part="ENCODER" gate="A" pin="2"/>
+</segment>
+</net>
+<net name="VCC_SENSE" class="0">
+<segment>
+<pinref part="IC1" gate="PORTA_L" pin="PA5"/>
+<wire x1="314.96" y1="259.08" x2="292.1" y2="259.08" width="0.1524" layer="91"/>
+<label x="292.1" y="259.08" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R24" gate="G$1" pin="2"/>
+<pinref part="R35" gate="G$1" pin="1"/>
+<wire x1="223.52" y1="48.26" x2="223.52" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="50.8" x2="223.52" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="50.8" x2="246.38" y2="50.8" width="0.1524" layer="91"/>
+<junction x="223.52" y="50.8"/>
+<label x="246.38" y="50.8" size="1.778" layer="95" rot="MR0"/>
 </segment>
 </net>
 </nets>
