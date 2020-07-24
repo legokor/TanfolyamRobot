@@ -26626,7 +26626,7 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="GND4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="C7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
-<part name="JP1" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X6" device="" package3d_urn="urn:adsk.eagle:package:22472/2" value="SWD"/>
+<part name="SWD" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X6" device="" package3d_urn="urn:adsk.eagle:package:22472/2" value="SWD"/>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="IC4" library="ftdichip" library_urn="urn:adsk.eagle:library:231" deviceset="FT232R" device="L" package3d_urn="urn:adsk.eagle:package:14013/1"/>
@@ -26640,13 +26640,13 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10K"/>
 <part name="R2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
 <part name="GND9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="LED1" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0603" package3d_urn="urn:adsk.eagle:package:15819/3"/>
-<part name="LED2" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0603" package3d_urn="urn:adsk.eagle:package:15819/3"/>
+<part name="TX" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0603" package3d_urn="urn:adsk.eagle:package:15819/3"/>
+<part name="RX" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0603" package3d_urn="urn:adsk.eagle:package:15819/3"/>
 <part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3"/>
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3"/>
 <part name="GND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="LCD1" library="SparkFun-Displays" library_urn="urn:adsk.eagle:library:515" deviceset="LCD-16X2" device="NOSILK" package3d_urn="urn:adsk.eagle:package:38514/1"/>
-<part name="VR1" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="TRIMPOT" device="-SMD-3MM-CLOSED-1/8W-20%" package3d_urn="urn:adsk.eagle:package:39665/1" value="10k"/>
+<part name="CONT" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="TRIMPOT" device="-SMD-3MM-CLOSED-1/8W-20%" package3d_urn="urn:adsk.eagle:package:39665/1" value="10k"/>
 <part name="P+2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="P+3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -26702,9 +26702,9 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
 <part name="GND24" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="D5" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="MICROMELF-W" package3d_urn="urn:adsk.eagle:package:43441/2" value="BAS85"/>
-<part name="S1" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1" value=""/>
+<part name="RST" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1" value=""/>
 <part name="GND26" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="S2" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1" value=""/>
+<part name="BUT" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1" value=""/>
 <part name="X6" library="con-kycon" library_urn="urn:adsk.eagle:library:157" deviceset="KUSBVX-BS1N" device="" package3d_urn="urn:adsk.eagle:package:7681/1" value=""/>
 <part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="R29" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
@@ -26720,7 +26720,7 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="C18" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0603" package3d_urn="urn:adsk.eagle:package:23616/2" value="100n"/>
 <part name="GND28" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="IC5" library="v-reg" library_urn="urn:adsk.eagle:library:409" deviceset="LD117A?*" device="S" package3d_urn="urn:adsk.eagle:package:30370/1" technology="33TR"/>
-<part name="JP16" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="/90" package3d_urn="urn:adsk.eagle:package:22459/2"/>
+<part name="SERVO" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="/90" package3d_urn="urn:adsk.eagle:package:22459/2"/>
 <part name="ENCODER" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X4" device="/90" package3d_urn="urn:adsk.eagle:package:22465/2"/>
 <part name="P+12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND29" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -26867,7 +26867,7 @@ is actually active-low.</text>
 <attribute name="NAME" x="392.684" y="322.961" size="1.778" layer="95"/>
 <attribute name="VALUE" x="392.684" y="317.881" size="1.778" layer="96"/>
 </instance>
-<instance part="JP1" gate="A" x="121.92" y="226.06" smashed="yes">
+<instance part="SWD" gate="A" x="121.92" y="226.06" smashed="yes">
 <attribute name="NAME" x="115.57" y="236.855" size="1.778" layer="95"/>
 <attribute name="VALUE" x="115.57" y="215.9" size="1.778" layer="96"/>
 </instance>
@@ -26915,11 +26915,11 @@ is actually active-low.</text>
 <instance part="GND9" gate="1" x="66.04" y="124.46" smashed="yes">
 <attribute name="VALUE" x="63.5" y="121.92" size="1.778" layer="96"/>
 </instance>
-<instance part="LED1" gate="G$1" x="193.04" y="132.08" smashed="yes">
+<instance part="TX" gate="G$1" x="193.04" y="132.08" smashed="yes">
 <attribute name="NAME" x="196.596" y="127.508" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="198.755" y="127.508" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="LED2" gate="G$1" x="200.66" y="132.08" smashed="yes">
+<instance part="RX" gate="G$1" x="200.66" y="132.08" smashed="yes">
 <attribute name="NAME" x="204.216" y="127.508" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="206.375" y="127.508" size="1.778" layer="96" rot="R90"/>
 </instance>
@@ -26938,7 +26938,7 @@ is actually active-low.</text>
 <attribute name="NAME" x="497.84" y="152.908" size="1.778" layer="95"/>
 <attribute name="VALUE" x="497.84" y="108.458" size="1.778" layer="96" align="top-left"/>
 </instance>
-<instance part="VR1" gate="R?" x="462.28" y="154.94" smashed="yes" rot="R270">
+<instance part="CONT" gate="R?" x="462.28" y="154.94" smashed="yes" rot="R270">
 <attribute name="NAME" x="464.82" y="156.464" size="1.778" layer="95" font="vector"/>
 <attribute name="VALUE" x="464.82" y="153.416" size="1.778" layer="96" font="vector" align="top-left"/>
 </instance>
@@ -27150,14 +27150,14 @@ is actually active-low.</text>
 <attribute name="NAME" x="177.8" y="279.8826" size="1.778" layer="95"/>
 <attribute name="VALUE" x="177.8" y="277.0886" size="1.778" layer="96"/>
 </instance>
-<instance part="S1" gate="G$1" x="180.34" y="314.96" smashed="yes" rot="R90">
+<instance part="RST" gate="G$1" x="180.34" y="314.96" smashed="yes" rot="R90">
 <attribute name="NAME" x="178.816" y="314.96" size="1.778" layer="95" font="vector" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="180.848" y="314.96" size="1.778" layer="96" font="vector" rot="R90" align="top-center"/>
 </instance>
 <instance part="GND26" gate="1" x="180.34" y="299.72" smashed="yes">
 <attribute name="VALUE" x="177.8" y="297.18" size="1.778" layer="96"/>
 </instance>
-<instance part="S2" gate="G$1" x="292.1" y="215.9" smashed="yes" rot="R90">
+<instance part="BUT" gate="G$1" x="292.1" y="215.9" smashed="yes" rot="R90">
 <attribute name="NAME" x="290.576" y="215.9" size="1.778" layer="95" font="vector" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="292.608" y="215.9" size="1.778" layer="96" font="vector" rot="R90" align="top-center"/>
 </instance>
@@ -27215,7 +27215,7 @@ is actually active-low.</text>
 <attribute name="NAME" x="170.18" y="50.8" size="1.778" layer="95"/>
 <attribute name="VALUE" x="170.18" y="48.26" size="1.778" layer="96"/>
 </instance>
-<instance part="JP16" gate="A" x="474.98" y="53.34" smashed="yes">
+<instance part="SERVO" gate="A" x="474.98" y="53.34" smashed="yes">
 <attribute name="NAME" x="468.63" y="59.055" size="1.778" layer="95"/>
 <attribute name="VALUE" x="468.63" y="45.72" size="1.778" layer="96"/>
 </instance>
@@ -27445,7 +27445,7 @@ is actually active-low.</text>
 <junction x="391.16" y="314.96"/>
 </segment>
 <segment>
-<pinref part="JP1" gate="A" pin="3"/>
+<pinref part="SWD" gate="A" pin="3"/>
 <wire x1="111.76" y1="228.6" x2="111.76" y2="215.9" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="228.6" x2="111.76" y2="228.6" width="0.1524" layer="91"/>
 <pinref part="GND5" gate="1" pin="GND"/>
@@ -27507,7 +27507,7 @@ is actually active-low.</text>
 <pinref part="GND9" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="VR1" gate="R?" pin="CW"/>
+<pinref part="CONT" gate="R?" pin="CW"/>
 <pinref part="GND11" gate="1" pin="GND"/>
 <wire x1="454.66" y1="152.4" x2="454.66" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="454.66" y1="154.94" x2="457.2" y2="154.94" width="0.1524" layer="91"/>
@@ -27639,7 +27639,7 @@ is actually active-low.</text>
 <pinref part="GND24" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="S1" gate="G$1" pin="1"/>
+<pinref part="RST" gate="G$1" pin="1"/>
 <pinref part="GND26" gate="1" pin="GND"/>
 <wire x1="180.34" y1="302.26" x2="180.34" y2="309.88" width="0.1524" layer="91"/>
 </segment>
@@ -27650,7 +27650,7 @@ is actually active-low.</text>
 <wire x1="510.54" y1="248.92" x2="510.54" y2="243.84" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="S2" gate="G$1" pin="1"/>
+<pinref part="BUT" gate="G$1" pin="1"/>
 <pinref part="GND25" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -27664,7 +27664,7 @@ is actually active-low.</text>
 <wire x1="358.14" y1="81.28" x2="358.14" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="JP16" gate="A" pin="3"/>
+<pinref part="SERVO" gate="A" pin="3"/>
 <wire x1="472.44" y1="50.8" x2="467.36" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="GND30" gate="1" pin="GND"/>
 <wire x1="467.36" y1="50.8" x2="467.36" y2="43.18" width="0.1524" layer="91"/>
@@ -27754,7 +27754,7 @@ is actually active-low.</text>
 <junction x="391.16" y="332.74"/>
 </segment>
 <segment>
-<pinref part="JP1" gate="A" pin="1"/>
+<pinref part="SWD" gate="A" pin="1"/>
 <wire x1="119.38" y1="233.68" x2="111.76" y2="233.68" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="233.68" x2="111.76" y2="241.3" width="0.1524" layer="91"/>
 <pinref part="+3V3" gate="G$1" pin="+3V3"/>
@@ -27804,7 +27804,7 @@ is actually active-low.</text>
 </net>
 <net name="SWD_SWO" class="0">
 <segment>
-<pinref part="JP1" gate="A" pin="6"/>
+<pinref part="SWD" gate="A" pin="6"/>
 <wire x1="119.38" y1="220.98" x2="88.9" y2="220.98" width="0.1524" layer="91"/>
 <label x="88.9" y="220.98" size="1.778" layer="95"/>
 </segment>
@@ -27816,7 +27816,7 @@ is actually active-low.</text>
 </net>
 <net name="SWD_RSTN" class="0">
 <segment>
-<pinref part="JP1" gate="A" pin="5"/>
+<pinref part="SWD" gate="A" pin="5"/>
 <wire x1="119.38" y1="223.52" x2="88.9" y2="223.52" width="0.1524" layer="91"/>
 <label x="88.9" y="223.52" size="1.778" layer="95"/>
 </segment>
@@ -27828,7 +27828,7 @@ is actually active-low.</text>
 </net>
 <net name="SWD_SWDIO" class="0">
 <segment>
-<pinref part="JP1" gate="A" pin="4"/>
+<pinref part="SWD" gate="A" pin="4"/>
 <wire x1="119.38" y1="226.06" x2="88.9" y2="226.06" width="0.1524" layer="91"/>
 <label x="88.9" y="226.06" size="1.778" layer="95"/>
 </segment>
@@ -27840,7 +27840,7 @@ is actually active-low.</text>
 </net>
 <net name="SWD_SWCLK" class="0">
 <segment>
-<pinref part="JP1" gate="A" pin="2"/>
+<pinref part="SWD" gate="A" pin="2"/>
 <wire x1="119.38" y1="231.14" x2="88.9" y2="231.14" width="0.1524" layer="91"/>
 <label x="88.9" y="231.14" size="1.778" layer="95"/>
 </segment>
@@ -27935,7 +27935,7 @@ is actually active-low.</text>
 <pinref part="P+1" gate="1" pin="+5V"/>
 </segment>
 <segment>
-<pinref part="VR1" gate="R?" pin="CCW"/>
+<pinref part="CONT" gate="R?" pin="CCW"/>
 <pinref part="P+2" gate="1" pin="+5V"/>
 <wire x1="477.52" y1="157.48" x2="477.52" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="477.52" y1="154.94" x2="467.36" y2="154.94" width="0.1524" layer="91"/>
@@ -27990,7 +27990,7 @@ is actually active-low.</text>
 <wire x1="358.14" y1="83.82" x2="358.14" y2="96.52" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="JP16" gate="A" pin="2"/>
+<pinref part="SERVO" gate="A" pin="2"/>
 <wire x1="472.44" y1="53.34" x2="467.36" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="P+14" gate="1" pin="+5V"/>
 <wire x1="467.36" y1="53.34" x2="467.36" y2="71.12" width="0.1524" layer="91"/>
@@ -28038,14 +28038,14 @@ is actually active-low.</text>
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="190.5" y1="124.46" x2="193.04" y2="124.46" width="0.1524" layer="91"/>
-<pinref part="LED1" gate="G$1" pin="C"/>
+<pinref part="TX" gate="G$1" pin="C"/>
 <wire x1="193.04" y1="124.46" x2="193.04" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="FTDI_RXLEDN_R" class="0">
 <segment>
 <pinref part="R4" gate="G$1" pin="1"/>
-<pinref part="LED2" gate="G$1" pin="C"/>
+<pinref part="RX" gate="G$1" pin="C"/>
 <wire x1="190.5" y1="121.92" x2="200.66" y2="121.92" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="121.92" x2="200.66" y2="127" width="0.1524" layer="91"/>
 </segment>
@@ -28053,7 +28053,7 @@ is actually active-low.</text>
 <net name="LCD_CONTRAST" class="0">
 <segment>
 <pinref part="LCD1" gate="G$1" pin="VO"/>
-<pinref part="VR1" gate="R?" pin="WIPER"/>
+<pinref part="CONT" gate="R?" pin="WIPER"/>
 <wire x1="462.28" y1="149.86" x2="462.28" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="462.28" y1="144.78" x2="495.3" y2="144.78" width="0.1524" layer="91"/>
 </segment>
@@ -28447,7 +28447,7 @@ is actually active-low.</text>
 <wire x1="190.5" y1="325.12" x2="200.66" y2="325.12" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="325.12" x2="200.66" y2="304.8" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="304.8" x2="213.36" y2="304.8" width="0.1524" layer="91"/>
-<pinref part="S1" gate="G$1" pin="2"/>
+<pinref part="RST" gate="G$1" pin="2"/>
 <wire x1="180.34" y1="320.04" x2="180.34" y2="325.12" width="0.1524" layer="91"/>
 <junction x="180.34" y="325.12"/>
 <pinref part="R29" gate="G$1" pin="2"/>
@@ -28631,7 +28631,7 @@ is actually active-low.</text>
 <net name="BUTTON" class="0">
 <segment>
 <label x="292.1" y="223.52" size="1.778" layer="95"/>
-<pinref part="S2" gate="G$1" pin="2"/>
+<pinref part="BUT" gate="G$1" pin="2"/>
 <wire x1="292.1" y1="220.98" x2="292.1" y2="223.52" width="0.1524" layer="91"/>
 <pinref part="IC1" gate="PORTA_H" pin="PA15"/>
 <wire x1="292.1" y1="223.52" x2="314.96" y2="223.52" width="0.1524" layer="91"/>
@@ -28727,7 +28727,7 @@ is actually active-low.</text>
 <pinref part="R8" gate="G$1" pin="2"/>
 <pinref part="Q4" gate="G$1" pin="D"/>
 <wire x1="447.04" y1="58.42" x2="447.04" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="JP16" gate="A" pin="1"/>
+<pinref part="SERVO" gate="A" pin="1"/>
 <wire x1="447.04" y1="55.88" x2="447.04" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="472.44" y1="55.88" x2="447.04" y2="55.88" width="0.1524" layer="91"/>
 <junction x="447.04" y="55.88"/>
@@ -28845,11 +28845,11 @@ is actually active-low.</text>
 <junction x="48.26" y="139.7"/>
 </segment>
 <segment>
-<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="TX" gate="G$1" pin="A"/>
 <pinref part="SUPPLY2" gate="G$1" pin="+5V/1"/>
 </segment>
 <segment>
-<pinref part="LED2" gate="G$1" pin="A"/>
+<pinref part="RX" gate="G$1" pin="A"/>
 <pinref part="SUPPLY3" gate="G$1" pin="+5V/1"/>
 </segment>
 <segment>
