@@ -28029,9 +28029,9 @@ is actually active-low.</text>
 <pinref part="R28" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="PORTC_H" pin="PC9"/>
-<wire x1="431.8" y1="238.76" x2="408.94" y2="238.76" width="0.1524" layer="91"/>
-<label x="408.94" y="238.76" size="1.778" layer="95"/>
+<pinref part="IC1" gate="PORTB_H" pin="PB12"/>
+<wire x1="370.84" y1="231.14" x2="347.98" y2="231.14" width="0.1524" layer="91"/>
+<label x="347.98" y="231.14" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="FTDI_TXLEDN_R" class="0">
@@ -28708,13 +28708,6 @@ is actually active-low.</text>
 <label x="363.22" y="233.68" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="PB12" class="0">
-<segment>
-<pinref part="IC1" gate="PORTB_H" pin="PB12"/>
-<wire x1="370.84" y1="231.14" x2="360.68" y2="231.14" width="0.1524" layer="91"/>
-<label x="363.22" y="231.14" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="PC8" class="0">
 <segment>
 <pinref part="IC1" gate="PORTC_H" pin="PC8"/>
@@ -28801,7 +28794,7 @@ is actually active-low.</text>
 <pinref part="R5" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$6" class="0">
+<net name="LCD_K" class="0">
 <segment>
 <pinref part="LCD1" gate="G$1" pin="K"/>
 <pinref part="R5" gate="G$1" pin="2"/>
@@ -28921,6 +28914,27 @@ is actually active-low.</text>
 <wire x1="223.52" y1="50.8" x2="246.38" y2="50.8" width="0.1524" layer="91"/>
 <junction x="223.52" y="50.8"/>
 <label x="246.38" y="50.8" size="1.778" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="PA2" class="0">
+<segment>
+<pinref part="IC1" gate="PORTA_L" pin="PA2"/>
+<wire x1="314.96" y1="266.7" x2="304.8" y2="266.7" width="0.1524" layer="91"/>
+<label x="307.34" y="266.7" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PA3" class="0">
+<segment>
+<pinref part="IC1" gate="PORTA_L" pin="PA3"/>
+<wire x1="314.96" y1="264.16" x2="304.8" y2="264.16" width="0.1524" layer="91"/>
+<label x="307.34" y="264.16" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PC9" class="0">
+<segment>
+<pinref part="IC1" gate="PORTC_H" pin="PC9"/>
+<wire x1="431.8" y1="238.76" x2="421.64" y2="238.76" width="0.1524" layer="91"/>
+<label x="424.18" y="238.76" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
