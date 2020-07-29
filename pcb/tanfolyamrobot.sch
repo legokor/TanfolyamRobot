@@ -26721,7 +26721,7 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="GND28" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="IC5" library="v-reg" library_urn="urn:adsk.eagle:library:409" deviceset="LD117A?*" device="S" package3d_urn="urn:adsk.eagle:package:30370/1" technology="33TR"/>
 <part name="SERVO" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="/90" package3d_urn="urn:adsk.eagle:package:22459/2"/>
-<part name="ENCODER" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X4" device="/90" package3d_urn="urn:adsk.eagle:package:22465/2"/>
+<part name="ENC" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X4" device="/90" package3d_urn="urn:adsk.eagle:package:22465/2"/>
 <part name="P+12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND29" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND30" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -27219,7 +27219,7 @@ is actually active-low.</text>
 <attribute name="NAME" x="468.63" y="59.055" size="1.778" layer="95"/>
 <attribute name="VALUE" x="468.63" y="45.72" size="1.778" layer="96"/>
 </instance>
-<instance part="ENCODER" gate="A" x="347.98" y="83.82" smashed="yes">
+<instance part="ENC" gate="A" x="347.98" y="83.82" smashed="yes">
 <attribute name="NAME" x="341.63" y="92.075" size="1.778" layer="95"/>
 <attribute name="VALUE" x="341.63" y="76.2" size="1.778" layer="96"/>
 </instance>
@@ -27569,7 +27569,7 @@ is actually active-low.</text>
 <wire x1="345.44" y1="81.28" x2="340.36" y2="81.28" width="0.1524" layer="91"/>
 <wire x1="340.36" y1="81.28" x2="340.36" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="GND16" gate="1" pin="GND"/>
-<pinref part="ENCODER" gate="A" pin="7"/>
+<pinref part="ENC" gate="A" pin="7"/>
 </segment>
 <segment>
 <pinref part="GND17" gate="1" pin="GND"/>
@@ -27658,7 +27658,7 @@ is actually active-low.</text>
 <pinref part="GND28" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="ENCODER" gate="A" pin="8"/>
+<pinref part="ENC" gate="A" pin="8"/>
 <wire x1="353.06" y1="81.28" x2="358.14" y2="81.28" width="0.1524" layer="91"/>
 <pinref part="GND29" gate="1" pin="GND"/>
 <wire x1="358.14" y1="81.28" x2="358.14" y2="76.2" width="0.1524" layer="91"/>
@@ -27960,7 +27960,7 @@ is actually active-low.</text>
 <wire x1="340.36" y1="83.82" x2="340.36" y2="96.52" width="0.1524" layer="91"/>
 <wire x1="345.44" y1="83.82" x2="340.36" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="P+6" gate="1" pin="+5V"/>
-<pinref part="ENCODER" gate="A" pin="5"/>
+<pinref part="ENC" gate="A" pin="5"/>
 </segment>
 <segment>
 <pinref part="IC2" gate="G$1" pin="OUT"/>
@@ -27984,7 +27984,7 @@ is actually active-low.</text>
 <pinref part="D7" gate="G$1" pin="C"/>
 </segment>
 <segment>
-<pinref part="ENCODER" gate="A" pin="6"/>
+<pinref part="ENC" gate="A" pin="6"/>
 <wire x1="353.06" y1="83.82" x2="358.14" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="P+12" gate="1" pin="+5V"/>
 <wire x1="358.14" y1="83.82" x2="358.14" y2="96.52" width="0.1524" layer="91"/>
@@ -28292,14 +28292,14 @@ is actually active-low.</text>
 <segment>
 <wire x1="345.44" y1="88.9" x2="335.28" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="R20" gate="G$1" pin="1"/>
-<pinref part="ENCODER" gate="A" pin="1"/>
+<pinref part="ENC" gate="A" pin="1"/>
 </segment>
 </net>
 <net name="ENC1_B_5V" class="0">
 <segment>
 <wire x1="345.44" y1="86.36" x2="335.28" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="R21" gate="G$1" pin="1"/>
-<pinref part="ENCODER" gate="A" pin="3"/>
+<pinref part="ENC" gate="A" pin="3"/>
 </segment>
 </net>
 <net name="MOTOR_FAULTN" class="0">
@@ -28890,14 +28890,14 @@ is actually active-low.</text>
 <segment>
 <wire x1="353.06" y1="86.36" x2="363.22" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="R32" gate="G$1" pin="1"/>
-<pinref part="ENCODER" gate="A" pin="4"/>
+<pinref part="ENC" gate="A" pin="4"/>
 </segment>
 </net>
 <net name="ENC2_A_5V" class="0">
 <segment>
 <wire x1="353.06" y1="88.9" x2="363.22" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="R31" gate="G$1" pin="1"/>
-<pinref part="ENCODER" gate="A" pin="2"/>
+<pinref part="ENC" gate="A" pin="2"/>
 </segment>
 </net>
 <net name="VCC_SENSE" class="0">
