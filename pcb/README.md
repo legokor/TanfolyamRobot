@@ -4,7 +4,7 @@ _Note: schematic net and pin names are formatted like_ `this`.
 
 ## Microcontroller
 
-The main MCU is an STM32F103C8T6 in TQFP64 package. There's an option to add an ESP8266 module which communicates with the main MCU via UART.
+The main MCU is an [STM32F103C8T6](https://www.st.com/resource/en/datasheet/stm32f103c8.pdf) in TQFP64 package. There's an option to add an ESP8266 module which communicates with the main MCU via UART.
 
 **The full STM32 pinout and pin assignments can be found in [STM32F103_pin_assignment.xls](STM32F103_pin_assignment.xls)**
 
