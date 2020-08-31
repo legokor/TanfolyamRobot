@@ -25,38 +25,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include <stm32f4xx.h>
-
 #include "hd44780.h"
-
-#define BKL_FREQ			250000
-#define CON_FREQ			BKL_FREQ
-
-#define HD44780_TIMER 		TIM7
-#define HD44780_CLK_EN		__TIM7_CLK_ENABLE
-#define HD44780_PRIORITY 	1
-#define HD44780_IRQ 		TIM7_IRQn
-#define HD44780_HANDLER		TIM7_IRQHandler
-
-#define BKL_GPIO_EN			__GPIOB_CLK_ENABLE
-#define BKL_GPIO			GPIOB
-#define BKL_PIN				GPIO_PIN_15
-#define BKL_AF 				GPIO_AF9_TIM12
-#define BKL_TIMER 			TIM12
-#define BKL_CHANNEL			TIM_CHANNEL_2
-#define BKL_CLK_EN			__TIM12_CLK_ENABLE
-#define BKL_PERIOD			(HAL_RCC_GetHCLKFreq() /2) / BKL_FREQ
-
-#define CON_GPIO_EN			__GPIOB_CLK_ENABLE
-#define CON_GPIO			GPIOB
-#define CON_PIN				GPIO_PIN_9
-#define CON_AF 				GPIO_AF3_TIM11
-#define CON_TIMER 			TIM11
-#define CON_CHANNEL			TIM_CHANNEL_1
-#define CON_CLK_EN			__TIM11_CLK_ENABLE
-#define CON_PERIOD			HAL_RCC_GetHCLKFreq() / CON_FREQ
-
-#define MAX_CONTRAST		3000
 
 #define NONE 0
 
@@ -101,11 +70,7 @@ typedef struct {
 	uint8_t font;
 } hd44780_conf_type;
 
-void HD44780_HANDLER(void);
-
 static TIM_HandleTypeDef Handle_Lcd;
-static TIM_HandleTypeDef Handle_Brigt;
-static TIM_HandleTypeDef Handle_Con;
 
 static hd44780_conf_type Lcd_Conf;
 static volatile hd44780_task_type Queue[HD44780_QUEUE_SIZE];
@@ -153,7 +118,7 @@ static void set_output(const bool output) {
 	gpio_init.Pin = pins;
 	gpio_init.Mode = dir;
 	gpio_init.Pull = GPIO_NOPULL;
-	gpio_init.Speed = GPIO_SPEED_MEDIUM;
+	gpio_init.Speed = GPIO_SPEED_FREQ_MEDIUM;
 
 	HAL_GPIO_Init(Lcd_Conf.gpio, &gpio_init);
 }
@@ -256,38 +221,6 @@ static void exec(void) {
 			break;
 		}
 	}
-}
-
-/**
- * Set the brightness
- *
- * @param brightness	0-100
- *
- */
-void hd44780_brightness(const uint8_t brightness) {
-
-	uint32_t bright;
-
-	bright = (uint32_t) (100 - brightness);
-	bright *= BKL_PERIOD;
-	bright /= 100;
-	__HAL_TIM_SetCompare(&Handle_Brigt, BKL_CHANNEL, bright);
-}
-
-/**
- * Set the contrast
- *
- * @param contrast	0-100
- *
- */
-void hd44780_contrast(const uint8_t contrast) {
-
-	uint32_t cont;
-
-	cont = (uint32_t) (100 - contrast);
-	cont *= BKL_PERIOD * 2;
-	cont /= 100;
-	__HAL_TIM_SetCompare(&Handle_Con, CON_CHANNEL, cont);
 }
 
 /**
@@ -444,8 +377,9 @@ void hd44780_printf(const char *fmt, ...) {
  */
 void hd44780_init(GPIO_TypeDef *gpio, const uint16_t rs, const uint16_t rw,
 		const uint16_t e, const uint16_t db4, const uint16_t db5,
-		const uint16_t db6, const uint16_t db7, const hd44780_lines_type lines,
-		const hd44780_font_type font) {
+		const uint16_t db6, const uint16_t db7,
+		TIM_TypeDef* timer, IRQn_Type irq, uint32_t irq_priority,
+		const hd44780_lines_type lines, const hd44780_font_type font) {
 
 	assert_param(IS_GPIO_ALL_INSTANCE(gpio));
 	assert_param(IS_GPIO_PIN(rs));
@@ -467,26 +401,12 @@ void hd44780_init(GPIO_TypeDef *gpio, const uint16_t rs, const uint16_t rw,
 	Lcd_Conf.lines = lines;
 	Lcd_Conf.font = font;
 
-	if (gpio == GPIOA)
-		__GPIOA_CLK_ENABLE();
-	else if (gpio == GPIOB)
-		__GPIOB_CLK_ENABLE();
-	else if (gpio == GPIOC)
-		__GPIOC_CLK_ENABLE();
-	else if (gpio == GPIOD)
-		__GPIOD_CLK_ENABLE();
-	else if (gpio == GPIOE)
-		__GPIOE_CLK_ENABLE();
-	else
-		return;
-
 	init_delay();
 
-	HD44780_CLK_EN();
-	HAL_NVIC_SetPriority(HD44780_IRQ, 0, HD44780_PRIORITY);
-	HAL_NVIC_EnableIRQ(HD44780_IRQ);
+	HAL_NVIC_SetPriority(irq, 0, irq_priority);
+	HAL_NVIC_EnableIRQ(irq);
 
-	Handle_Lcd.Instance = HD44780_TIMER;
+	Handle_Lcd.Instance = timer;
 	Handle_Lcd.Init.Period = (62500 / HD44780_QUEUE_FREQ) - 1;
 	Handle_Lcd.Init.Prescaler = ((HAL_RCC_GetHCLKFreq() / 2) / 62500) - 1;
 	Handle_Lcd.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -515,82 +435,7 @@ void hd44780_init(GPIO_TypeDef *gpio, const uint16_t rs, const uint16_t rw,
 	hd44780_home();
 }
 
-/**
- * Initialise the brightness control
- *
- */
-void hd44780_init_brightness(void) {
-
-	GPIO_InitTypeDef gpio;
-	TIM_OC_InitTypeDef oc;
-
-	BKL_GPIO_EN();
-	gpio.Pin = BKL_PIN;
-	gpio.Mode = GPIO_MODE_AF_OD;
-	gpio.Pull = GPIO_NOPULL;
-	gpio.Speed = GPIO_SPEED_MEDIUM;
-	gpio.Alternate = BKL_AF;
-	HAL_GPIO_Init(BKL_GPIO, &gpio);
-
-	BKL_CLK_EN();
-	Handle_Brigt.Instance = BKL_TIMER;
-	Handle_Brigt.Init.Period = BKL_PERIOD;
-	Handle_Brigt.Init.Prescaler = 1 - 1;
-	Handle_Brigt.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	Handle_Brigt.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_PWM_Init(&Handle_Brigt);
-
-	oc.OCMode = TIM_OCMODE_PWM1;
-	oc.OCIdleState = TIM_OCIDLESTATE_SET;
-	oc.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-	oc.Pulse = 0;
-	oc.OCPolarity = TIM_OCPOLARITY_HIGH;
-	oc.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-
-	HAL_TIM_PWM_ConfigChannel(&Handle_Brigt, &oc,
-	BKL_CHANNEL);
-	HAL_TIM_PWM_Start(&Handle_Brigt, BKL_CHANNEL);
-}
-
-/**
- * Initialise the contrast control
- *
- */
-void hd44780_init_contrast(void) {
-
-	GPIO_InitTypeDef gpio;
-	TIM_OC_InitTypeDef oc;
-
-	CON_GPIO_EN();
-	gpio.Pin = CON_PIN;
-	gpio.Mode = GPIO_MODE_AF_OD;
-	gpio.Pull = GPIO_PULLDOWN;
-	gpio.Speed = GPIO_SPEED_MEDIUM;
-	gpio.Alternate = CON_AF;
-	HAL_GPIO_Init(CON_GPIO, &gpio);
-
-	CON_CLK_EN();
-	Handle_Con.Instance = CON_TIMER;
-	Handle_Con.Init.Period = CON_PERIOD;
-	Handle_Con.Init.Prescaler = 1 - 1;
-	Handle_Con.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	Handle_Con.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_PWM_Init(&Handle_Con);
-
-	oc.OCMode = TIM_OCMODE_PWM1;
-	oc.OCIdleState = TIM_OCIDLESTATE_SET;
-	oc.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-	oc.Pulse = 0;
-	oc.OCPolarity = TIM_OCPOLARITY_HIGH;
-	oc.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-
-	HAL_TIM_PWM_ConfigChannel(&Handle_Con, &oc,
-	CON_CHANNEL);
-	HAL_TIM_PWM_Start(&Handle_Con, CON_CHANNEL);
-}
-
-void HD44780_HANDLER(void) {
-
+void hd44780_handler(void) {
 	exec();
 	HAL_TIM_IRQHandler(&Handle_Lcd);
 }

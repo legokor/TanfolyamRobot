@@ -26,7 +26,7 @@
 #define __HD44780_H
 
 #include <stdbool.h>
-#include "stm32f4xx.h"
+#include "stm32f1xx.h"
 
 #define HD44780_QUEUE_FREQ  5000	/**< Update Frequency */
 #define HD44780_QUEUE_SIZE  500		/**< Queue Size */
@@ -47,8 +47,6 @@ typedef enum {
 	HD44780_FONT_5x10 = 0x04 		/**< Large Font */
 } hd44780_font_type;
 
-void hd44780_brightness(const uint8_t brightness);
-void hd44780_contrast(const uint8_t contrast);
 void hd44780_clear(void);
 void hd44780_home(void);
 void hd44780_display(const bool enable, const bool cursor, const bool blink);
@@ -59,10 +57,10 @@ void hd44780_print(const char* string);
 void hd44780_printf(const char *fmt, ...);
 void hd44780_init(GPIO_TypeDef* port, const uint16_t rs, const uint16_t rw,
 		const uint16_t e, const uint16_t db4, const uint16_t db5,
-		const uint16_t db6, const uint16_t db7, const hd44780_lines_type lines,
-		const hd44780_font_type font);
-void hd44780_init_brightness();
-void hd44780_init_contrast();
+		const uint16_t db6, const uint16_t db7,
+		TIM_TypeDef* timer, IRQn_Type irq, uint32_t irq_priority,
+		const hd44780_lines_type lines, const hd44780_font_type font);
+void hd44780_handler(void);
 
 #endif
 
