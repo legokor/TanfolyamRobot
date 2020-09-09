@@ -209,7 +209,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     PB14     ------> TIM1_CH2N
     PB15     ------> TIM1_CH3N 
     */
-    GPIO_InitStruct.Pin = TIM1_CH1N_MOTOR2_PWM1_Pin|TIM1_CH1N_MOTOR1_PWM1_Pin|TIM1_CH3N_SERVO_PWM_Pin;
+    GPIO_InitStruct.Pin = TIM1_CH1N_MOTOR2_PWM1_Pin|TIM1_CH2N_MOTOR1_PWM1_Pin|TIM1_CH3N_SERVO_PWM_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
