@@ -7,14 +7,16 @@
 #ifndef LCD_LCD_H_
 #define LCD_LCD_H_
 
-#include "hd44780.h"
+#include <stdint.h>
+#include "stm32f1xx_hal.h"
 
-void lcdInit(GPIO_TypeDef *port,
-             uint16_t pinRs, uint16_t pinRw, uint16_t pinE,
-             uint16_t pinD4, uint16_t pinD5, uint16_t pinD6, uint16_t pinD7,
-             TIM_TypeDef* timer, IRQn_Type irq,
-             uint8_t numOfLines);
-void lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
-void lcdIrqHandler();
+void lcdInit(GPIO_TypeDef *lcdRstPort, uint16_t lcdRstPin, GPIO_TypeDef *lcdEnPort, uint16_t lcdEnPin,
+             GPIO_TypeDef *lcdD4Port, uint16_t lcdD4Pin, GPIO_TypeDef *lcdD5Port, uint16_t lcdD5Pin,
+             GPIO_TypeDef *lcdD6Port, uint16_t lcdD6Pin, GPIO_TypeDef *lcdD7Port, uint16_t lcdD7Pin,
+             uint8_t lcdRows, uint8_t lcdCols);
+int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
+int lcdPuts(uint8_t row, uint8_t col, const char *str);
+int lcdClear();
+void lcdHandler();
 
 #endif /* LCD_LCD_H_ */
