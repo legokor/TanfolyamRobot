@@ -287,7 +287,10 @@ int lcdPuts(uint8_t row, uint8_t col, const char *str) {
  * @return 0 on success
  */
 int lcdClear() {
-    lcdAddCmd(HD44780_CLEARDISPLAY);
+    int err = lcdAddCmd(HD44780_CLEARDISPLAY);
+    if (err) {
+        return err;
+    }
     lcdDelayMs(5);
 }
 
