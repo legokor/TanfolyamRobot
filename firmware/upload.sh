@@ -5,4 +5,9 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 
-stm32flash -w Debug/tanfolyamrobot.bin -v -g 0x0 $1
+stty -F $1 115200
+
+echo -n ENTER_DFU > $1
+sleep 0.1
+
+stm32flash -b 115200 -w Debug/tanfolyamrobot.bin -v -g 0x0 $1
