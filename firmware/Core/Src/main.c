@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "lcd.h"
+#include "dfu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,6 +35,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DFU_MAGIC_WORD     "LEGO"
+#define DFU_NON_MAGIC_WORD "NOPE"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -85,6 +88,23 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+  /*
+   * Reboot into DFU if the magic word is set
+   */
+  if (checkMagicWord(DFU_MAGIC_WORD)) {
+      setMagicWord(DFU_NON_MAGIC_WORD);
+      enterDfuMode();
+  }
+
+  /*
+   * When leaving DFU, the non-magic word is set
+   */
+  uint8_t exitDfu = 0;
+  if (checkMagicWord(DFU_NON_MAGIC_WORD)) {
+      setMagicWord("\x00\x00\x00\x00");
+      exitDfu = 1;
+  }
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -121,10 +141,23 @@ int main(void)
           LCD_D6_GPIO_Port, LCD_D6_Pin, LCD_D7_GPIO_Port, LCD_D7_Pin,
           lcdRows, lcdCols);
 
+  if (exitDfu) {
+      lcdPrintf(0, 0, "Exit DFU mode...");
+      HAL_Delay(800);
+      lcdClear();
+  }
+
   lcdPrintf(0, 4, "LEGO");
   lcdPrintf(1, 8, "K%cR", 239);
   HAL_Delay(2000);
   lcdClear();
+
+  // TODO: This is a DFU demo. Remove it.
+  HAL_Delay(2000);
+  lcdPrintf(0, 0, "Enter DFU mode..");
+  HAL_Delay(100);
+  rebootIntoDfu(DFU_MAGIC_WORD);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
