@@ -37,6 +37,7 @@
 /* USER CODE BEGIN PD */
 #define DFU_MAGIC_WORD     "LEGO"
 #define DFU_NON_MAGIC_WORD "NOPE"
+#define UART_DFU_COMMAND   "ENTER_DFU"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -56,6 +57,11 @@ UART_HandleTypeDef huart3;
 /* USER CODE BEGIN PV */
 const uint8_t lcdRows = 2;
 const uint8_t lcdCols = 16;
+
+const char uartDfuCommand[] = UART_DFU_COMMAND;
+const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
+uint8_t uartDfuRequest = 0;
+uint8_t uartRxData;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,6 +82,28 @@ static void MX_USART3_UART_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim == &htim4) {
         lcdHandler();
+    }
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
+    static uint8_t dfuReceived = 0;
+
+    if (huart == &huart1) {
+        /*
+         * Parse UART DFU command
+         */
+        if (uartRxData == uartDfuCommand[dfuReceived]) {
+            dfuReceived++;
+        } else {
+            dfuReceived = 0;
+        }
+        if (dfuReceived == uartDfuCommandLen) {
+            dfuReceived = 0;
+            uartDfuRequest = 1;
+        }
+
+        // Receive next byte
+        HAL_UART_Receive_IT(&huart1, &uartRxData, 1);
     }
 }
 /* USER CODE END 0 */
@@ -133,6 +161,7 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim4);
+  HAL_UART_Receive_IT(&huart1, &uartRxData, 1);
 
   HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, GPIO_PIN_SET);
 
@@ -152,18 +181,17 @@ int main(void)
   HAL_Delay(2000);
   lcdClear();
 
-  // TODO: This is a DFU demo. Remove it.
-  HAL_Delay(2000);
-  lcdPrintf(0, 0, "Enter DFU mode..");
-  HAL_Delay(100);
-  rebootIntoDfu(DFU_MAGIC_WORD);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      if (uartDfuRequest) {
+          lcdPrintf(0, 4, "DFU mode");
+          HAL_Delay(100);
+          rebootIntoDfu(DFU_MAGIC_WORD);
+      }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
