@@ -2,8 +2,8 @@ Debug/
 Release/
 
 # CubeIDE launch configurations
-*.launch
-*.cfg
+/*.launch
+/*.cfg
 
 # Prerequisites
 *.d
