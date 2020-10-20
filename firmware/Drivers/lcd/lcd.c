@@ -292,6 +292,8 @@ int lcdClear() {
         return err;
     }
     lcdDelayMs(5);
+
+    return 0;
 }
 
 /**
