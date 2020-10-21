@@ -26,6 +26,7 @@
 #include <string.h>
 #include "lcd.h"
 #include "dfu.h"
+#include "color_sensor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -82,6 +83,16 @@ static void MX_USART3_UART_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim == &htim4) {
         lcdHandler();
+    }
+}
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+    if (htim == &htim4) {
+        if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3) {
+            uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+
+            colorSensorCaptureHandler(captureVal);
+        }
     }
 }
 
@@ -181,6 +192,10 @@ int main(void)
   HAL_Delay(2000);
   lcdClear();
 
+  colorSensorInit(COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
+                  COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
+                  16);
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -444,9 +459,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 640;
+  htim4.Init.Prescaler = 32;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 100;
+  htim4.Init.Period = 0xffff;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_IC_Init(&htim4) != HAL_OK)
