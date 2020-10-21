@@ -61,8 +61,9 @@ const uint8_t lcdCols = 16;
 
 const char uartDfuCommand[] = UART_DFU_COMMAND;
 const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
-uint8_t uartDfuRequest = 0;
-uint8_t uartRxData;
+volatile uint8_t uartDfuRequest = 0;
+volatile uint8_t uartRxData;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
