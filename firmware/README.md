@@ -27,3 +27,4 @@ TODO: check if `stm32flash` works
  - [[PM0075] STM32F103 Programming manual](https://www.st.com/resource/en/programming_manual/cd00283419-stm32f10xxx-flash-memory-microcontrollers-stmicroelectronics.pdf)
  - [[AN2606] STM32 microcontroller system memory boot mode](https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf)
  - [[AN3155] USART protocol used in the STM32 bootloader](https://www.st.com/resource/en/application_note/cd00264342-usart-protocol-used-in-the-stm32-bootloader-stmicroelectronics.pdf)
+ - [TCS3200 color sensor datasheet](https://www.mouser.com/catalog/specsheets/tcs3200-e11.pdf)
