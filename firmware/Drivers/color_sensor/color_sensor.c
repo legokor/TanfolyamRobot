@@ -84,7 +84,7 @@ void colorSensorCaptureHandler(uint16_t captureVal) {
  */
 void colorSensorInit(GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS1Port, uint16_t csS1Pin,
                      GPIO_TypeDef *csS2Port, uint16_t csS2Pin, GPIO_TypeDef *csS3Port, uint16_t csS3Pin,
-                     uin16_t inputFiltering) {
+                     uint16_t inputFiltering) {
     s0Port = csS0Port;
     s1Port = csS1Port;
     s2Port = csS2Port;

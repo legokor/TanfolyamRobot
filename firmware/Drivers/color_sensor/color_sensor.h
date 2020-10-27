@@ -13,7 +13,7 @@
 
 void colorSensorInit(GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS1Port, uint16_t csS1Pin,
                      GPIO_TypeDef *csS2Port, uint16_t csS2Pin, GPIO_TypeDef *csS3Port, uint16_t csS3Pin,
-                     uin16_t inputFiltering);
+                     uint16_t inputFiltering);
 void colorSensorCaptureHandler(uint16_t captureVal);
 void colorSensorGetPeriods(uint16_t* capRed, uint16_t* capGreen, uint16_t* capBlue, uint16_t* capClear);
 
