@@ -27,6 +27,7 @@
 #include "lcd.h"
 #include "dfu.h"
 #include "color_sensor.h"
+#include "encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -63,6 +64,8 @@ const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
 volatile uint8_t uartDfuRequest = 0;
 volatile uint8_t uartRxData;
 
+volatile Encoder encoder1;
+volatile Encoder encoder2;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,6 +119,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
         HAL_UART_Receive_IT(&huart1, &uartRxData, 1);
     }
 }
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    switch (GPIO_Pin) {
+        case ENC1_A_Pin: encoderHandlerA(&encoder1); break;
+        case ENC1_B_Pin: encoderHandlerB(&encoder1); break;
+        case ENC2_A_Pin: encoderHandlerA(&encoder2); break;
+        case ENC2_B_Pin: encoderHandlerB(&encoder2); break;
+    }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -193,6 +206,10 @@ int main(void)
   colorSensorInit(COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
+
+  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, EncoderResolution_4, +1);
+  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, EncoderResolution_4, -1);
+
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
