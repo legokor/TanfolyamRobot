@@ -135,12 +135,13 @@ void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim_ic)
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**TIM4 GPIO Configuration
+    PB6     ------> TIM4_CH1
     PB8     ------> TIM4_CH3
     */
-    GPIO_InitStruct.Pin = TIM4_CH3_COLOR_Pin;
+    GPIO_InitStruct.Pin = TIM4_CH1_US_ECHO_Pin|TIM4_CH3_COLOR_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(TIM4_CH3_COLOR_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* TIM4 interrupt Init */
     HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
@@ -247,9 +248,10 @@ void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim_ic)
     __HAL_RCC_TIM4_CLK_DISABLE();
 
     /**TIM4 GPIO Configuration
+    PB6     ------> TIM4_CH1
     PB8     ------> TIM4_CH3
     */
-    HAL_GPIO_DeInit(TIM4_CH3_COLOR_GPIO_Port, TIM4_CH3_COLOR_Pin);
+    HAL_GPIO_DeInit(GPIOB, TIM4_CH1_US_ECHO_Pin|TIM4_CH3_COLOR_Pin);
 
     /* TIM4 interrupt DeInit */
     HAL_NVIC_DisableIRQ(TIM4_IRQn);
