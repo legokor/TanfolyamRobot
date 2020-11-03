@@ -110,8 +110,8 @@ void Error_Handler(void);
 #define COLOR_S3_GPIO_Port GPIOB
 #define COLOR_S2_Pin GPIO_PIN_5
 #define COLOR_S2_GPIO_Port GPIOB
-#define US_ECHO_Pin GPIO_PIN_6
-#define US_ECHO_GPIO_Port GPIOB
+#define TIM4_CH1_US_ECHO_Pin GPIO_PIN_6
+#define TIM4_CH1_US_ECHO_GPIO_Port GPIOB
 #define US_TRIG_Pin GPIO_PIN_7
 #define US_TRIG_GPIO_Port GPIOB
 #define TIM4_CH3_COLOR_Pin GPIO_PIN_8
