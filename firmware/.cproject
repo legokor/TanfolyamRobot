@@ -49,6 +49,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/lcd/"/>
 									<listOptionValue builtIn="false" value="../Drivers/color_sensor/"/>
 									<listOptionValue builtIn="false" value="../Drivers/encoder/"/>
+									<listOptionValue builtIn="false" value="../Drivers/ultrasonic/"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.133896599" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -131,6 +132,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/lcd/"/>
 									<listOptionValue builtIn="false" value="../Drivers/color_sensor/"/>
 									<listOptionValue builtIn="false" value="../Drivers/encoder/"/>
+									<listOptionValue builtIn="false" value="../Drivers/ultrasonic/"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1181318450" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

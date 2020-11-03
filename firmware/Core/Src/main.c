@@ -28,6 +28,7 @@
 #include "dfu.h"
 #include "color_sensor.h"
 #include "encoder.h"
+#include "ultrasonic.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,6 +41,8 @@
 #define DFU_MAGIC_WORD     "LEGO"
 #define DFU_NON_MAGIC_WORD "NOPE"
 #define UART_DFU_COMMAND   "ENTER_DFU"
+
+#define TIM4_FREQUENCY_HZ (2*1000*1000)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -66,6 +69,9 @@ volatile uint8_t uartRxData;
 
 volatile Encoder encoder1;
 volatile Encoder encoder2;
+
+volatile UltraSonic us;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,10 +96,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
     if (htim == &htim4) {
-        if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3) {
-            uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
-
-            colorSensorCaptureHandler(captureVal);
+        switch (htim->Channel) {
+            case HAL_TIM_ACTIVE_CHANNEL_1 : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+                usHandlerRisingCapture(&us, captureVal);
+                break;
+            }
+            case HAL_TIM_ACTIVE_CHANNEL_2 : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+                usHandlerFallingCapture(&us, captureVal);
+                break;
+            }
+            case HAL_TIM_ACTIVE_CHANNEL_3 : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+                colorSensorCaptureHandler(captureVal);
+                break;
+            }
+            default: break;  // only needed to suppress unhandled enum value warning
         }
     }
 }
@@ -210,6 +229,10 @@ int main(void)
   encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, EncoderResolution_4, +1);
   encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, EncoderResolution_4, -1);
 
+  usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin, &htim4, TIM4_FREQUENCY_HZ, &htim4, TIM4_FREQUENCY_HZ);
+
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_2);
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
