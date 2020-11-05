@@ -5,6 +5,24 @@
  *      Author: ksstms
  *
  * Use this library to access the STM32F103's built-in Device Firmware Updater.
+ *
+ * All peripherals and device configs must be set to their default startup values before jumping to
+ * the DFU code. It's a lot easier to jump there at the start of the main function before any device
+ * initialization. Therefore this lib uses the backup registers to store a magic word, then resets
+ * the CPU. At the beginning of main() the backup registers can be checked to determine if there was
+ * a DFU request.
+ *
+ * Example:
+ *     - Put this in the main function:
+ *         int main(void) {
+ *             if (checkMagicWord(<magic word>)) {
+ *                 setMagicWord(<not the magic word>);
+ *                 enterDfuMode();
+ *             }
+ *             ...
+ *         }
+ *
+ *     - Call this: rebootIntoDfu(<magic word>);
  */
 
 #include "stm32f1xx_hal.h"
