@@ -3,6 +3,10 @@
  *
  *  Created on: Nov 4, 2020
  *      Author: ksstms
+ *
+ * This driver makes it easier to handle PWM outputs.
+ * It only starts the PWM channel and provides functions for setting the output compare register.
+ * All other configuration must be done in CubeMX.
  */
 #include "pwm.h"
 #include <stdlib.h>
