@@ -3,6 +3,10 @@
  *
  *  Created on: Nov 5, 2020
  *      Author: ksstms
+ *
+ * This driver uses the PWM driver to generate the control signal for servo motors.
+ * Most servos need a 50 Hz PWM signal with pulse width between 1 and 2 ms.
+ * 1 ms sets the position to -90 degrees, and 2 ms to +90 degrees.
  */
 #include "servo.h"
 #include <stdlib.h>
