@@ -26726,7 +26726,7 @@ Source: http://www.infineon.com/upload/Document/cmc_upload/documents/011/3655/BS
 <part name="GND29" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND30" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="Q4" library="transistor-small-signal" library_urn="urn:adsk.eagle:library:401" deviceset="BSS123" device="" package3d_urn="urn:adsk.eagle:package:28738/2"/>
-<part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7"/>
+<part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="330R"/>
 <part name="P+13" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="P+14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND31" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -26802,6 +26802,8 @@ the RESET and/or BOOT0 circuitry</text>
 required for the used module</text>
 <text x="480.06" y="228.6" size="1.778" layer="97">The ESP8266's reset signal 
 is actually active-low.</text>
+<text x="426.72" y="58.42" size="1.778" layer="150">The signal pin can draw some current,
+so a low resistance pullup is needed</text>
 </plain>
 <instances>
 <instance part="IC1" gate="PORTA_L" x="322.58" y="264.16" smashed="yes">
@@ -27215,9 +27217,9 @@ is actually active-low.</text>
 <attribute name="NAME" x="170.18" y="50.8" size="1.778" layer="95"/>
 <attribute name="VALUE" x="170.18" y="48.26" size="1.778" layer="96"/>
 </instance>
-<instance part="SERVO" gate="A" x="474.98" y="53.34" smashed="yes">
-<attribute name="NAME" x="468.63" y="59.055" size="1.778" layer="95"/>
-<attribute name="VALUE" x="468.63" y="45.72" size="1.778" layer="96"/>
+<instance part="SERVO" gate="A" x="500.38" y="50.8" smashed="yes">
+<attribute name="NAME" x="494.03" y="56.515" size="1.778" layer="95"/>
+<attribute name="VALUE" x="494.03" y="43.18" size="1.778" layer="96"/>
 </instance>
 <instance part="ENC" gate="A" x="347.98" y="83.82" smashed="yes">
 <attribute name="NAME" x="341.63" y="92.075" size="1.778" layer="95"/>
@@ -27229,25 +27231,25 @@ is actually active-low.</text>
 <instance part="GND29" gate="1" x="358.14" y="73.66" smashed="yes">
 <attribute name="VALUE" x="355.6" y="71.12" size="1.778" layer="96"/>
 </instance>
-<instance part="GND30" gate="1" x="467.36" y="40.64" smashed="yes">
-<attribute name="VALUE" x="464.82" y="38.1" size="1.778" layer="96"/>
+<instance part="GND30" gate="1" x="490.22" y="38.1" smashed="yes">
+<attribute name="VALUE" x="487.68" y="35.56" size="1.778" layer="96"/>
 </instance>
-<instance part="Q4" gate="G$1" x="447.04" y="48.26" smashed="yes">
-<attribute name="NAME" x="449.58" y="48.26" size="1.778" layer="95"/>
-<attribute name="VALUE" x="449.58" y="45.72" size="1.778" layer="96"/>
+<instance part="Q4" gate="G$1" x="474.98" y="45.72" smashed="yes">
+<attribute name="NAME" x="477.52" y="45.72" size="1.778" layer="95"/>
+<attribute name="VALUE" x="477.52" y="43.18" size="1.778" layer="96"/>
 </instance>
-<instance part="R8" gate="G$1" x="447.04" y="63.5" smashed="yes" rot="R270">
-<attribute name="NAME" x="448.5386" y="67.31" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="443.738" y="67.31" size="1.778" layer="96" rot="R270"/>
+<instance part="R8" gate="G$1" x="474.98" y="60.96" smashed="yes" rot="R270">
+<attribute name="NAME" x="476.4786" y="64.77" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="471.678" y="64.77" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="P+13" gate="1" x="447.04" y="73.66" smashed="yes">
-<attribute name="VALUE" x="444.5" y="68.58" size="1.778" layer="96" rot="R90"/>
+<instance part="P+13" gate="1" x="474.98" y="71.12" smashed="yes">
+<attribute name="VALUE" x="472.44" y="66.04" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="P+14" gate="1" x="467.36" y="73.66" smashed="yes">
-<attribute name="VALUE" x="464.82" y="68.58" size="1.778" layer="96" rot="R90"/>
+<instance part="P+14" gate="1" x="490.22" y="71.12" smashed="yes">
+<attribute name="VALUE" x="487.68" y="66.04" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="GND31" gate="1" x="447.04" y="40.64" smashed="yes">
-<attribute name="VALUE" x="444.5" y="38.1" size="1.778" layer="96"/>
+<instance part="GND31" gate="1" x="474.98" y="38.1" smashed="yes">
+<attribute name="VALUE" x="472.44" y="35.56" size="1.778" layer="96"/>
 </instance>
 <instance part="GND32" gate="1" x="474.98" y="81.28" smashed="yes">
 <attribute name="VALUE" x="472.44" y="78.74" size="1.778" layer="96"/>
@@ -27665,9 +27667,9 @@ is actually active-low.</text>
 </segment>
 <segment>
 <pinref part="SERVO" gate="A" pin="3"/>
-<wire x1="472.44" y1="50.8" x2="467.36" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="497.84" y1="48.26" x2="490.22" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="GND30" gate="1" pin="GND"/>
-<wire x1="467.36" y1="50.8" x2="467.36" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="490.22" y1="48.26" x2="490.22" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="Q4" gate="G$1" pin="S"/>
@@ -27991,14 +27993,14 @@ is actually active-low.</text>
 </segment>
 <segment>
 <pinref part="SERVO" gate="A" pin="2"/>
-<wire x1="472.44" y1="53.34" x2="467.36" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="497.84" y1="50.8" x2="490.22" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="P+14" gate="1" pin="+5V"/>
-<wire x1="467.36" y1="53.34" x2="467.36" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="490.22" y1="50.8" x2="490.22" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="R8" gate="G$1" pin="1"/>
 <pinref part="P+13" gate="1" pin="+5V"/>
-<wire x1="447.04" y1="71.12" x2="447.04" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="474.98" y1="68.58" x2="474.98" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="P+15" gate="1" pin="+5V"/>
@@ -28726,18 +28728,18 @@ is actually active-low.</text>
 <segment>
 <pinref part="R8" gate="G$1" pin="2"/>
 <pinref part="Q4" gate="G$1" pin="D"/>
-<wire x1="447.04" y1="58.42" x2="447.04" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="474.98" y1="55.88" x2="474.98" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="SERVO" gate="A" pin="1"/>
-<wire x1="447.04" y1="55.88" x2="447.04" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="472.44" y1="55.88" x2="447.04" y2="55.88" width="0.1524" layer="91"/>
-<junction x="447.04" y="55.88"/>
+<wire x1="474.98" y1="53.34" x2="474.98" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="497.84" y1="53.34" x2="474.98" y2="53.34" width="0.1524" layer="91"/>
+<junction x="474.98" y="53.34"/>
 </segment>
 </net>
 <net name="SERVO" class="0">
 <segment>
 <pinref part="Q4" gate="G$1" pin="G"/>
-<wire x1="441.96" y1="45.72" x2="419.1" y2="45.72" width="0.1524" layer="91"/>
-<label x="419.1" y="45.72" size="1.778" layer="95"/>
+<wire x1="469.9" y1="43.18" x2="447.04" y2="43.18" width="0.1524" layer="91"/>
+<label x="447.04" y="43.18" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="PORTB_H" pin="PB15"/>
