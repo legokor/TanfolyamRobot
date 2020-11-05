@@ -4916,7 +4916,7 @@ design rules under a new name.</description>
 <attribute name="POPULARITY" value="21" x="10.16" y="23.495" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="VALUE" x="13.335" y="21.59" size="1.27" layer="27" rot="R90"/>
 </element>
-<element name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="4K7" x="10.16" y="27.305" smashed="yes">
+<element name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="330R" x="10.16" y="27.305" smashed="yes">
 <attribute name="NAME" x="6.35" y="26.67" size="1.016" layer="25" font="vector" ratio="17"/>
 <attribute name="POPULARITY" value="70" x="10.16" y="27.305" size="1.778" layer="27" display="off"/>
 <attribute name="SPICEPREFIX" value="R" x="10.16" y="27.305" size="1.778" layer="27" display="off"/>
