@@ -29,6 +29,7 @@
 #include "color_sensor.h"
 #include "encoder.h"
 #include "ultrasonic.h"
+#include "servo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,6 +44,9 @@
 #define UART_DFU_COMMAND   "ENTER_DFU"
 
 #define TIM4_FREQUENCY_HZ (2*1000*1000)
+
+#define SERVO_START_POS 620   // TODO: calibrate endpoints
+#define SERVO_END_POS   155
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -73,6 +77,7 @@ volatile Encoder encoder2;
 
 volatile UltraSonic us;
 
+Servo* servo;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -238,6 +243,9 @@ int main(void)
 
   HAL_Delay(2000);
   lcdClear();
+
+  servo = servoCreate(&htim1, TIM_CHANNEL_3, 5120, PwmOutput_N, SERVO_START_POS, SERVO_END_POS);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
