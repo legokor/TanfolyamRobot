@@ -309,7 +309,9 @@ void lcdHandler() {
         enPinState = 0;
     } else {
         uint8_t cmd;
+        __disable_irq();
         int err = circularBufferRead(&transferBuf, &cmd);
+        __enable_irq();
 
         if (!err) {
             HAL_GPIO_WritePin(rsPort, rsPin, (GPIO_PinState)(cmd & (1 << 7)));
@@ -368,7 +370,11 @@ static int8_t lcdAdd4BitTransfer(uint8_t val, TransferType type) {
     val &= 0x0F;
     val = val | (type << 7);
 
-    return circularBufferWrite(&transferBuf, val);
+    __disable_irq();
+    int8_t e = circularBufferWrite(&transferBuf, val);
+    __enable_irq();
+
+    return e;
 }
 
 /**
