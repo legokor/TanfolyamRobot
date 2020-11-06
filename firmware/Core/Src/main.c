@@ -275,6 +275,7 @@ int main(void)
   while (1)
   {
       if (uartDfuRequest) {
+          lcdClear();
           lcdPrintf(0, 4, "DFU mode");
           HAL_Delay(100);
           rebootIntoDfu(DFU_MAGIC_WORD);
