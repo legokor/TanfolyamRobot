@@ -208,6 +208,29 @@ void lcdInit(GPIO_TypeDef *lcdRsPort, uint16_t lcdRsPin, GPIO_TypeDef *lcdEnPort
     lcdState.initialized = 1;
 }
 
+/**
+ * Write a custom character in the LCD's CGRAM
+ * @note CGRAM is located at character address 0-7, and they are duplicated at 8-15
+ * @param address index of the character 0-7
+ * @param character 8 rows of 5 bits
+ * @return 0 on success
+ */
+int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]) {
+    if (address >= 8) {
+        return -1;
+    }
+
+    address *= 8;
+    lcdAddCmd(HD44780_SETCGRAMADDR | address);
+
+    for (uint8_t i=0; i<8; i++) {
+        lcdAddData(character[i]);
+    }
+
+    lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
+
+    return 0;
+}
 
 /**
  * Works just like printf after the position specifiers
@@ -280,6 +303,21 @@ int lcdPuts(uint8_t row, uint8_t col, const char *str) {
     }
 
     return printedChars;
+}
+
+/**
+ * Put a single character on the LCD
+ * @param row of position
+ * @param col of position
+ * @param c character to be displayed
+ */
+int lcdPutc(uint8_t row, uint8_t col, char c) {
+    int err = lcdSetCursor(row, col);
+    if (err) {
+        return err;
+    }
+
+    return lcdAddData(c);
 }
 
 /**
