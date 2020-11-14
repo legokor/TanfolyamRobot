@@ -115,8 +115,9 @@ uint16_t d7Pin;
 /*
  * Private functions
  */
-static void lcdCmd4Bit(uint8_t cmd);
+static void lcdSend4Bit(uint8_t data, TransferType type);
 static void lcdCmd(uint8_t cmd);
+static void lcdData(uint8_t data);
 static void lcdDelayMs(uint8_t ms);
 static int8_t lcdAdd4BitTransfer(uint8_t val, TransferType type);
 static int8_t lcdAddCmd(uint8_t cmd);
@@ -184,11 +185,11 @@ void lcdInit(GPIO_TypeDef *lcdRsPort, uint16_t lcdRsPin, GPIO_TypeDef *lcdEnPort
 
     // Try to set 4bit mode
     for (uint8_t i=0; i<3; i++) {
-        lcdCmd4Bit(0x03);
+        lcdSend4Bit(0x03, TransferType_Command);
         lcdDelayMs(5);
     }
     // Set 4-bit interface
-    lcdCmd4Bit(0x02);
+    lcdSend4Bit(0x02, TransferType_Command);
     lcdDelayMs(5);
 
     // Set functions
@@ -329,13 +330,13 @@ void lcdHandler() {
  * Blocking function to send a 4-bit command
  * @param cmd 4-bit command
  */
-static void lcdCmd4Bit(uint8_t cmd) {
-    HAL_GPIO_WritePin(rsPort, rsPin, (GPIO_PinState)(cmd & (TransferType_Command << 7)));
+static void lcdSend4Bit(uint8_t data, TransferType type) {
+    HAL_GPIO_WritePin(rsPort, rsPin, type);
 
-    HAL_GPIO_WritePin(d7Port, d7Pin, (GPIO_PinState)(cmd & (1 << 3)));
-    HAL_GPIO_WritePin(d6Port, d6Pin, (GPIO_PinState)(cmd & (1 << 2)));
-    HAL_GPIO_WritePin(d5Port, d5Pin, (GPIO_PinState)(cmd & (1 << 1)));
-    HAL_GPIO_WritePin(d4Port, d4Pin, (GPIO_PinState)(cmd & (1 << 0)));
+    HAL_GPIO_WritePin(d7Port, d7Pin, (GPIO_PinState)(data & (1 << 3)));
+    HAL_GPIO_WritePin(d6Port, d6Pin, (GPIO_PinState)(data & (1 << 2)));
+    HAL_GPIO_WritePin(d5Port, d5Pin, (GPIO_PinState)(data & (1 << 1)));
+    HAL_GPIO_WritePin(d4Port, d4Pin, (GPIO_PinState)(data & (1 << 0)));
 
     HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_SET);
     lcdDelayMs(1);
@@ -348,8 +349,17 @@ static void lcdCmd4Bit(uint8_t cmd) {
  * @param cmd 8-bit command
  */
 static void lcdCmd(uint8_t cmd) {
-    lcdCmd4Bit(cmd >> 4);
-    lcdCmd4Bit(cmd & 0x0F);
+    lcdSend4Bit(cmd >> 4,   TransferType_Command);
+    lcdSend4Bit(cmd & 0x0F, TransferType_Command);
+}
+
+/**
+ * Blocking function to send an 8-bit data
+ * @param data 8-bit data
+ */
+static void lcdData(uint8_t data) {
+    lcdSend4Bit(data >> 4,   TransferType_Data);
+    lcdSend4Bit(data & 0x0F, TransferType_Data);
 }
 
 /**
