@@ -14,8 +14,10 @@ void lcdInit(GPIO_TypeDef *lcdRstPort, uint16_t lcdRstPin, GPIO_TypeDef *lcdEnPo
              GPIO_TypeDef *lcdD4Port, uint16_t lcdD4Pin, GPIO_TypeDef *lcdD5Port, uint16_t lcdD5Pin,
              GPIO_TypeDef *lcdD6Port, uint16_t lcdD6Pin, GPIO_TypeDef *lcdD7Port, uint16_t lcdD7Pin,
              uint8_t lcdRows, uint8_t lcdCols);
+int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]);
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
 int lcdPuts(uint8_t row, uint8_t col, const char *str);
+int lcdPutc(uint8_t row, uint8_t col, char c);
 int lcdClear();
 void lcdHandler();
 
