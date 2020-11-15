@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "lcd.h"
+#include "battery_indicator.h"
 #include "dfu.h"
 #include "color_sensor.h"
 #include "encoder.h"
@@ -249,6 +250,8 @@ int main(void)
       lcdClear();
   }
 
+  batteryIndicatorInit();
+
   lcdPrintf(0, 4, "LEGO");
   lcdPrintf(1, 8, "K%cR", 239);
 
@@ -287,6 +290,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+      batteryIndicatorDisplay(0, 15, batteryVoltage); // TODO: move this to some housekeeping function
+      HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
