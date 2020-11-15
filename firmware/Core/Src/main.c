@@ -44,12 +44,30 @@
 #define DFU_NON_MAGIC_WORD "NOPE"
 #define UART_DFU_COMMAND   "ENTER_DFU"
 
-#define TIM4_FREQUENCY_HZ (2*1000*1000)
+#define LCD_TIMER (&htim2)
 
-#define SERVO_START_POS 620   // TODO: calibrate endpoints
-#define SERVO_END_POS   155
+#define USB_UART (&huart1)
 
+#define VBAT_ADC               (&hadc1)
+#define VBAT_ADC_TIMER         (&htim4)
 #define ADC_TO_VBAT_MULTIPLIER (3300 * 5 / 4096)
+
+#define SERVO_TIMER         (&htim1)
+#define SERVO_TIMER_CHANNEL TIM_CHANNEL_3
+#define SERVO_OUTPUT_TYPE   PwmOutput_N
+#define SERVO_TIMER_PERIOD  5120
+#define SERVO_START_POS     620           // TODO: calibrate endpoints
+#define SERVO_END_POS       155
+
+#define US_AND_COLOR_CAPTURE_TIMER (&htim4)
+#define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
+#define US_RISING_CHANNEL          TIM_CHANNEL_1
+#define US_RISING_ACTIVE_CHANNEL   HAL_TIM_ACTIVE_CHANNEL_1
+#define US_FALLING_CHANNEL         TIM_CHANNEL_2
+#define US_FALLING_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_2
+#define COLOR_CHANNEL              TIM_CHANNEL_3
+#define COLOR_ACTIVE_CHANNEL       HAL_TIM_ACTIVE_CHANNEL_3
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -106,39 +124,39 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    if (htim == &htim2) {
+    if (htim == LCD_TIMER) {
         lcdHandler();
-    } else if (htim == &htim4) {
+    } else if (htim == VBAT_ADC_TIMER) {
         if (!batteryAdcBusy) {
             batteryAdcBusy = 1;
-            HAL_ADC_Start_IT(&hadc1);
+            HAL_ADC_Start_IT(VBAT_ADC);
         }
     }
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-    if (hadc == &hadc1) {
-        uint16_t adcVal = HAL_ADC_GetValue(&hadc1);
+    if (hadc == VBAT_ADC) {
+        uint16_t adcVal = HAL_ADC_GetValue(VBAT_ADC);
         batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER;
         batteryAdcBusy = 0;
     }
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-    if (htim == &htim4) {
+    if (htim == US_AND_COLOR_CAPTURE_TIMER) {
         switch (htim->Channel) {
-            case HAL_TIM_ACTIVE_CHANNEL_1 : {
-                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+            case US_RISING_ACTIVE_CHANNEL : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, US_RISING_CHANNEL);
                 usHandlerRisingCapture(&us, captureVal);
                 break;
             }
-            case HAL_TIM_ACTIVE_CHANNEL_2 : {
-                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+            case US_FALLING_ACTIVE_CHANNEL : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, US_FALLING_CHANNEL);
                 usHandlerFallingCapture(&us, captureVal);
                 break;
             }
-            case HAL_TIM_ACTIVE_CHANNEL_3 : {
-                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+            case COLOR_ACTIVE_CHANNEL : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, COLOR_CHANNEL);
                 colorSensorCaptureHandler(captureVal);
                 break;
             }
@@ -150,7 +168,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
     static uint8_t dfuReceived = 0;
 
-    if (huart == &huart1) {
+    if (huart == USB_UART) {
         /*
          * Parse UART DFU command
          */
@@ -165,7 +183,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
         }
 
         // Receive next byte
-        HAL_UART_Receive_IT(&huart1, &uartRxData, 1);
+        HAL_UART_Receive_IT(USB_UART, &uartRxData, 1);
     }
 }
 
@@ -233,9 +251,8 @@ int main(void)
   MX_TIM2_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_Base_Start_IT(&htim4);
-  HAL_UART_Receive_IT(&huart1, &uartRxData, 1);
+  HAL_TIM_Base_Start_IT(LCD_TIMER);
+  HAL_UART_Receive_IT(USB_UART, &uartRxData, 1);
 
   HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, GPIO_PIN_SET);
 
@@ -255,22 +272,27 @@ int main(void)
   lcdPrintf(0, 4, "LEGO");
   lcdPrintf(1, 8, "K%cR", 239);
 
+  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, EncoderResolution_4, +1);
+  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, EncoderResolution_4, -1);
+
+  usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
+         US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
+         US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
+
+  HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_RISING_CHANNEL);
+  HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_FALLING_CHANNEL);
+
   colorSensorInit(COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
 
-  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, EncoderResolution_4, +1);
-  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, EncoderResolution_4, -1);
+  HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL);
 
-  usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin, &htim4, TIM4_FREQUENCY_HZ, &htim4, TIM4_FREQUENCY_HZ);
+  servo = servoCreate(SERVO_TIMER, SERVO_TIMER_CHANNEL, SERVO_TIMER_PERIOD,
+                      SERVO_OUTPUT_TYPE, SERVO_START_POS, SERVO_END_POS    );
 
-  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);
-  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_2);
-  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
-
-  servo = servoCreate(&htim1, TIM_CHANNEL_3, 5120, PwmOutput_N, SERVO_START_POS, SERVO_END_POS);
-
-  HAL_ADC_Start_IT(&hadc1);
+  HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER);
+  HAL_ADC_Start_IT(VBAT_ADC);
 
   HAL_Delay(1000);
   lcdClear();
