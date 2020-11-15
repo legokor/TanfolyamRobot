@@ -83,8 +83,9 @@ volatile UltraSonic us;
 
 Servo* servo;
 
-volatile uint16_t adcVal = 0;
-volatile uint8_t adcBusy = 0;
+volatile uint16_t batteryVoltage = 0;
+volatile uint8_t batteryAdcBusy = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,16 +108,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim == &htim2) {
         lcdHandler();
     } else if (htim == &htim4) {
-        if (!adcBusy) {
-            adcBusy = 1;
+        if (!batteryAdcBusy) {
+            batteryAdcBusy = 1;
             HAL_ADC_Start_IT(&hadc1);
         }
     }
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-    adcVal = HAL_ADC_GetValue(&hadc1);
-    adcBusy = 0;
+    if (hadc == &hadc1) {
+        uint16_t adcVal = HAL_ADC_GetValue(&hadc1);
+        batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER;
+        batteryAdcBusy = 0;
+    }
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
