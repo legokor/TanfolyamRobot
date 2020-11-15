@@ -268,12 +268,12 @@ int main(void)
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_2);
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
 
-  HAL_Delay(2000);
-  lcdClear();
-
   servo = servoCreate(&htim1, TIM_CHANNEL_3, 5120, PwmOutput_N, SERVO_START_POS, SERVO_END_POS);
 
   HAL_ADC_Start_IT(&hadc1);
+
+  HAL_Delay(1000);
+  lcdClear();
 
   /* USER CODE END 2 */
 
