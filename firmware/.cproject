@@ -52,6 +52,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/pwm/"/>
 									<listOptionValue builtIn="false" value="../Drivers/ultrasonic/"/>
 									<listOptionValue builtIn="false" value="../Drivers/servo/"/>
+									<listOptionValue builtIn="false" value="../Drivers/motor/"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.133896599" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -137,6 +138,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/pwm/"/>
 									<listOptionValue builtIn="false" value="../Drivers/ultrasonic/"/>
 									<listOptionValue builtIn="false" value="../Drivers/servo/"/>
+									<listOptionValue builtIn="false" value="../Drivers/motor/"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1181318450" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

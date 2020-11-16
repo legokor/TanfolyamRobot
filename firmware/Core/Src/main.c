@@ -31,6 +31,7 @@
 #include "encoder.h"
 #include "ultrasonic.h"
 #include "servo.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,6 +69,25 @@
 #define COLOR_CHANNEL              TIM_CHANNEL_3
 #define COLOR_ACTIVE_CHANNEL       HAL_TIM_ACTIVE_CHANNEL_3
 
+#define MOTOR1_PWM1_TIMER         (&htim1)
+#define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
+#define MOTOR1_PWM1_TIMER_PERIOD  5120
+#define MOTOR1_PWM1_OUTPUT_TYPE   PwmOutput_N
+#define MOTOR1_PWM2_TIMER         (&htim3)
+#define MOTOR1_PWM2_TIMER_CHANNEL TIM_CHANNEL_3
+#define MOTOR1_PWM2_TIMER_PERIOD  5120
+#define MOTOR1_PWM2_OUTPUT_TYPE   PwmOutput_P
+#define MOTOR1_REVERSED           0
+
+#define MOTOR2_PWM1_TIMER         (&htim1)
+#define MOTOR2_PWM1_TIMER_CHANNEL TIM_CHANNEL_2
+#define MOTOR2_PWM1_TIMER_PERIOD  5120
+#define MOTOR2_PWM1_OUTPUT_TYPE   PwmOutput_N
+#define MOTOR2_PWM2_TIMER         (&htim3)
+#define MOTOR2_PWM2_TIMER_CHANNEL TIM_CHANNEL_4
+#define MOTOR2_PWM2_TIMER_PERIOD  5120
+#define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
+#define MOTOR2_REVERSED           1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -101,6 +121,9 @@ volatile Encoder encoder2;
 volatile UltraSonic us;
 
 Servo* servo;
+
+Motor* motor1;
+Motor* motor2;
 
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
@@ -293,6 +316,19 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER);
   HAL_ADC_Start_IT(VBAT_ADC);
+
+  motor1 = motorCreate(MOTOR1_PWM1_TIMER, MOTOR1_PWM1_TIMER_CHANNEL,
+                       MOTOR1_PWM1_TIMER_PERIOD, MOTOR1_PWM1_OUTPUT_TYPE,
+                       MOTOR1_PWM2_TIMER, MOTOR1_PWM2_TIMER_CHANNEL,
+                       MOTOR1_PWM2_TIMER_PERIOD, MOTOR1_PWM2_OUTPUT_TYPE,
+                       MOTOR1_REVERSED);
+  motor2 = motorCreate(MOTOR2_PWM1_TIMER, MOTOR2_PWM1_TIMER_CHANNEL,
+                       MOTOR2_PWM1_TIMER_PERIOD, MOTOR2_PWM1_OUTPUT_TYPE,
+                       MOTOR2_PWM2_TIMER, MOTOR2_PWM2_TIMER_CHANNEL,
+                       MOTOR2_PWM2_TIMER_PERIOD, MOTOR2_PWM2_OUTPUT_TYPE,
+                       MOTOR2_REVERSED);
+
+  HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
   HAL_Delay(1000);
   lcdClear();
