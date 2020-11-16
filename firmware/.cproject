@@ -134,7 +134,9 @@
 									<listOptionValue builtIn="false" value="../Drivers/lcd/"/>
 									<listOptionValue builtIn="false" value="../Drivers/color_sensor/"/>
 									<listOptionValue builtIn="false" value="../Drivers/encoder/"/>
+									<listOptionValue builtIn="false" value="../Drivers/pwm/"/>
 									<listOptionValue builtIn="false" value="../Drivers/ultrasonic/"/>
+									<listOptionValue builtIn="false" value="../Drivers/servo/"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1181318450" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
