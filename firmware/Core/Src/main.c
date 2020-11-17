@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <stdio.h>
 #include "lcd.h"
 #include "battery_indicator.h"
 #include "dfu.h"
@@ -95,6 +96,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+
+#define FAIL fail(__FILE__, __LINE__)
 
 /* USER CODE END PM */
 
@@ -222,6 +225,29 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     }
 }
 
+/**
+ * Print error message on LCD and UART, then wait indefinitely for UART DFU request
+ * @note If both LCD and UART init failed, we are SOL
+ * @param file file name (__FILE__)
+ * @param line file line (__LINE__)
+ */
+void fail(char *file, uint16_t line) {
+    char msg[512];
+    uint16_t msgLen = sprintf(msg, "ERROR %s:%d", file, line);
+
+    lcdPuts(0, 0, msg);
+    HAL_UART_Transmit(&huart1, (uint8_t*)msg, msgLen, 0xffff);
+
+    while (1) {
+        if (uartDfuRequest) {
+            lcdClear();
+            lcdPrintf(0, 4, "DFU mode");
+            HAL_Delay(100);
+            rebootIntoDfu(DFU_MAGIC_WORD);
+        }
+    }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -277,8 +303,13 @@ int main(void)
   MX_TIM2_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(LCD_TIMER);
-  HAL_UART_Receive_IT(USB_UART, &uartRxData, 1);
+  if (HAL_TIM_Base_Start_IT(LCD_TIMER) != HAL_OK) {
+      FAIL;
+  }
+
+  if (HAL_UART_Receive_IT(USB_UART, &uartRxData, 1) != HAL_OK) {
+      FAIL;
+  }
 
   HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, GPIO_PIN_SET);
 
@@ -302,20 +333,33 @@ int main(void)
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
 
-  HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_RISING_CHANNEL);
-  HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_FALLING_CHANNEL);
+  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_RISING_CHANNEL) != HAL_OK) {
+      FAIL;
+  }
+  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_FALLING_CHANNEL) != HAL_OK) {
+      FAIL;
+  }
 
   colorSensorInit(COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
 
-  HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL);
+  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
+      FAIL;
+  }
 
   servo = servoCreate(SERVO_TIMER, SERVO_TIMER_CHANNEL, SERVO_TIMER_PERIOD,
                       SERVO_OUTPUT_TYPE, SERVO_START_POS, SERVO_END_POS    );
+  if (servo == NULL) {
+      FAIL;
+  }
 
-  HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER);
-  HAL_ADC_Start_IT(VBAT_ADC);
+  if (HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER) != HAL_OK) {
+      FAIL;
+  }
+  if (HAL_ADC_Start_IT(VBAT_ADC) != HAL_OK) {
+      FAIL;
+  }
 
   encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin,
                          MOTOR1_ENCODER_RESOLUTION, MOTOR1_REVERSED);
@@ -327,11 +371,17 @@ int main(void)
                        MOTOR1_PWM2_TIMER, MOTOR1_PWM2_TIMER_CHANNEL,
                        MOTOR1_PWM2_TIMER_PERIOD, MOTOR1_PWM2_OUTPUT_TYPE,
                        MOTOR1_REVERSED);
+  if (motor1 == NULL) {
+      FAIL;
+  }
   motor2 = motorCreate(MOTOR2_PWM1_TIMER, MOTOR2_PWM1_TIMER_CHANNEL,
                        MOTOR2_PWM1_TIMER_PERIOD, MOTOR2_PWM1_OUTPUT_TYPE,
                        MOTOR2_PWM2_TIMER, MOTOR2_PWM2_TIMER_CHANNEL,
                        MOTOR2_PWM2_TIMER_PERIOD, MOTOR2_PWM2_OUTPUT_TYPE,
                        MOTOR2_REVERSED);
+  if (motor2 == NULL) {
+      FAIL;
+  }
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
