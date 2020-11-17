@@ -88,6 +88,9 @@
 #define MOTOR2_PWM2_TIMER_PERIOD  5120
 #define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR2_REVERSED           1
+
+#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_1
+#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -295,8 +298,8 @@ int main(void)
   lcdPrintf(0, 4, "LEGO");
   lcdPrintf(1, 8, "K%cR", 239);
 
-  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, EncoderResolution_4, +1);
-  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, EncoderResolution_4, -1);
+  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, MOTOR1_ENCODER_RESOLUTION, +1);
+  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, MOTOR2_ENCODER_RESOLUTION, -1);
 
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
