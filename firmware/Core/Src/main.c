@@ -298,9 +298,6 @@ int main(void)
   lcdPrintf(0, 4, "LEGO");
   lcdPrintf(1, 8, "K%cR", 239);
 
-  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin, MOTOR1_ENCODER_RESOLUTION, +1);
-  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin, MOTOR2_ENCODER_RESOLUTION, -1);
-
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
@@ -319,6 +316,11 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER);
   HAL_ADC_Start_IT(VBAT_ADC);
+
+  encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin,
+                         MOTOR1_ENCODER_RESOLUTION, MOTOR1_REVERSED);
+  encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin,
+                         MOTOR2_ENCODER_RESOLUTION, MOTOR2_REVERSED);
 
   motor1 = motorCreate(MOTOR1_PWM1_TIMER, MOTOR1_PWM1_TIMER_CHANNEL,
                        MOTOR1_PWM1_TIMER_PERIOD, MOTOR1_PWM1_OUTPUT_TYPE,
