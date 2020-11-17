@@ -36,13 +36,13 @@
  * @param portX GPIO port of encoder terminal X
  * @param pinX GPIO pin of encoder terminal X
  * @param resolution decoding resolution
- * @param direction  1 increase counter when A is leading
- *                  -1 increase counter when B is leading
+ * @param reversed 0 increase counter when A is leading
+ *                 otherwise increase counter when B is leading
  */
 void encoderInit(volatile Encoder* encoder,
                  GPIO_TypeDef* portA, uint16_t pinA,
                  GPIO_TypeDef* portB, uint16_t pinB,
-                 EncoderResolution resolution, int8_t direction) {
+                 EncoderResolution resolution, uint8_t reversed) {
 
     encoder->portA = portA;
     encoder->pinA = pinA;
@@ -50,11 +50,10 @@ void encoderInit(volatile Encoder* encoder,
     encoder->pinB = pinB;
     encoder->resolution = resolution;
 
-    // Default to positive direction
-    if (direction != 1 && direction != -1) {
-        encoder->direction = 1;
+    if (reversed) {
+        encoder->direction = -1;
     } else {
-        encoder->direction = direction;
+        encoder->direction =  1;
     }
 
     encoder->counter = 0;

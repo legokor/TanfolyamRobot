@@ -35,7 +35,7 @@ typedef struct {
 void encoderInit(volatile Encoder* encoder,
                  GPIO_TypeDef* portA, uint16_t pinA,
                  GPIO_TypeDef* portB, uint16_t pinB,
-                 EncoderResolution resolution, int8_t direction);
+                 EncoderResolution resolution, uint8_t reversed);
 void encoderHandlerA(volatile Encoder* encoder);
 void encoderHandlerB(volatile Encoder* encoder);
 uint32_t encoderGetCounterValue(volatile const Encoder* encoder);
