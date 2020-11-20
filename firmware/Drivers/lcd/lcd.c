@@ -441,9 +441,7 @@ static int lcdAdd4BitTransfer(uint8_t val, TransferType type) {
     val &= 0x0F;
     val = val | (type << 7);
 
-    __disable_irq();
     int8_t e = circularBufferWrite(&transferBuf, val);
-    __enable_irq();
 
     return e;
 }
@@ -462,16 +460,15 @@ static int lcdAddCmd(uint8_t cmd) {
     uint8_t cmd0 = cmd >> 4;
     uint8_t cmd1 = cmd & 0x0F;
 
+    __disable_irq();
     int err;
-    err = lcdAdd4BitTransfer(cmd0, TransferType_Command);
-    if (err) {
-        return err; // this should never happen
+    err = lcdAdd4BitTransfer(cmd0, TransferType_Command);     // this should never fail
+    if (!err) {
+        err = lcdAdd4BitTransfer(cmd1, TransferType_Command); // this should never fail
     }
-    err = lcdAdd4BitTransfer(cmd1, TransferType_Command);
-    if (err) {
-        return err; // this should never happen
-    }
-    return 0;
+    __enable_irq();
+
+    return err;
 }
 
 /**
@@ -488,16 +485,15 @@ static int lcdAddData(uint8_t data) {
     uint8_t data0 = data >> 4;
     uint8_t data1 = data & 0x0F;
 
+    __disable_irq();
     int err;
-    err = lcdAdd4BitTransfer(data0, TransferType_Data);
-    if (err) {
-        return err; // this should never happen
+    err = lcdAdd4BitTransfer(data0, TransferType_Data);     // this should never fail
+    if (!err) {
+        err = lcdAdd4BitTransfer(data1, TransferType_Data); // this should never fail
     }
-    err = lcdAdd4BitTransfer(data1, TransferType_Data);
-    if (err) {
-        return err; // this should never happen
-    }
-    return 0;
+    __enable_irq();
+
+    return err;
 }
 
 /**
