@@ -122,7 +122,7 @@ static void lcdDelayMs(uint8_t ms);
 static int lcdAdd4BitTransfer(uint8_t val, TransferType type);
 static int lcdAddCmd(uint8_t cmd);
 static int lcdAddData(uint8_t data);
-static int lcdSetCursor(uint8_t row, uint8_t col);
+
 /**
  * Initialize the display
  * @param lcdXPort GPIO port of X
@@ -506,7 +506,7 @@ static int lcdAddData(uint8_t data) {
  * @param row 0-based row number
  * @return 0 on success
  */
-static int lcdSetCursor(uint8_t row, uint8_t col) {
+int lcdSetCursor(uint8_t row, uint8_t col) {
     if (row >= lcdSettings.numOfRows) {
         row = 0;
     }
@@ -522,3 +522,12 @@ static int lcdSetCursor(uint8_t row, uint8_t col) {
     return 0;
 }
 
+/**
+ * Check the current position of the cursor
+ * @param row
+ * @param col
+ */
+void lcdGetCursor(uint8_t* row, uint8_t* col) {
+    *row = lcdState.currentRow;
+    *col = lcdState.currentCol;
+}

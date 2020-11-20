@@ -12,5 +12,7 @@
 
 void batteryIndicatorInit();
 void batteryIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage);
+void batteryIndicatorEnable();
+void batteryIndicatorDisable();
 
 #endif /* INC_BATTERY_INDICATOR_H_ */

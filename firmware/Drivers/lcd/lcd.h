@@ -18,6 +18,8 @@ int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]);
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
 int lcdPuts(uint8_t row, uint8_t col, const char *str);
 int lcdPutc(uint8_t row, uint8_t col, char c);
+int lcdSetCursor(uint8_t row, uint8_t col);
+void lcdGetCursor(uint8_t* row, uint8_t* col);
 int lcdClear();
 void lcdHandler();
 

@@ -50,9 +50,12 @@
 
 #define USB_UART (&huart1)
 
-#define VBAT_ADC               (&hadc1)
-#define VBAT_ADC_TIMER         (&htim4)
-#define ADC_TO_VBAT_MULTIPLIER (3300 * 5 / 4096)
+#define VBAT_ADC                 (&hadc1)
+#define VBAT_ADC_TIMER           (&htim4)
+#define ADC_TO_VBAT_MULTIPLIER   (3300 * 5 / 4096)
+#define BATTERY_INDICATOR_ROW    0
+#define BATTERY_INDICATOR_COL    15
+#define BATTERY_INDICATOR_PERIOD 10   // about 300 ms
 
 #define SERVO_TIMER         (&htim1)
 #define SERVO_TIMER_CHANNEL TIM_CHANNEL_3
@@ -152,9 +155,18 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    static uint32_t adcTimerItCount = 0;
+
     if (htim == LCD_TIMER) {
         lcdHandler();
     } else if (htim == VBAT_ADC_TIMER) {
+        adcTimerItCount++;
+
+        if (adcTimerItCount >= BATTERY_INDICATOR_PERIOD) {
+            adcTimerItCount = 0;
+            batteryIndicatorDisplay(BATTERY_INDICATOR_ROW, BATTERY_INDICATOR_COL, batteryVoltage);
+        }
+
         if (!batteryAdcBusy) {
             batteryAdcBusy = 1;
             HAL_ADC_Start_IT(VBAT_ADC);
@@ -208,6 +220,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
         if (dfuReceived == uartDfuCommandLen) {
             dfuReceived = 0;
 
+            batteryIndicatorDisable();
             lcdClear();
             lcdPrintf(0, 4, "DFU mode");
             HAL_Delay(100);
@@ -385,6 +398,7 @@ int main(void)
 
   HAL_Delay(1000);
   lcdClear();
+  batteryIndicatorEnable();
 
   /* USER CODE END 2 */
 
