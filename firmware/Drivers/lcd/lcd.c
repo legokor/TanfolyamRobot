@@ -215,7 +215,7 @@ void lcdInit(GPIO_TypeDef *lcdRsPort, uint16_t lcdRsPin, GPIO_TypeDef *lcdEnPort
  * @param character 8 rows of 5 bits
  * @return 0 on success
  */
-int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]) {
+int lcdAddCustomCharacter(uint8_t address, const uint8_t character[8]) {
     if (address >= 8) {
         return -1;
     }

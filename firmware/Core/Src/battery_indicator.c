@@ -14,7 +14,7 @@ volatile uint8_t enabled = 0;
 /**
  * Custom characters for HD44780-based LCD
  */
-uint8_t batteryChar[][8] = {
+const uint8_t batteryChar[][8] = {
     {0b01110, 0b10101, 0b11011, 0b01110, 0b01110, 0b10001, 0b01110, 0b10001},   // battery dead
     {0b01110, 0b11011, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11111},   // battery level 0
     {0b01110, 0b11011, 0b10001, 0b10001, 0b10001, 0b10001, 0b11111, 0b11111},   // battery level 1
