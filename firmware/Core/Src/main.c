@@ -118,7 +118,6 @@ const uint8_t lcdCols = 16;
 
 const char uartDfuCommand[] = UART_DFU_COMMAND;
 const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
-volatile uint8_t uartDfuRequest = 0;
 volatile uint8_t uartRxData;
 
 volatile Encoder encoder1;
@@ -208,7 +207,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
         }
         if (dfuReceived == uartDfuCommandLen) {
             dfuReceived = 0;
-            uartDfuRequest = 1;
+
+            lcdClear();
+            lcdPrintf(0, 4, "DFU mode");
+            HAL_Delay(100);
+            rebootIntoDfu(DFU_MAGIC_WORD);
         }
 
         // Receive next byte
@@ -239,12 +242,7 @@ void fail(char *file, uint16_t line) {
     HAL_UART_Transmit(&huart1, (uint8_t*)msg, msgLen, 0xffff);
 
     while (1) {
-        if (uartDfuRequest) {
-            lcdClear();
-            lcdPrintf(0, 4, "DFU mode");
-            HAL_Delay(100);
-            rebootIntoDfu(DFU_MAGIC_WORD);
-        }
+
     }
 }
 
