@@ -119,10 +119,10 @@ static void lcdSend4Bit(uint8_t data, TransferType type);
 static void lcdCmd(uint8_t cmd);
 static void lcdData(uint8_t data);
 static void lcdDelayMs(uint8_t ms);
-static int8_t lcdAdd4BitTransfer(uint8_t val, TransferType type);
-static int8_t lcdAddCmd(uint8_t cmd);
-static int8_t lcdAddData(uint8_t data);
-static int8_t lcdSetCursor(uint8_t row, uint8_t col);
+static int lcdAdd4BitTransfer(uint8_t val, TransferType type);
+static int lcdAddCmd(uint8_t cmd);
+static int lcdAddData(uint8_t data);
+static int lcdSetCursor(uint8_t row, uint8_t col);
 /**
  * Initialize the display
  * @param lcdXPort GPIO port of X
@@ -220,16 +220,24 @@ int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]) {
         return -1;
     }
 
-    address *= 8;
-    lcdAddCmd(HD44780_SETCGRAMADDR | address);
+    int err;
 
-    for (uint8_t i=0; i<8; i++) {
-        lcdAddData(character[i]);
+    address *= 8;
+    err = lcdAddCmd(HD44780_SETCGRAMADDR | address);
+    if (err) {
+        return err;
     }
 
-    lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
+    for (uint8_t i=0; i<8; i++) {
+        err = lcdAddData(character[i]);
+        if (err) {
+            return err;
+        }
+    }
 
-    return 0;
+    err = lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
+
+    return err;
 }
 
 /**
@@ -246,7 +254,7 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
     int size = vsprintf(str, fmt, args);
 
     if (size <= 0) {
-        return -1;
+        return size;
     }
 
     return lcdPuts(row, col, str);
@@ -254,6 +262,8 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
 
 /**
  * Put string on the LCD
+ * @note \n and \r are the only special characters supported. Everything else will be sent to the LCD as-is.
+ *
  * @param row of starting position
  * @param col of starting position
  * @param str string to be displayed
@@ -261,40 +271,42 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
 int lcdPuts(uint8_t row, uint8_t col, const char *str) {
     int err;
 
-    err = lcdSetCursor(row, col);
-    if (err) {
-        return err;
+    if ( (lcdState.currentCol != col) || (lcdState.currentRow != row) ) {
+        err = lcdSetCursor(row, col);
+        if (err) {
+            return err;
+        }
     }
 
     uint8_t printedChars = 0;
 
     while (*str) {
+
+        // And the end of line, jump to the next one
         if (lcdState.currentCol >= lcdSettings.numOfCols) {
-            lcdState.currentCol = 0;
-            lcdState.currentRow++;
-            err = lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
+            err = lcdSetCursor(lcdState.currentRow + 1, 0);
             if (err) {
                 return err;
             }
         }
 
-        if (*str == '\n') {
-           lcdState.currentRow++;
-           lcdState.currentCol=0;
-           err = lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
+        if (*str == '\n') {             // Jump to the beginning of the next line
+           err = lcdSetCursor(lcdState.currentRow + 1, 0);
            if (err) {
                return err;
            }
 
-        } else if (*str == '\r') {
-            lcdState.currentCol = 0;
-            err = lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
+        } else if (*str == '\r') {      // Jump to the beginning of the current line
+            err = lcdSetCursor(lcdState.currentRow, 0);
             if (err) {
                return err;
             }
 
         } else {
-            lcdAddData(*str);
+            err = lcdAddData(*str);
+            if (err) {
+               return err;
+            }
             lcdState.currentCol++;
         }
 
@@ -312,11 +324,12 @@ int lcdPuts(uint8_t row, uint8_t col, const char *str) {
  * @param c character to be displayed
  */
 int lcdPutc(uint8_t row, uint8_t col, char c) {
-    int err = lcdSetCursor(row, col);
-    if (err) {
-        return err;
+    if ( (lcdState.currentCol != col) || (lcdState.currentRow != row) ) {
+        int err = lcdSetCursor(row, col);
+        if (err) {
+            return err;
+        }
     }
-
     return lcdAddData(c);
 }
 
@@ -331,6 +344,9 @@ int lcdClear() {
         return err;
     }
     lcdDelayMs(5);
+
+    lcdState.currentCol = 0;
+    lcdState.currentRow = 0;
 
     return 0;
 }
@@ -414,7 +430,7 @@ static void lcdDelayMs(uint8_t ms) {
  * @param type command or data
  * @return 0 on success
  */
-static int8_t lcdAdd4BitTransfer(uint8_t val, TransferType type) {
+static int lcdAdd4BitTransfer(uint8_t val, TransferType type) {
     val &= 0x0F;
     val = val | (type << 7);
 
@@ -430,18 +446,23 @@ static int8_t lcdAdd4BitTransfer(uint8_t val, TransferType type) {
  * @param cmd 8-bit command
  * @return 0 on success
  */
-static int8_t lcdAddCmd(uint8_t cmd) {
+static int lcdAddCmd(uint8_t cmd) {
+    // cmd is sent in two 4-bit parts, so check if those will fit in the buffer
+    if (circularBufferGetAvailable(&transferBuf) < 2) {
+        return -1;
+    }
+
     uint8_t cmd0 = cmd >> 4;
     uint8_t cmd1 = cmd & 0x0F;
 
-    int8_t err;
+    int err;
     err = lcdAdd4BitTransfer(cmd0, TransferType_Command);
     if (err) {
-        return err;
+        return err; // this should never happen
     }
     err = lcdAdd4BitTransfer(cmd1, TransferType_Command);
     if (err) {
-        return err;
+        return err; // this should never happen
     }
     return 0;
 }
@@ -451,18 +472,23 @@ static int8_t lcdAddCmd(uint8_t cmd) {
  * @param data 8-bit data
  * @return 0 on success
  */
-static int8_t lcdAddData(uint8_t data) {
+static int lcdAddData(uint8_t data) {
+    // data is sent in two 4-bit parts, so check if those will fit in the buffer
+    if (circularBufferGetAvailable(&transferBuf) < 2) {
+        return -1;
+    }
+
     uint8_t data0 = data >> 4;
     uint8_t data1 = data & 0x0F;
 
-    int8_t err;
+    int err;
     err = lcdAdd4BitTransfer(data0, TransferType_Data);
     if (err) {
-        return err;
+        return err; // this should never happen
     }
     err = lcdAdd4BitTransfer(data1, TransferType_Data);
     if (err) {
-        return err;
+        return err; // this should never happen
     }
     return 0;
 }
@@ -473,13 +499,19 @@ static int8_t lcdAddData(uint8_t data) {
  * @param row 0-based row number
  * @return 0 on success
  */
-static int8_t lcdSetCursor(uint8_t row, uint8_t col) {
+static int lcdSetCursor(uint8_t row, uint8_t col) {
     if (row >= lcdSettings.numOfRows) {
         row = 0;
     }
+
+    int err = lcdAddCmd(HD44780_SETDDRAMADDR | (col + HD44780RowOffsets[row]));
+    if (err) {
+        return err;
+    }
+
     lcdState.currentCol = col;
     lcdState.currentRow = row;
 
-    return lcdAddCmd(HD44780_SETDDRAMADDR | (col + HD44780RowOffsets[row]));
+    return 0;
 }
 
