@@ -330,7 +330,14 @@ int lcdPutc(uint8_t row, uint8_t col, char c) {
             return err;
         }
     }
-    return lcdAddData(c);
+
+    int err = lcdAddData(c);
+    if (err) {
+        return err;
+    }
+    lcdState.currentCol++;
+
+    return 0;
 }
 
 /**
