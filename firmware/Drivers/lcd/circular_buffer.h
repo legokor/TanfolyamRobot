@@ -20,6 +20,7 @@ typedef struct {
 void circularBufferInit(CircularBuffer* cBuf, uint8_t* memory, uint16_t size);
 int8_t circularBufferWrite(CircularBuffer* cBuf, uint8_t data);
 int8_t circularBufferRead(CircularBuffer* cBuf, uint8_t *data);
+uint16_t circularBufferGetAvailable(CircularBuffer* cBuf);
 uint8_t circularBufferIsEmpty(CircularBuffer* cBuf);
 uint8_t circularBufferIsFull(CircularBuffer* cBuf);
 

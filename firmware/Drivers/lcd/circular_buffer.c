@@ -63,6 +63,11 @@ int8_t circularBufferRead(CircularBuffer* cBuf, uint8_t *data) {
 
     return 0;
 }
+
+uint16_t circularBufferGetAvailable(CircularBuffer* cBuf) {
+    return cBuf->size - cBuf->elements;
+}
+
 uint8_t circularBufferIsEmpty(CircularBuffer* cBuf) {
     return (cBuf->elements == 0);
 }
