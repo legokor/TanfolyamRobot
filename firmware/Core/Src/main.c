@@ -406,12 +406,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      if (uartDfuRequest) {
-          lcdClear();
-          lcdPrintf(0, 4, "DFU mode");
-          HAL_Delay(100);
-          rebootIntoDfu(DFU_MAGIC_WORD);
-      }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
