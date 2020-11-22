@@ -411,8 +411,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-      batteryIndicatorDisplay(0, 15, batteryVoltage); // TODO: move this to some housekeeping function
-      HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
