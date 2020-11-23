@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include <stdio.h>
+#include "robotcontrol.h"
 #include "lcd.h"
 #include "battery_indicator.h"
 #include "dfu.h"
@@ -33,6 +34,7 @@
 #include "ultrasonic.h"
 #include "servo.h"
 #include "motor.h"
+#include "application.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -398,6 +400,8 @@ int main(void)
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
+  robotControlInit(servo, &us, &colorSensor, motor1, motor2, &encoder1, &encoder2, USB_UART);
+
   HAL_Delay(1000);
   lcdClear();
   batteryIndicatorEnable();
@@ -406,6 +410,18 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  // Start user application
+  int retVal = application();
+
+  // If application returns, stop the motors, and print the returned value
+  motorSetSpeed(motor1, 0);
+  motorSetSpeed(motor2, 0);
+  servoSetPosition(servo, 0);
+  lcdClear();
+  lcdPrintf(0, 0, "application");
+  lcdPrintf(1, 0, "returned %d", retVal);
+
   while (1)
   {
 
