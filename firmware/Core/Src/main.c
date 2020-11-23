@@ -127,6 +127,7 @@ volatile Encoder encoder1;
 volatile Encoder encoder2;
 
 volatile UltraSonic us;
+volatile ColorSensor colorSensor;
 
 Servo* servo;
 
@@ -197,7 +198,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
             }
             case COLOR_ACTIVE_CHANNEL : {
                 uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, COLOR_CHANNEL);
-                colorSensorCaptureHandler(captureVal);
+                colorSensorCaptureHandler(&colorSensor, captureVal);
                 break;
             }
             default: break;  // only needed to suppress unhandled enum value warning
@@ -351,7 +352,8 @@ int main(void)
       FAIL;
   }
 
-  colorSensorInit(COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
+  colorSensorInit(&colorSensor,
+                  COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
 
