@@ -225,7 +225,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 
             batteryIndicatorDisable();
             lcdClear();
-            lcdPrintf(0, 4, "DFU mode");
+            lcdPuts(0, 4, "DFU mode");
             HAL_Delay(100);
             rebootIntoDfu(DFU_MAGIC_WORD);
         }
@@ -333,15 +333,15 @@ int main(void)
           lcdRows, lcdCols);
 
   if (exitDfu) {
-      lcdPrintf(0, 0, "Exit DFU mode...");
+      lcdPuts(0, 0, "Exit DFU mode...");
       HAL_Delay(1000);
       lcdClear();
   }
 
   batteryIndicatorInit();
 
-  lcdPrintf(0, 4, "LEGO");
-  lcdPrintf(1, 8, "K%cR", 239);
+  lcdPuts(0, 4, "LEGO");
+  lcdPuts(1, 8, "K\xefR");
 
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
