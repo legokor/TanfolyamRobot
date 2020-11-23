@@ -72,3 +72,23 @@ int uartPrintf(const char *fmt, ...) {
 void delayMs(uint32_t delay) {
     HAL_Delay(delay);
 }
+
+/**
+ * Works just like printf after the position specifiers
+ * @param row of starting position
+ * @param col of starting position
+ * @param fmt printf-like format string followed by a variable number of arguments
+ */
+int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    char str[64];
+    int size = vsprintf(str, fmt, args);
+
+    if (size <= 0) {
+        return size;
+    }
+
+    return lcdPuts(row, col, str);
+}

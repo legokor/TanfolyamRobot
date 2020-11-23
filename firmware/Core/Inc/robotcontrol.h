@@ -26,5 +26,6 @@ uint16_t getUsDistance();
 // TODO: motor control
 int uartPrintf(const char *fmt, ...);
 void delayMs(uint32_t delay);
+int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
 
 #endif /* INC_ROBOTCONTROL_H_ */
