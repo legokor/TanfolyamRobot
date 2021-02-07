@@ -411,6 +411,9 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  lcdPrintf(0, 0, "Press button\nto start");
+  while (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_SET);
+
   // Start user application
   int retVal = application();
 
