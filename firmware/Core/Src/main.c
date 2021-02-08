@@ -95,8 +95,8 @@
 #define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR2_REVERSED           0
 
-#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_1
-#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_1
+#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_4
+#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_4
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
