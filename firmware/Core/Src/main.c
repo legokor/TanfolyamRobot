@@ -157,12 +157,30 @@ static void MX_ADC1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+uint32_t samplePrescaler = 0;
+uint32_t sample;
+uint8_t sampleFlag = 0;
+uint8_t sampleError = 0;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
 
     if (htim == LCD_TIMER) {
-        lcdHandler();
-    } else if (htim == VBAT_ADC_TIMER) {
+        //lcdHandler();
+
+/*
+        if (samplePrescaler % 40 == 0) {
+            if (sampleFlag == 0) {
+                sample = encoderGetCounterValue(&encoder1);
+                sampleFlag = 1;
+            } else {
+                sampleError = 1;
+            }
+        }
+        samplePrescaler++;
+*/
+    } else if (htim == VBAT_ADC_TIMER) {/*
         adcTimerItCount++;
 
         if (adcTimerItCount >= BATTERY_INDICATOR_PERIOD) {
@@ -173,19 +191,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         if (!batteryAdcBusy) {
             batteryAdcBusy = 1;
             HAL_ADC_Start_IT(VBAT_ADC);
-        }
+        }*/
     }
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {/*
     if (hadc == VBAT_ADC) {
         uint16_t adcVal = HAL_ADC_GetValue(VBAT_ADC);
         batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER;
         batteryAdcBusy = 0;
-    }
+    }*/
 }
 
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {/*
     if (htim == US_AND_COLOR_CAPTURE_TIMER) {
         switch (htim->Channel) {
             case US_RISING_ACTIVE_CHANNEL : {
@@ -205,7 +223,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
             }
             default: break;  // only needed to suppress unhandled enum value warning
         }
-    }
+    }*/
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
@@ -414,6 +432,7 @@ int main(void)
   lcdPrintf(0, 0, "Press button\nto start");
   while (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_SET);
 
+/*
   // Start user application
   int retVal = application();
 
@@ -424,9 +443,58 @@ int main(void)
   lcdClear();
   lcdPrintf(0, 0, "application");
   lcdPrintf(1, 0, "returned %d", retVal);
+*/
+
+
+  uint32_t p1 = encoderGetCounterValue(&encoder1);
+  uint32_t p2 = encoderGetCounterValue(&encoder2);
+
+  uint32_t cntr = 0;
+
+  uint8_t speeds[] = {95,100, 1,5,6,7,8,10,15,20,30,40,50,60,70,80,90,95,100};
+  uint8_t i=0;
+  int16_t speed;
 
   while (1)
   {
+      uint32_t encVal2 = encoderGetCounterValue(&encoder2);
+      uint32_t d2 = encVal2 - p2;
+      p2 = encVal2;
+
+
+      uint32_t time = htim2.Instance->CNT;
+
+      char t[32];
+      int len = sprintf(t, "%d,%d,%d\n", time, speed, d2);
+
+      HAL_UART_Transmit(&huart1, t, len, 0xff);
+
+      delayMs(1);
+
+      if (cntr == 3000) {
+          speed = -speeds[i];
+          motorSetSpeed(motor1, speed);
+          motorSetSpeed(motor2, speed);
+          i++;
+      }
+
+      if (cntr == 3700) {
+          speed = 0;
+          motorSetSpeed(motor1, speed);
+          motorSetSpeed(motor2, speed);
+          cntr = 0;
+      }
+
+      cntr++;
+
+      /*
+      if (sampleError) {
+          HAL_UART_Transmit(&huart1, "E", 2, 0xffff);
+          sampleError = 0;
+      }
+      if (sampleFlag) {
+
+      }*/
 
     /* USER CODE END WHILE */
 
@@ -619,9 +687,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 1600;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1600;
+  htim2.Init.Period = 65535;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
