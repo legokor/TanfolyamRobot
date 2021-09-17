@@ -413,6 +413,7 @@ int main(void)
 
   lcdPrintf(0, 0, "Press button\nto start");
   while (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_SET);
+  lcdClear();
 
   // Start user application
   int retVal = application();
