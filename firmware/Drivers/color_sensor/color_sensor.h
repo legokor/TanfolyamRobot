@@ -36,11 +36,19 @@ typedef struct {
     uint32_t captureSum;
 } ColorSensor;
 
+typedef struct {
+    uint16_t h;
+    uint8_t s;
+    uint8_t v;
+} ColorHsv;
+
 void colorSensorInit(volatile ColorSensor* cs,
                      GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS1Port, uint16_t csS1Pin,
                      GPIO_TypeDef *csS2Port, uint16_t csS2Pin, GPIO_TypeDef *csS3Port, uint16_t csS3Pin,
                      uint16_t inputFiltering);
 void colorSensorCaptureHandler(volatile ColorSensor* cs, uint16_t captureVal);
 void colorSensorGetPeriods(volatile ColorSensor* cs, uint16_t* capRed, uint16_t* capGreen, uint16_t* capBlue, uint16_t* capClear);
+void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t* b);
+void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color);
 
 #endif /* COLOR_SENSOR_COLOR_SENSOR_H_ */

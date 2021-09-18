@@ -7,6 +7,7 @@
  * Driver for the TCS3200 color sensor
  */
 #include "color_sensor.h"
+#include "calibration.h"
 
 /**
  * Set the color filter of the sensor
@@ -87,4 +88,69 @@ void colorSensorGetPeriods(volatile ColorSensor* cs, uint16_t* capRed, uint16_t*
     *capGreen = cs->measuredVal[ColorIndex_Green];
     *capBlue  = cs->measuredVal[ColorIndex_Blue];
     *capClear = cs->measuredVal[ColorIndex_Clear];
+}
+
+/**
+ * Read calibrated RGB values
+ * @param r
+ * @param g
+ * @param b
+ */
+void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t* b) {
+    uint16_t pR, pG, pB, pC;
+    colorSensorGetPeriods(cs, &pR, &pG, &pB, &pC);
+
+    uint16_t sR = SCALE / pR;
+    uint16_t sG = SCALE / pG;
+    uint16_t sB = SCALE / pB;
+
+    *r = (sR - R_MIN) * 255 / (R_MAX - R_MIN);
+    *g = (sG - G_MIN) * 255 / (G_MAX - G_MIN);
+    *b = (sB - B_MIN) * 255 / (B_MAX - B_MIN);
+}
+
+/**
+ * Read calibrated color in HSV
+ * @param color
+ */
+void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color) {
+    uint8_t r, g, b;
+    colorSensorGetRgb(cs, &r, &g, &b);
+
+    uint8_t max, min;
+
+    min = (r < g) ? r : g;
+    max = (r > g) ? r : g;
+    min = (min < b) ? min : b;
+    max = (max > b) ? max : b;
+
+    int16_t hue;
+    uint8_t sat;
+    uint8_t val = (uint16_t)max * 100 / 255;
+
+    uint8_t delta = max - min;
+
+    if (delta == 0) {
+        sat = 0;
+        hue = 0;
+    } else {
+        sat = 100 * delta / max;
+
+        if (max == r) {
+            hue = 60 * ( ( ((float)g - (float)b) / delta )    );    // TODO: optimize
+        } else if (max == g) {
+            hue = 60 * ( ( ((float)b - (float)r) / delta ) + 2);    // TODO: optimize
+        } else {
+            hue = 60 * ( ( ((float)r - (float)g) / delta ) + 4);    // TODO: optimize
+        }
+    }
+
+    hue = hue % 360;
+    if (hue < 0) {
+        hue += 360;
+    }
+
+    color->h = hue;
+    color->s = sat;
+    color->v = val;
 }
