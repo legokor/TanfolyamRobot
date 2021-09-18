@@ -22,7 +22,7 @@ void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile Co
                       UART_HandleTypeDef* usbUart);
 void setServoPosition(int8_t position);
 uint16_t getUsDistance();
-// TODO: color getter
+void getColorHsv(ColorHsv* color);
 // TODO: motor control
 int uartPrintf(const char *fmt, ...);
 void delayMs(uint32_t delay);

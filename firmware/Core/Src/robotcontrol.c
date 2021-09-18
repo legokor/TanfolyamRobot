@@ -51,6 +51,14 @@ uint16_t getUsDistance() {
 }
 
 /**
+ * Read color in HSV format
+ * @param color
+ */
+void getColorHsv(ColorHsv* color) {
+    colorSensorGetHsv(cs, color);
+}
+
+/**
  * Print to the USB serial port. Works just like regular printf.
  */
 int uartPrintf(const char *fmt, ...) {
