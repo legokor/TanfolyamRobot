@@ -97,6 +97,9 @@
 
 #define MOTOR1_ENCODER_RESOLUTION EncoderResolution_4
 #define MOTOR2_ENCODER_RESOLUTION EncoderResolution_4
+#define MOTOR_ENCODER_TIMER       (&htim2)
+#define MOTOR_ENCODER_MAX_SPEED_CPS 12000
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -161,6 +164,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
 
     if (htim == LCD_TIMER) {
+        encoderTimerOverflowHandler(&encoder1);
+        encoderTimerOverflowHandler(&encoder2);
         lcdHandler();
     } else if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
@@ -377,9 +382,11 @@ int main(void)
   }
 
   encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin,
-                         MOTOR1_ENCODER_RESOLUTION, MOTOR1_REVERSED);
+                         MOTOR1_ENCODER_RESOLUTION, MOTOR1_REVERSED,
+                         MOTOR_ENCODER_TIMER, MOTOR_ENCODER_MAX_SPEED_CPS);
   encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin,
-                         MOTOR2_ENCODER_RESOLUTION, MOTOR2_REVERSED);
+                         MOTOR2_ENCODER_RESOLUTION, MOTOR2_REVERSED,
+                         MOTOR_ENCODER_TIMER, MOTOR_ENCODER_MAX_SPEED_CPS);
 
   motor1 = motorCreate(MOTOR1_PWM1_TIMER, MOTOR1_PWM1_TIMER_CHANNEL,
                        MOTOR1_PWM1_TIMER_PERIOD, MOTOR1_PWM1_OUTPUT_TYPE,
