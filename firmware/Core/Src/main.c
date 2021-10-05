@@ -34,6 +34,7 @@
 #include "ultrasonic.h"
 #include "servo.h"
 #include "motor.h"
+#include "speed_control.h"
 #include "application.h"
 /* USER CODE END Includes */
 
@@ -95,6 +96,8 @@
 #define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR2_REVERSED           0
 
+#define MOTOR_CONTROL_TIMER       (&htim3)
+
 #define MOTOR1_ENCODER_RESOLUTION EncoderResolution_4
 #define MOTOR2_ENCODER_RESOLUTION EncoderResolution_4
 #define MOTOR_ENCODER_TIMER       (&htim2)
@@ -136,8 +139,10 @@ volatile ColorSensor colorSensor;
 
 Servo* servo;
 
-Motor* motor1;
-Motor* motor2;
+volatile Motor* motor1;
+volatile Motor* motor2;
+volatile SpeedControl* speedControl1;
+volatile SpeedControl* speedControl2;
 
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
@@ -179,6 +184,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             batteryAdcBusy = 1;
             HAL_ADC_Start_IT(VBAT_ADC);
         }
+    }
+}
+
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+    if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
+        speedControlHandler(speedControl1);
+        speedControlHandler(speedControl2);
     }
 }
 
@@ -402,6 +414,16 @@ int main(void)
                        MOTOR2_PWM2_TIMER_PERIOD, MOTOR2_PWM2_OUTPUT_TYPE,
                        MOTOR2_REVERSED);
   if (motor2 == NULL) {
+      FAIL;
+  }
+
+  speedControl1 = speedControlCreate(motor1, &encoder1);
+  if (speedControl1 == NULL) {
+      FAIL;
+  }
+
+  speedControl2 = speedControlCreate(motor2, &encoder2);
+  if (speedControl2 == NULL) {
       FAIL;
   }
 
