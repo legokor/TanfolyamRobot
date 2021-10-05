@@ -11,8 +11,8 @@
 Servo* servo;
 volatile UltraSonic* us;
 volatile ColorSensor* cs;
-volatile Motor* motorL;
-volatile Motor* motorR;
+volatile SpeedControl* scL;
+volatile SpeedControl* scR;
 volatile Encoder* encoderL;
 volatile Encoder* encoderR;
 UART_HandleTypeDef* uart;
@@ -21,14 +21,14 @@ UART_HandleTypeDef* uart;
  * Save the pointer to every driver instance used here
  */
 void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
-                      volatile Motor* motorLeft, volatile Motor* motorRight,
+                      volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
                       UART_HandleTypeDef* usbUart) {
     servo = usServo;
     us = usSensor;
     cs = colorSensor;
-    motorL = motorLeft;
-    motorR = motorRight;
+    scL = scLeft;
+    scR = scRight;
     encoderL = encoderLeft;
     encoderR = encoderRight;
     uart = usbUart;
@@ -57,6 +57,20 @@ uint16_t getUsDistance() {
 void getColorHsv(ColorHsv* color) {
     colorSensorGetHsv(cs, color);
 }
+
+/**
+ * Set motor speed
+ * @param mot_lr MOT_L for left, MOT_R for right
+ * @param speed between -100 and +100
+ */
+void setMotorSpeed(uint8_t mot_lr, float speed) {
+    if (mot_lr == MOT_L) {
+        speedControlSetSpeed(scL, speed);
+    } else {
+        speedControlSetSpeed(scR, speed);
+    }
+}
+
 
 /**
  * Print to the USB serial port. Works just like regular printf.
