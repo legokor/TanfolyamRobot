@@ -77,21 +77,21 @@
 
 #define MOTOR1_PWM1_TIMER         (&htim1)
 #define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
-#define MOTOR1_PWM1_TIMER_PERIOD  5120
+#define MOTOR1_PWM1_TIMER_PERIOD  5333
 #define MOTOR1_PWM1_OUTPUT_TYPE   PwmOutput_N
 #define MOTOR1_PWM2_TIMER         (&htim3)
 #define MOTOR1_PWM2_TIMER_CHANNEL TIM_CHANNEL_3
-#define MOTOR1_PWM2_TIMER_PERIOD  5120
+#define MOTOR1_PWM2_TIMER_PERIOD  5333
 #define MOTOR1_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR1_REVERSED           1
 
 #define MOTOR2_PWM1_TIMER         (&htim1)
 #define MOTOR2_PWM1_TIMER_CHANNEL TIM_CHANNEL_2
-#define MOTOR2_PWM1_TIMER_PERIOD  5120
+#define MOTOR2_PWM1_TIMER_PERIOD  5333
 #define MOTOR2_PWM1_OUTPUT_TYPE   PwmOutput_N
 #define MOTOR2_PWM2_TIMER         (&htim3)
 #define MOTOR2_PWM2_TIMER_CHANNEL TIM_CHANNEL_4
-#define MOTOR2_PWM2_TIMER_PERIOD  5120
+#define MOTOR2_PWM2_TIMER_PERIOD  5333
 #define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR2_REVERSED           0
 
@@ -362,13 +362,13 @@ int main(void)
   if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
       FAIL;
   }
-
+/*
   servo = servoCreate(SERVO_TIMER, SERVO_TIMER_CHANNEL, SERVO_TIMER_PERIOD,
                       SERVO_OUTPUT_TYPE, SERVO_START_POS, SERVO_END_POS    );
   if (servo == NULL) {
       FAIL;
   }
-
+*/
   if (HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER) != HAL_OK) {
       FAIL;
   }
@@ -421,7 +421,6 @@ int main(void)
   // If application returns, stop the motors, and print the returned value
   motorSetSpeed(motor1, 0);
   motorSetSpeed(motor2, 0);
-  servoSetPosition(servo, 0);
   lcdClear();
   lcdPrintf(0, 0, "application");
   lcdPrintf(1, 0, "returned %d", retVal);
@@ -538,6 +537,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
   TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
@@ -546,12 +546,21 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 250;
+  htim1.Init.Prescaler = 12;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 5120;
+  htim1.Init.Period = 5333;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -574,12 +583,6 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.Pulse = 256;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_LOW;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -622,7 +625,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1600;
+  htim2.Init.Period = 3200;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -658,6 +661,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
@@ -665,11 +669,20 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 250;
+  htim3.Init.Prescaler = 12;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 5120;
+  htim3.Init.Period = 5333;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
