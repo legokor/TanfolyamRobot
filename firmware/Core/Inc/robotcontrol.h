@@ -12,18 +12,21 @@
 #include "lcd.h"
 #include "servo.h"
 #include "ultrasonic.h"
-#include "motor.h"
+#include "speed_control.h"
 #include "encoder.h"
 #include "color_sensor.h"
 
+#define MOT_L 0
+#define MOT_R 1
+
 void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
-                      volatile Motor* motorLeft, volatile Motor* motorRight,
+                      volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
                       UART_HandleTypeDef* usbUart);
 void setServoPosition(int8_t position);
 uint16_t getUsDistance();
 void getColorHsv(ColorHsv* color);
-// TODO: motor control
+void setMotorSpeed(uint8_t mot_lr, float speed);
 int uartPrintf(const char *fmt, ...);
 void delayMs(uint32_t delay);
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);

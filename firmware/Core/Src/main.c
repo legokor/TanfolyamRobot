@@ -429,7 +429,7 @@ int main(void)
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
-  robotControlInit(servo, &us, &colorSensor, motor1, motor2, &encoder1, &encoder2, USB_UART);
+  robotControlInit(servo, &us, &colorSensor, speedControl1, speedControl2, &encoder1, &encoder2, USB_UART);
 
   HAL_Delay(1000);
   lcdClear();
@@ -448,8 +448,9 @@ int main(void)
   int retVal = application();
 
   // If application returns, stop the motors, and print the returned value
-  motorSetSpeed(motor1, 0);
-  motorSetSpeed(motor2, 0);
+  HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_RESET);
+  speedControlSetSpeed(speedControl1, 0);
+  speedControlSetSpeed(speedControl2, 0);
   lcdClear();
   lcdPrintf(0, 0, "application");
   lcdPrintf(1, 0, "returned %d", retVal);
