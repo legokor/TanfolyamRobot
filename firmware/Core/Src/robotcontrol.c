@@ -62,13 +62,19 @@ void getColorHsv(ColorHsv* color) {
  * Set motor speed
  * @param mot_lr MOT_L for left, MOT_R for right
  * @param speed between -100 and +100
+ * @return 0 on success
  */
-void setMotorSpeed(uint8_t mot_lr, float speed) {
+int setMotorSpeed(uint8_t mot_lr, float speed) {
     if (mot_lr == MOT_L) {
         speedControlSetSpeed(scL, speed);
-    } else {
-        speedControlSetSpeed(scR, speed);
+        return 0;
     }
+    if (mot_lr == MOT_R){
+        speedControlSetSpeed(scR, speed);
+        return 0;
+    }
+
+    return -1;
 }
 
 

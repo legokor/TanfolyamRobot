@@ -26,7 +26,7 @@ void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile Co
 void setServoPosition(int8_t position);
 uint16_t getUsDistance();
 void getColorHsv(ColorHsv* color);
-void setMotorSpeed(uint8_t mot_lr, float speed);
+int setMotorSpeed(uint8_t mot_lr, float speed);
 int uartPrintf(const char *fmt, ...);
 void delayMs(uint32_t delay);
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
