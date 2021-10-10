@@ -79,6 +79,21 @@ int setMotorSpeed(uint8_t mot_lr, float speed) {
 
 
 /**
+ * Read the current value of the encoder's counter
+ * @param mot_lr MOT_L for left, MOT_R for right motor
+ * @return encoder counter value
+ */
+uint32_t getEncoderPosition(uint8_t mot_lr) {
+    if (mot_lr == MOT_L) {
+        return encoderGetCounterValue(scL->encoder);
+    }
+    if (mot_lr == MOT_R){
+    	return encoderGetCounterValue(scR->encoder);
+    }
+    return 0;
+}
+
+/**
  * Print to the USB serial port. Works just like regular printf.
  */
 int uartPrintf(const char *fmt, ...) {

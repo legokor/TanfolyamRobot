@@ -27,6 +27,7 @@ void setServoPosition(int8_t position);
 uint16_t getUsDistance();
 void getColorHsv(ColorHsv* color);
 int setMotorSpeed(uint8_t mot_lr, float speed);
+uint32_t getEncoderPosition(uint8_t mot_lr);
 int uartPrintf(const char *fmt, ...);
 void delayMs(uint32_t delay);
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
