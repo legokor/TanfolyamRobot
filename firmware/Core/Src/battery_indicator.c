@@ -9,10 +9,12 @@
 
 #define BATTERY_CELL_COUNT 2
 
+volatile uint8_t enabled = 0;
+
 /**
  * Custom characters for HD44780-based LCD
  */
-uint8_t batteryChar[][8] = {
+const uint8_t batteryChar[][8] = {
     {0b01110, 0b10101, 0b11011, 0b01110, 0b01110, 0b10001, 0b01110, 0b10001},   // battery dead
     {0b01110, 0b11011, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11111},   // battery level 0
     {0b01110, 0b11011, 0b10001, 0b10001, 0b10001, 0b10001, 0b11111, 0b11111},   // battery level 1
@@ -52,6 +54,10 @@ void batteryIndicatorInit() {
  * @param batteryVoltage in mV
  */
 void batteryIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage) {
+    if (!enabled) {
+        return;
+    }
+
     uint8_t c = 0;
 
     // Find the correct character based on the voltage thresholds
@@ -70,5 +76,16 @@ void batteryIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage) 
         }
     }
 
+    uint8_t originalRow, originalCol;
+    lcdGetCursor(&originalRow, &originalCol);
     lcdPutc(row, col, c);
+    lcdSetCursor(originalRow, originalCol);
+}
+
+void batteryIndicatorEnable() {
+    enabled = 1;
+}
+
+void batteryIndicatorDisable() {
+    enabled = 0;
 }

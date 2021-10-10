@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include <stdio.h>
+#include "robotcontrol.h"
 #include "lcd.h"
 #include "battery_indicator.h"
 #include "dfu.h"
@@ -33,6 +34,8 @@
 #include "ultrasonic.h"
 #include "servo.h"
 #include "motor.h"
+#include "speed_control.h"
+#include "application.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,9 +53,12 @@
 
 #define USB_UART (&huart1)
 
-#define VBAT_ADC               (&hadc1)
-#define VBAT_ADC_TIMER         (&htim4)
-#define ADC_TO_VBAT_MULTIPLIER (3300 * 5 / 4096)
+#define VBAT_ADC                 (&hadc1)
+#define VBAT_ADC_TIMER           (&htim4)
+#define ADC_TO_VBAT_MULTIPLIER   (3300 * 5 / 4096)
+#define BATTERY_INDICATOR_ROW    0
+#define BATTERY_INDICATOR_COL    15
+#define BATTERY_INDICATOR_PERIOD 10   // about 300 ms
 
 #define SERVO_TIMER         (&htim1)
 #define SERVO_TIMER_CHANNEL TIM_CHANNEL_3
@@ -72,26 +78,31 @@
 
 #define MOTOR1_PWM1_TIMER         (&htim1)
 #define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
-#define MOTOR1_PWM1_TIMER_PERIOD  5120
+#define MOTOR1_PWM1_TIMER_PERIOD  5333
 #define MOTOR1_PWM1_OUTPUT_TYPE   PwmOutput_N
 #define MOTOR1_PWM2_TIMER         (&htim3)
 #define MOTOR1_PWM2_TIMER_CHANNEL TIM_CHANNEL_3
-#define MOTOR1_PWM2_TIMER_PERIOD  5120
+#define MOTOR1_PWM2_TIMER_PERIOD  5333
 #define MOTOR1_PWM2_OUTPUT_TYPE   PwmOutput_P
-#define MOTOR1_REVERSED           0
+#define MOTOR1_REVERSED           1
 
 #define MOTOR2_PWM1_TIMER         (&htim1)
 #define MOTOR2_PWM1_TIMER_CHANNEL TIM_CHANNEL_2
-#define MOTOR2_PWM1_TIMER_PERIOD  5120
+#define MOTOR2_PWM1_TIMER_PERIOD  5333
 #define MOTOR2_PWM1_OUTPUT_TYPE   PwmOutput_N
 #define MOTOR2_PWM2_TIMER         (&htim3)
 #define MOTOR2_PWM2_TIMER_CHANNEL TIM_CHANNEL_4
-#define MOTOR2_PWM2_TIMER_PERIOD  5120
+#define MOTOR2_PWM2_TIMER_PERIOD  5333
 #define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
-#define MOTOR2_REVERSED           1
+#define MOTOR2_REVERSED           0
 
-#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_1
-#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_1
+#define MOTOR_CONTROL_TIMER       (&htim3)
+
+#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_4
+#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_4
+#define MOTOR_ENCODER_TIMER       (&htim2)
+#define MOTOR_ENCODER_MAX_SPEED_CPS 12000
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -118,18 +129,20 @@ const uint8_t lcdCols = 16;
 
 const char uartDfuCommand[] = UART_DFU_COMMAND;
 const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
-volatile uint8_t uartDfuRequest = 0;
 volatile uint8_t uartRxData;
 
 volatile Encoder encoder1;
 volatile Encoder encoder2;
 
 volatile UltraSonic us;
+volatile ColorSensor colorSensor;
 
 Servo* servo;
 
-Motor* motor1;
-Motor* motor2;
+volatile Motor* motor1;
+volatile Motor* motor2;
+volatile SpeedControl* speedControl1;
+volatile SpeedControl* speedControl2;
 
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
@@ -153,13 +166,31 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    static uint32_t adcTimerItCount = 0;
+
     if (htim == LCD_TIMER) {
+        encoderTimerOverflowHandler(&encoder1);
+        encoderTimerOverflowHandler(&encoder2);
         lcdHandler();
     } else if (htim == VBAT_ADC_TIMER) {
+        adcTimerItCount++;
+
+        if (adcTimerItCount >= BATTERY_INDICATOR_PERIOD) {
+            adcTimerItCount = 0;
+            batteryIndicatorDisplay(BATTERY_INDICATOR_ROW, BATTERY_INDICATOR_COL, batteryVoltage);
+        }
+
         if (!batteryAdcBusy) {
             batteryAdcBusy = 1;
             HAL_ADC_Start_IT(VBAT_ADC);
         }
+    }
+}
+
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+    if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
+        speedControlHandler(speedControl1);
+        speedControlHandler(speedControl2);
     }
 }
 
@@ -186,7 +217,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
             }
             case COLOR_ACTIVE_CHANNEL : {
                 uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, COLOR_CHANNEL);
-                colorSensorCaptureHandler(captureVal);
+                colorSensorCaptureHandler(&colorSensor, captureVal);
                 break;
             }
             default: break;  // only needed to suppress unhandled enum value warning
@@ -208,7 +239,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
         }
         if (dfuReceived == uartDfuCommandLen) {
             dfuReceived = 0;
-            uartDfuRequest = 1;
+
+            batteryIndicatorDisable();
+            lcdClear();
+            lcdPuts(0, 4, "DFU mode");
+            HAL_Delay(100);
+            rebootIntoDfu(DFU_MAGIC_WORD);
         }
 
         // Receive next byte
@@ -239,12 +275,7 @@ void fail(char *file, uint16_t line) {
     HAL_UART_Transmit(&huart1, (uint8_t*)msg, msgLen, 0xffff);
 
     while (1) {
-        if (uartDfuRequest) {
-            lcdClear();
-            lcdPrintf(0, 4, "DFU mode");
-            HAL_Delay(100);
-            rebootIntoDfu(DFU_MAGIC_WORD);
-        }
+
     }
 }
 
@@ -319,15 +350,15 @@ int main(void)
           lcdRows, lcdCols);
 
   if (exitDfu) {
-      lcdPrintf(0, 0, "Exit DFU mode...");
+      lcdPuts(0, 0, "Exit DFU mode...");
       HAL_Delay(1000);
       lcdClear();
   }
 
   batteryIndicatorInit();
 
-  lcdPrintf(0, 4, "LEGO");
-  lcdPrintf(1, 8, "K%cR", 239);
+  lcdPuts(0, 4, "LEGO");
+  lcdPuts(1, 8, "K\xefR");
 
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
          US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
@@ -340,20 +371,21 @@ int main(void)
       FAIL;
   }
 
-  colorSensorInit(COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
+  colorSensorInit(&colorSensor,
+                  COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
 
   if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
       FAIL;
   }
-
+/*
   servo = servoCreate(SERVO_TIMER, SERVO_TIMER_CHANNEL, SERVO_TIMER_PERIOD,
                       SERVO_OUTPUT_TYPE, SERVO_START_POS, SERVO_END_POS    );
   if (servo == NULL) {
       FAIL;
   }
-
+*/
   if (HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER) != HAL_OK) {
       FAIL;
   }
@@ -362,9 +394,11 @@ int main(void)
   }
 
   encoderInit(&encoder1, ENC1_A_GPIO_Port, ENC1_A_Pin, ENC1_B_GPIO_Port, ENC1_B_Pin,
-                         MOTOR1_ENCODER_RESOLUTION, MOTOR1_REVERSED);
+                         MOTOR1_ENCODER_RESOLUTION, MOTOR1_REVERSED,
+                         MOTOR_ENCODER_TIMER, MOTOR_ENCODER_MAX_SPEED_CPS);
   encoderInit(&encoder2, ENC2_A_GPIO_Port, ENC2_A_Pin, ENC2_B_GPIO_Port, ENC2_B_Pin,
-                         MOTOR2_ENCODER_RESOLUTION, MOTOR2_REVERSED);
+                         MOTOR2_ENCODER_RESOLUTION, MOTOR2_REVERSED,
+                         MOTOR_ENCODER_TIMER, MOTOR_ENCODER_MAX_SPEED_CPS);
 
   motor1 = motorCreate(MOTOR1_PWM1_TIMER, MOTOR1_PWM1_TIMER_CHANNEL,
                        MOTOR1_PWM1_TIMER_PERIOD, MOTOR1_PWM1_OUTPUT_TYPE,
@@ -383,29 +417,51 @@ int main(void)
       FAIL;
   }
 
+  speedControl1 = speedControlCreate(motor1, &encoder1);
+  if (speedControl1 == NULL) {
+      FAIL;
+  }
+
+  speedControl2 = speedControlCreate(motor2, &encoder2);
+  if (speedControl2 == NULL) {
+      FAIL;
+  }
+
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
+
+  robotControlInit(servo, &us, &colorSensor, speedControl1, speedControl2, &encoder1, &encoder2, USB_UART);
 
   HAL_Delay(1000);
   lcdClear();
+  batteryIndicatorEnable();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  lcdPrintf(0, 0, "Press button\nto start");
+  while (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_SET);
+  lcdClear();
+
+  // Start user application
+  int retVal = application();
+
+  // If application returns, stop the motors, and print the returned value
+  HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_RESET);
+  speedControlSetSpeed(speedControl1, 0);
+  speedControlSetSpeed(speedControl2, 0);
+  lcdClear();
+  lcdPrintf(0, 0, "application");
+  lcdPrintf(1, 0, "returned %d", retVal);
+
   while (1)
   {
-      if (uartDfuRequest) {
-          lcdClear();
-          lcdPrintf(0, 4, "DFU mode");
-          HAL_Delay(100);
-          rebootIntoDfu(DFU_MAGIC_WORD);
-      }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 
-      batteryIndicatorDisplay(0, 15, batteryVoltage); // TODO: move this to some housekeeping function
-      HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -511,6 +567,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
   TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
@@ -519,12 +576,21 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 250;
+  htim1.Init.Prescaler = 12;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 5120;
+  htim1.Init.Period = 5333;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -547,12 +613,6 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.Pulse = 256;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_LOW;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -595,7 +655,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1600;
+  htim2.Init.Period = 3200;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -631,6 +691,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
@@ -638,11 +699,20 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 250;
+  htim3.Init.Prescaler = 12;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 5120;
+  htim3.Init.Period = 5333;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
   {
     Error_Handler();

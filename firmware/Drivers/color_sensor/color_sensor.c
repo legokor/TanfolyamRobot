@@ -7,71 +7,40 @@
  * Driver for the TCS3200 color sensor
  */
 #include "color_sensor.h"
-
-typedef enum {
-    ColorIndex_Red = 0,
-    ColorIndex_Blue = 1,
-    ColorIndex_Clear = 2,
-    ColorIndex_Green = 3,
-    ColorIndex_Invalid = 4,
-} ColorIndex;
-
-/*
- * Color sensor pin locations
- */
-GPIO_TypeDef *s0Port;
-GPIO_TypeDef *s1Port;
-GPIO_TypeDef *s2Port;
-GPIO_TypeDef *s3Port;
-uint16_t s0Pin;
-uint16_t s1Pin;
-uint16_t s2Pin;
-uint16_t s3Pin;
-
-/*
- * Capture values for each channel
- */
-volatile uint16_t measuredVal[4] = {0, 0, 0, 0};
-volatile ColorIndex currentCaptureIndex;
-uint16_t numOfAverages;
+#include "calibration.h"
 
 /**
  * Set the color filter of the sensor
  * @param colorIndex
  */
-void setColorFilter(ColorIndex colorIndex) {
-    HAL_GPIO_WritePin(s2Port, s2Pin, colorIndex & (1 << 1));
-    HAL_GPIO_WritePin(s3Port, s3Pin, colorIndex & (1 << 0));
+void setColorFilter(volatile ColorSensor* cs, ColorIndex colorIndex) {
+    HAL_GPIO_WritePin(cs->s2Port, cs->s2Pin, colorIndex & (1 << 1));
+    HAL_GPIO_WritePin(cs->s3Port, cs->s3Pin, colorIndex & (1 << 0));
 }
 
 /**
  * Call this from the sensor output's input capture interrupt handler
  * @param captureVal timer's input capture value
  */
-void colorSensorCaptureHandler(uint16_t captureVal) {
-    static uint16_t prevCaptureVal;
-    static uint32_t itCntr = 0;
-    static uint32_t captureSum = 0;
+void colorSensorCaptureHandler(volatile ColorSensor* cs, uint16_t captureVal) {
+    uint16_t elapsed = captureVal - cs->prevCaptureVal;
 
-    uint16_t elapsed = captureVal - prevCaptureVal;
+    cs->prevCaptureVal = captureVal;
+    cs->captureSum += elapsed;
+    cs->itCntr++;
 
-    prevCaptureVal = captureVal;
+    if (cs->itCntr == cs->numOfAverages) {
+        cs->itCntr = 0;
 
-    captureSum += elapsed;
-    itCntr++;
+        cs->measuredVal[cs->currentCaptureIndex] = cs->captureSum / 16;
+        cs->captureSum = 0;
 
-    if (itCntr == numOfAverages) {
-        itCntr = 0;
-
-        measuredVal[currentCaptureIndex] = captureSum / 16;
-        captureSum = 0;
-
-        currentCaptureIndex++;
-        if (currentCaptureIndex == ColorIndex_Invalid) {
-          currentCaptureIndex = ColorIndex_Red;
+        cs->currentCaptureIndex++;
+        if (cs->currentCaptureIndex == ColorIndex_Invalid) {
+            cs->currentCaptureIndex = ColorIndex_Red;
         }
 
-        setColorFilter(currentCaptureIndex);
+        setColorFilter(cs, cs->currentCaptureIndex);
     }
 
 }
@@ -80,33 +49,30 @@ void colorSensorCaptureHandler(uint16_t captureVal) {
  * Initialize the color sensor
  * @param csSxPort GPIO port of Sx setting pin
  * @param csSxPin pin number of Sx setting pin
- * @param inputFiltering number of capture value to average for each channel
+ * @param inputFiltering number of capture values to average for each channel
  */
-void colorSensorInit(GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS1Port, uint16_t csS1Pin,
+void colorSensorInit(volatile ColorSensor* cs,
+                     GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS1Port, uint16_t csS1Pin,
                      GPIO_TypeDef *csS2Port, uint16_t csS2Pin, GPIO_TypeDef *csS3Port, uint16_t csS3Pin,
                      uint16_t inputFiltering) {
-    s0Port = csS0Port;
-    s1Port = csS1Port;
-    s2Port = csS2Port;
-    s3Port = csS3Port;
-    s0Pin = csS0Pin;
-    s1Pin = csS1Pin;
-    s2Pin = csS2Pin;
-    s3Pin = csS3Pin;
+    cs->s0Port = csS0Port;
+    cs->s1Port = csS1Port;
+    cs->s2Port = csS2Port;
+    cs->s3Port = csS3Port;
+    cs->s0Pin = csS0Pin;
+    cs->s1Pin = csS1Pin;
+    cs->s2Pin = csS2Pin;
+    cs->s3Pin = csS3Pin;
 
-    numOfAverages = inputFiltering;
+    cs->numOfAverages = inputFiltering;
 
-    /*
-     * Disable frequency scaling
-     */
-    HAL_GPIO_WritePin(s0Port, s0Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(s1Port, s1Pin, GPIO_PIN_SET);
+    // Disable frequency scaling
+    HAL_GPIO_WritePin(cs->s0Port, cs->s0Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(cs->s1Port, cs->s1Pin, GPIO_PIN_SET);
 
-    /*
-     * Set color filter
-     */
-    setColorFilter(ColorIndex_Red);
-    currentCaptureIndex = ColorIndex_Red;
+    // Set color filter
+    setColorFilter(cs, ColorIndex_Red);
+    cs->currentCaptureIndex = ColorIndex_Red;
 }
 
 /**
@@ -116,9 +82,75 @@ void colorSensorInit(GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS
  * @param capBlue
  * @param capClear
  */
-void colorSensorGetPeriods(uint16_t* capRed, uint16_t* capGreen, uint16_t* capBlue, uint16_t* capClear) {
-    *capRed   = measuredVal[ColorIndex_Red];
-    *capGreen = measuredVal[ColorIndex_Green];
-    *capBlue  = measuredVal[ColorIndex_Blue];
-    *capClear = measuredVal[ColorIndex_Clear];
+void colorSensorGetPeriods(volatile ColorSensor* cs, uint16_t* capRed, uint16_t* capGreen,
+                           uint16_t* capBlue, uint16_t* capClear) {
+    *capRed   = cs->measuredVal[ColorIndex_Red];
+    *capGreen = cs->measuredVal[ColorIndex_Green];
+    *capBlue  = cs->measuredVal[ColorIndex_Blue];
+    *capClear = cs->measuredVal[ColorIndex_Clear];
+}
+
+/**
+ * Read calibrated RGB values
+ * @param r
+ * @param g
+ * @param b
+ */
+void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t* b) {
+    uint16_t pR, pG, pB, pC;
+    colorSensorGetPeriods(cs, &pR, &pG, &pB, &pC);
+
+    uint16_t sR = SCALE / pR;
+    uint16_t sG = SCALE / pG;
+    uint16_t sB = SCALE / pB;
+
+    *r = (sR - R_MIN) * 255 / (R_MAX - R_MIN);
+    *g = (sG - G_MIN) * 255 / (G_MAX - G_MIN);
+    *b = (sB - B_MIN) * 255 / (B_MAX - B_MIN);
+}
+
+/**
+ * Read calibrated color in HSV
+ * @param color
+ */
+void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color) {
+    uint8_t r, g, b;
+    colorSensorGetRgb(cs, &r, &g, &b);
+
+    uint8_t max, min;
+
+    min = (r < g) ? r : g;
+    max = (r > g) ? r : g;
+    min = (min < b) ? min : b;
+    max = (max > b) ? max : b;
+
+    int16_t hue;
+    uint8_t sat;
+    uint8_t val = (uint16_t)max * 100 / 255;
+
+    uint8_t delta = max - min;
+
+    if (delta == 0) {
+        sat = 0;
+        hue = 0;
+    } else {
+        sat = 100 * delta / max;
+
+        if (max == r) {
+            hue = 60 * ( ( ((float)g - (float)b) / delta )    );    // TODO: optimize
+        } else if (max == g) {
+            hue = 60 * ( ( ((float)b - (float)r) / delta ) + 2);    // TODO: optimize
+        } else {
+            hue = 60 * ( ( ((float)r - (float)g) / delta ) + 4);    // TODO: optimize
+        }
+    }
+
+    hue = hue % 360;
+    if (hue < 0) {
+        hue += 360;
+    }
+
+    color->h = hue;
+    color->s = sat;
+    color->v = val;
 }
