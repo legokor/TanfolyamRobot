@@ -13,9 +13,6 @@
  * https://github.com/nimaltd/LCD-Character
  */
 #include "lcd.h"
-#include <stdarg.h>
-#include <string.h>
-#include <stdio.h>
 #include "circular_buffer.h"
 
 /*
@@ -59,8 +56,8 @@
 
 /*
  * HD44780 character addressing works like this (if screen width <= 20):
- * | 0x00    1st row    0x13 | 0x14    2nd row    0x39 |
- * | 0x00    2nd row    0x13 | 0x14    2nd row    0x39 |
+ * | 0x00     row 1     0x13 | 0x14     row 3     0x27 |
+ * | 0x40     row 2     0x53 | 0x54     row 4     0x67 |
  */
 const uint8_t HD44780RowOffsets[] = {0x00, 0x40, 0x14, 0x54};
 
@@ -122,7 +119,7 @@ static void lcdDelayMs(uint8_t ms);
 static int lcdAdd4BitTransfer(uint8_t val, TransferType type);
 static int lcdAddCmd(uint8_t cmd);
 static int lcdAddData(uint8_t data);
-static int lcdSetCursor(uint8_t row, uint8_t col);
+
 /**
  * Initialize the display
  * @param lcdXPort GPIO port of X
@@ -215,7 +212,7 @@ void lcdInit(GPIO_TypeDef *lcdRsPort, uint16_t lcdRsPin, GPIO_TypeDef *lcdEnPort
  * @param character 8 rows of 5 bits
  * @return 0 on success
  */
-int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]) {
+int lcdAddCustomCharacter(uint8_t address, const uint8_t character[8]) {
     if (address >= 8) {
         return -1;
     }
@@ -238,26 +235,6 @@ int lcdAddCustomCharacter(uint8_t address, uint8_t character[8]) {
     err = lcdSetCursor(lcdState.currentRow, lcdState.currentCol);
 
     return err;
-}
-
-/**
- * Works just like printf after the position specifiers
- * @param row of starting position
- * @param col of starting position
- * @param fmt printf-like format string followed by a variable number of arguments
- */
-int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-
-    char str[64];
-    int size = vsprintf(str, fmt, args);
-
-    if (size <= 0) {
-        return size;
-    }
-
-    return lcdPuts(row, col, str);
 }
 
 /**
@@ -330,7 +307,14 @@ int lcdPutc(uint8_t row, uint8_t col, char c) {
             return err;
         }
     }
-    return lcdAddData(c);
+
+    int err = lcdAddData(c);
+    if (err) {
+        return err;
+    }
+    lcdState.currentCol++;
+
+    return 0;
 }
 
 /**
@@ -434,9 +418,7 @@ static int lcdAdd4BitTransfer(uint8_t val, TransferType type) {
     val &= 0x0F;
     val = val | (type << 7);
 
-    __disable_irq();
     int8_t e = circularBufferWrite(&transferBuf, val);
-    __enable_irq();
 
     return e;
 }
@@ -455,16 +437,15 @@ static int lcdAddCmd(uint8_t cmd) {
     uint8_t cmd0 = cmd >> 4;
     uint8_t cmd1 = cmd & 0x0F;
 
+    __disable_irq();
     int err;
-    err = lcdAdd4BitTransfer(cmd0, TransferType_Command);
-    if (err) {
-        return err; // this should never happen
+    err = lcdAdd4BitTransfer(cmd0, TransferType_Command);     // this should never fail
+    if (!err) {
+        err = lcdAdd4BitTransfer(cmd1, TransferType_Command); // this should never fail
     }
-    err = lcdAdd4BitTransfer(cmd1, TransferType_Command);
-    if (err) {
-        return err; // this should never happen
-    }
-    return 0;
+    __enable_irq();
+
+    return err;
 }
 
 /**
@@ -481,16 +462,15 @@ static int lcdAddData(uint8_t data) {
     uint8_t data0 = data >> 4;
     uint8_t data1 = data & 0x0F;
 
+    __disable_irq();
     int err;
-    err = lcdAdd4BitTransfer(data0, TransferType_Data);
-    if (err) {
-        return err; // this should never happen
+    err = lcdAdd4BitTransfer(data0, TransferType_Data);     // this should never fail
+    if (!err) {
+        err = lcdAdd4BitTransfer(data1, TransferType_Data); // this should never fail
     }
-    err = lcdAdd4BitTransfer(data1, TransferType_Data);
-    if (err) {
-        return err; // this should never happen
-    }
-    return 0;
+    __enable_irq();
+
+    return err;
 }
 
 /**
@@ -499,7 +479,7 @@ static int lcdAddData(uint8_t data) {
  * @param row 0-based row number
  * @return 0 on success
  */
-static int lcdSetCursor(uint8_t row, uint8_t col) {
+int lcdSetCursor(uint8_t row, uint8_t col) {
     if (row >= lcdSettings.numOfRows) {
         row = 0;
     }
@@ -515,3 +495,12 @@ static int lcdSetCursor(uint8_t row, uint8_t col) {
     return 0;
 }
 
+/**
+ * Check the current position of the cursor
+ * @param row
+ * @param col
+ */
+void lcdGetCursor(uint8_t* row, uint8_t* col) {
+    *row = lcdState.currentRow;
+    *col = lcdState.currentCol;
+}

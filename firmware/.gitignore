@@ -48,3 +48,6 @@ Release/
 *.su
 *.idb
 *.pdb
+
+# Enable exe for stm32flash
+!tools/stm32flash.exe
