@@ -56,8 +56,8 @@
 
 /*
  * HD44780 character addressing works like this (if screen width <= 20):
- * | 0x00    1st row    0x13 | 0x14    2nd row    0x39 |
- * | 0x00    2nd row    0x13 | 0x14    2nd row    0x39 |
+ * | 0x00     row 1     0x13 | 0x14     row 3     0x27 |
+ * | 0x40     row 2     0x53 | 0x54     row 4     0x67 |
  */
 const uint8_t HD44780RowOffsets[] = {0x00, 0x40, 0x14, 0x54};
 
