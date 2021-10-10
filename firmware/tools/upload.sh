@@ -22,7 +22,7 @@ sleep 1
 START_TIME=$(date +%s.%N)
 
 # Flash MCU
-stm32flash -b $UPLOAD_BAUD -w ../Debug/tanfolyamrobot.bin -v -g 0x0 $1
+./stm32flash -b $UPLOAD_BAUD -w ../Debug/tanfolyamrobot.bin -v -g 0x0 $1
 
 # Calculate and print upload time
 END_TIME=$(date +%s.%N)
