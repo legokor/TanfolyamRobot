@@ -35,7 +35,7 @@ A következő oldalon keressük ki a kicsomagolt projekt mappáját. Ekkor megje
 
 ## Fejlesztés
 
-A tanfolyam során az `application.c` fájlban fogunk dolgozni. Az itt található `application()` függvény gombnyomásra indul. Ha ebből a függvényből visszatértek, a robot leáll, és a kijelzőn megjeleníti a viszzatérési értéket.
+A tanfolyam során az `application.c` fájlban fogunk dolgozni. Az itt található `application()` függvény gombnyomásra indul. Ha ebből a függvényből visszatértek, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
 
 <p align="center"><img src="docs/img/appplication_source_file.png" align=center></p>
 
