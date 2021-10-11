@@ -1,4 +1,4 @@
-# TanfolyamRobot - PCB design
+# TanfolyamRobot - PCB design considerations
 
 _Note: schematic net and pin names are formatted like_ `this`.
 
