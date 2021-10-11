@@ -1,11 +1,25 @@
 # TanfolyamRobot
 
-TODO...
+## Fejlesztőkörnyezet
 
-## Connectors
+A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html).
 
-The GND pin's location is marked on the board. The pins are in the same order as on the connected modules, **except for the encoders**, where the power pins are swapped.
+Tesztelt operációs rendszerek: 
+ * Windows 10
+ * Ubuntu 18.04
+ * Ubuntu 20.04
+ * Pop!_OS 21.04
 
-| Color sensor                                       | Ultrasonic sensor                                | Motor encoders                                | Servo                                |
-|----------------------------------------------------|--------------------------------------------------|-----------------------------------------------|--------------------------------------|
-| <img src="etc/readme-img/color_sensor_pinout.png"> | <img src="etc/readme-img/ultrasonic_pinout.png"> | <img src="etc/readme-img/encoder_pinout.png"> | <img src="etc/readme-img/servo.png"> |
+### További lépések Linux esetén
+A firmware letöltése a robotra virtuális soros porton keresztül történik. A soros portok csak akkor használhatóak, ha a felhasználó tagja `dialout` csoportnak. 
+
+```
+sudo adduser $USER dialout
+```
+
+Ezután oprendszertől függően ki és be kell jelentkezni, vagy újra kell indítani a gépet.
+
+## Projekt importálása
+GitHubon a [Releases](https://github.com/legokor/TanfolyamRobot/releases) alatt töltsük le a projekt aktuális verzióját.
+
+
