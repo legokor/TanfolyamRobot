@@ -8,9 +8,7 @@ int application() {
     lcdPrintf(0, 0, "Hello");
     lcdPrintf(1, 5, "World!");
 
-    while (1) {
-
-    }
+    delayMs(2000);
 
     return 0;
 }
