@@ -429,7 +429,7 @@ int main(void)
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
-  robotControlInit(servo, &us, &colorSensor, speedControl1, speedControl2, &encoder1, &encoder2, USB_UART);
+  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, USB_UART);
 
   HAL_Delay(1000);
   lcdClear();
