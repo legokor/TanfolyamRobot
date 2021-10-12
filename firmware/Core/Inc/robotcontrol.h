@@ -16,8 +16,8 @@
 #include "encoder.h"
 #include "color_sensor.h"
 
-#define MOT_L 0
-#define MOT_R 1
+#define MOT_R 0
+#define MOT_L 1
 
 void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
