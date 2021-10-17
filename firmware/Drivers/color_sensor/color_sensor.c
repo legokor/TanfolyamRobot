@@ -100,9 +100,20 @@ void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t
     uint16_t pR, pG, pB, pC;
     colorSensorGetPeriods(cs, &pR, &pG, &pB, &pC);
 
-    uint16_t sR = SCALE / pR;
-    uint16_t sG = SCALE / pG;
-    uint16_t sB = SCALE / pB;
+    // Set to max value if we divide by 0
+    uint16_t sR = 65535;
+    uint16_t sG = 65535;
+    uint16_t sB = 65535;
+
+    if (pR != 0) {
+        sR = SCALE / pR;
+    }
+    if (pG != 0) {
+        sG = SCALE / pG;
+    }
+    if (pB != 0) {
+        sB = SCALE / pB;
+    }
 
     *r = (sR - R_MIN) * 255 / (R_MAX - R_MIN);
     *g = (sG - G_MIN) * 255 / (G_MAX - G_MIN);

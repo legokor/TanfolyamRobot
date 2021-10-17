@@ -189,8 +189,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
     if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
-        speedControlHandler(speedControl1);
-        speedControlHandler(speedControl2);
+        if (speedControl1 != NULL) {
+            speedControlHandler(speedControl1);
+        }
+        if (speedControl2 != NULL) {
+            speedControlHandler(speedControl2);
+        }
     }
 }
 
