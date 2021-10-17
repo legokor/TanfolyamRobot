@@ -34,36 +34,27 @@ void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile Co
     uart = usbUart;
 }
 
-/**
- * Set the servo's position in degrees
- * @param position must be between -90 and 90. Otherwise it will be clipped to those values.
- */
+
 void setServoPosition(int8_t position) {
     servoSetPosition(servo, position);
 }
 
-/**
- * Get the distance measured by the ultrasonic ranging sensor
- * @return distance in cm
- */
+
 uint16_t getUsDistance() {
     return usMeasureBlocking(us);   // TODO: measure automatically, provide a non-blocking measurement function
 }
 
-/**
- * Read color in HSV format
- * @param color
- */
-void getColorHsv(ColorHsv* color) {
-    colorSensorGetHsv(cs, color);
+
+void getColorHsv(Color* color) {
+    ColorHsv c;
+    colorSensorGetHsv(cs, &c);
+
+    color->h = c.h;
+    color->s = c.s;
+    color->v = c.v;
 }
 
-/**
- * Set motor speed
- * @param mot_lr MOT_L for left, MOT_R for right
- * @param speed between -100 and +100
- * @return 0 on success
- */
+
 int setMotorSpeed(uint8_t mot_lr, float speed) {
     if (mot_lr == MOT_L) {
         speedControlSetSpeed(scL, speed);
@@ -78,11 +69,6 @@ int setMotorSpeed(uint8_t mot_lr, float speed) {
 }
 
 
-/**
- * Read the current value of the encoder's counter
- * @param mot_lr MOT_L for left, MOT_R for right motor
- * @return encoder counter value
- */
 uint32_t getEncoderPosition(uint8_t mot_lr) {
     if (mot_lr == MOT_L) {
         return encoderGetCounterValue(scL->encoder);
@@ -93,9 +79,7 @@ uint32_t getEncoderPosition(uint8_t mot_lr) {
     return 0;
 }
 
-/**
- * Print to the USB serial port. Works just like regular printf.
- */
+
 int uartPrintf(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -108,20 +92,12 @@ int uartPrintf(const char *fmt, ...) {
     return size;
 }
 
-/**
- * Do nothing for the specified time
- * @param delay in ms
- */
+
 void delayMs(uint32_t delay) {
     HAL_Delay(delay);
 }
 
-/**
- * Works just like printf after the position specifiers
- * @param row of starting position
- * @param col of starting position
- * @param fmt printf-like format string followed by a variable number of arguments
- */
+
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
