@@ -16,20 +16,11 @@
 #include "encoder.h"
 #include "color_sensor.h"
 
-#define MOT_R 0
-#define MOT_L 1
+#include "robotcontrol-api.h"
 
 void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
                       UART_HandleTypeDef* usbUart);
-void setServoPosition(int8_t position);
-uint16_t getUsDistance();
-void getColorHsv(ColorHsv* color);
-int setMotorSpeed(uint8_t mot_lr, float speed);
-uint32_t getEncoderPosition(uint8_t mot_lr);
-int uartPrintf(const char *fmt, ...);
-void delayMs(uint32_t delay);
-int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
 
 #endif /* INC_ROBOTCONTROL_H_ */
