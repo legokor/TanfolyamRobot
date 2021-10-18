@@ -62,7 +62,9 @@ Pwm* pwmCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t timerPe
     }
 
     Pwm* pwm = (Pwm*) malloc(sizeof(Pwm));
-    pwmInit(pwm, timer, timerChannel, timerPeriod, outputType);
+    if (pwm != NULL) {
+        pwmInit(pwm, timer, timerChannel, timerPeriod, outputType);
+    }
 
     return pwm;
 }
