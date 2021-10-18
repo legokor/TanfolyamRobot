@@ -55,7 +55,10 @@ Servo* servoCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t tim
     }
 
     Servo* servo = (Servo*) malloc(sizeof(Servo));
-    servoInit(servo, pwm, compareStart, compareEnd);
+
+    if (servo != NULL) {
+        servoInit(servo, pwm, compareStart, compareEnd);
+    }
 
     return servo;
 }
