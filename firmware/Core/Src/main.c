@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include "robotcontrol.h"
 #include "lcd.h"
+#include "soft-pwm.h"
 #include "battery_indicator.h"
 #include "dfu.h"
 #include "color_sensor.h"
@@ -50,6 +51,8 @@
 #define UART_DFU_COMMAND   "ENTER_DFU"
 
 #define LCD_TIMER (&htim2)
+#define LCD_BACKLIGHT_PERIOD 100
+#define LCD_BACKLIGHT_PERCENT 60
 
 #define USB_UART (&huart1)
 
@@ -147,6 +150,7 @@ volatile SpeedControl* speedControl2;
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
 
+volatile SoftPwm* lcdBacklightPwm;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -172,6 +176,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         encoderTimerOverflowHandler(&encoder1);
         encoderTimerOverflowHandler(&encoder2);
         lcdHandler();
+        if (lcdBacklightPwm != NULL) {
+            softPwmHandler(lcdBacklightPwm);
+        }
     } else if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
 
@@ -346,7 +353,11 @@ int main(void)
       FAIL;
   }
 
-  HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, GPIO_PIN_SET);
+  lcdBacklightPwm = softPwmCreate(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, LCD_BACKLIGHT_PERIOD);
+  if (lcdBacklightPwm == NULL) {
+      FAIL;
+  }
+  softPwmSetDutyCylePercent(lcdBacklightPwm, LCD_BACKLIGHT_PERCENT);
 
   lcdInit(LCD_RST_GPIO_Port, LCD_RST_Pin, LCD_EN_GPIO_Port, LCD_EN_Pin,
           LCD_D4_GPIO_Port, LCD_D4_Pin, LCD_D5_GPIO_Port, LCD_D5_Pin,
