@@ -19,7 +19,7 @@ typedef struct {
     uint16_t compareEnd;
 } Servo;
 
-void servoInit(Servo* servo, Pwm* pwm, uint16_t compare1, uint16_t compare2);
+void servoInit(Servo* servo, Pwm* pwm, uint16_t compareStart, uint16_t compareEnd);
 Servo* servoCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t timerPeriod,
                    PwmOutput outputType, uint16_t compareStart, uint16_t compareEnd);
 void servoSetPosition(Servo* servo, int8_t position);
