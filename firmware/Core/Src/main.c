@@ -176,9 +176,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         if (lcdBacklightPwm != NULL) {
             softPwmHandler(lcdBacklightPwm);
         }
+        /*
         if (servo != NULL) {
             softServoHandler(servo);
         }
+        */
     } else if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
 
