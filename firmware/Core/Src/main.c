@@ -33,7 +33,7 @@
 #include "color_sensor.h"
 #include "encoder.h"
 #include "ultrasonic.h"
-#include "servo.h"
+#include "soft-servo.h"
 #include "motor.h"
 #include "speed_control.h"
 #include "application.h"
@@ -63,12 +63,9 @@
 #define BATTERY_INDICATOR_COL    15
 #define BATTERY_INDICATOR_PERIOD 10   // about 300 ms
 
-#define SERVO_TIMER         (&htim1)
-#define SERVO_TIMER_CHANNEL TIM_CHANNEL_3
-#define SERVO_OUTPUT_TYPE   PwmOutput_N
-#define SERVO_TIMER_PERIOD  5120
-#define SERVO_START_POS     620           // TODO: calibrate endpoints
-#define SERVO_END_POS       155
+#define SERVO_PERIOD        400
+#define SERVO_START_POS      20           // TODO: calibrate endpoints
+#define SERVO_END_POS        40
 
 #define US_AND_COLOR_CAPTURE_TIMER (&htim4)
 #define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
@@ -140,7 +137,7 @@ volatile Encoder encoder2;
 volatile UltraSonic us;
 volatile ColorSensor colorSensor;
 
-Servo* servo;
+SoftServo* servo;
 
 volatile Motor* motor1;
 volatile Motor* motor2;
@@ -178,6 +175,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         lcdHandler();
         if (lcdBacklightPwm != NULL) {
             softPwmHandler(lcdBacklightPwm);
+        }
+        if (servo != NULL) {
+            softServoHandler(servo);
         }
     } else if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
@@ -394,13 +394,12 @@ int main(void)
   if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
       FAIL;
   }
-/*
-  servo = servoCreate(SERVO_TIMER, SERVO_TIMER_CHANNEL, SERVO_TIMER_PERIOD,
-                      SERVO_OUTPUT_TYPE, SERVO_START_POS, SERVO_END_POS    );
+
+  servo = softServoCreate(SERVO_GPIO_Port, SERVO_Pin, SERVO_PERIOD, SERVO_START_POS, SERVO_END_POS);
   if (servo == NULL) {
       FAIL;
   }
-*/
+
   if (HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER) != HAL_OK) {
       FAIL;
   }
