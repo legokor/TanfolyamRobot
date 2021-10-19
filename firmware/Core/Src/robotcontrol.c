@@ -8,14 +8,14 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-Servo* servo;
-volatile UltraSonic* us;
-volatile ColorSensor* cs;
-volatile SpeedControl* scL;
-volatile SpeedControl* scR;
-volatile Encoder* encoderL;
-volatile Encoder* encoderR;
-UART_HandleTypeDef* uart;
+static Servo* servo;
+static volatile UltraSonic* us;
+static volatile ColorSensor* cs;
+static volatile SpeedControl* scL;
+static volatile SpeedControl* scR;
+static volatile Encoder* encoderL;
+static volatile Encoder* encoderR;
+static UART_HandleTypeDef* uart;
 
 /**
  * Save the pointer to every driver instance used here
