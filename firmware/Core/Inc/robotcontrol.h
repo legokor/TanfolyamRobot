@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include "lcd.h"
-#include "servo.h"
+#include "soft-servo.h"
 #include "ultrasonic.h"
 #include "speed_control.h"
 #include "encoder.h"
@@ -18,7 +18,7 @@
 
 #include "robotcontrol-api.h"
 
-void robotControlInit(Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
+void robotControlInit(volatile SoftServo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
                       UART_HandleTypeDef* usbUart);
