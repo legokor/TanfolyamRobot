@@ -42,7 +42,7 @@ void servoInit(Servo* servo, Pwm* pwm, uint16_t compareStart, uint16_t compareEn
  * @param timerPeriod counting period of the timer
  * @param outputType which pwm output is used (see pwm.h)
  * @param compareStart timer output compare value for -90 degree position (1 ms)
- * @param compareEnd output compare value for +90 degree position (2 ms)
+ * @param compareEnd timer output compare value for +90 degree position (2 ms)
  * @return pointer to the created struct, NULL on error
  */
 Servo* servoCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t timerPeriod,
