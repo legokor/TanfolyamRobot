@@ -52,7 +52,7 @@
 
 #define LCD_TIMER (&htim2)
 #define LCD_BACKLIGHT_PERIOD 100
-#define LCD_BACKLIGHT_PERCENT 60
+#define LCD_BACKLIGHT_PERCENT 50
 
 #define USB_UART (&huart1)
 
