@@ -16,6 +16,8 @@
  */
 #include "ultrasonic.h"
 
+#define TIMEOUT 60000
+
 // Approximate width of the trigger impulse. This has to be >=10 us
 const uint8_t triggerWidthUs = 15;
 
@@ -131,16 +133,26 @@ int16_t usGetDistance(volatile UltraSonic* us) {
  * @param us
  * @return distance in cm
  */
-uint16_t usMeasureBlocking(volatile UltraSonic* us) {
+int16_t usMeasureBlocking(volatile UltraSonic* us) {
     usStartMeasurement(us);
 
     // Wait for completion
-    // TODO: add timeout
-    int16_t distance;
-    do {
-        distance = usGetDistance(us);
-    } while (distance < 0);
+    int16_t distance = -1;
+    uint8_t timeout = 0;
 
-    return (uint16_t)distance;
+    while (distance < 0 && timeout==0) {
+        distance = usGetDistance(us);
+
+        if (distance < 0) {
+            uint16_t now = us->captureTimer->Instance->CNT;
+            uint16_t start = us->captureStart;
+            uint16_t elapsed = now - start;
+            if (elapsed >= TIMEOUT) {
+                timeout = 1;
+            }
+        }
+    } ;
+
+    return timeout ? -1 : distance;
 }
 
