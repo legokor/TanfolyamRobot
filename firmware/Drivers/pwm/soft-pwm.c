@@ -73,7 +73,7 @@ void softPwmSetDutyCylePercent(SoftPwm* pwm, float dutyCycle) {
 void softPwmHandler(SoftPwm* pwm) {
     pwm->cntr++;
 
-    if (pwm->cntr == pwm->period) {
+    if (pwm->cntr >= pwm->period) {
         pwm->cntr = 0;
     }
 
