@@ -8,21 +8,20 @@
 #ifndef SERVO_SOFT_SERVO_H_
 #define SERVO_SOFT_SERVO_H_
 
-#include <stdint.h>
-#include "stm32f1xx_hal.h"
+#include "soft-pwm.h"
 
+/**
+ * Struct for settings
+ */
 typedef struct {
-	GPIO_TypeDef* port;
-	uint16_t pin;
-	uint32_t cntr;
-	uint32_t period;
-	uint32_t start;
-	uint32_t end;
-	uint32_t compareVal;
+    SoftPwm* pwm;
+	uint32_t compareStart;
+	uint32_t compareEnd;
 } SoftServo;
 
-void softServoInit(SoftServo* servo, GPIO_TypeDef* port, uint16_t pin,
-		           uint32_t period, uint32_t start, uint32_t end);
+void softServoInit(SoftServo* servo, SoftPwm* pwm, uint32_t compareStart, uint32_t compareEnd);
+SoftServo* softServoCreate(GPIO_TypeDef* port, uint16_t pin, uint32_t period,
+                           uint16_t compareStart, uint16_t compareEnd);
 void softServoSetPosition(SoftServo* servo, int8_t position);
 void softServoHandler(SoftServo* servo);
 
