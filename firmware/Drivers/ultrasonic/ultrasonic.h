@@ -29,6 +29,6 @@ void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal);
 void usHandlerFallingCapture(volatile UltraSonic* us, uint16_t captureVal);
 void usStartMeasurement(volatile UltraSonic* us);
 int16_t usGetDistance(volatile UltraSonic* us);
-uint16_t usMeasureBlocking(volatile UltraSonic* us);
+int16_t usMeasureBlocking(volatile UltraSonic* us);
 
 #endif /* ULTRASONIC_ULTRASONIC_H_ */
