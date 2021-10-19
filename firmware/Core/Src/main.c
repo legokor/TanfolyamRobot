@@ -903,10 +903,11 @@ static void MX_GPIO_Init(void)
                           |LCD_EN_Pin|LCD_RST_Pin|MOTOR_SLEEPN_Pin|COLOR_S0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(COLOR_S1_GPIO_Port, COLOR_S1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SERVO_Pin|COLOR_S3_Pin|COLOR_S2_Pin|US_TRIG_Pin
+                          |LCD_BACKLIGHT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, COLOR_S3_Pin|COLOR_S2_Pin|US_TRIG_Pin|LCD_BACKLIGHT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(COLOR_S1_GPIO_Port, COLOR_S1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LCD_D7_Pin LCD_D6_Pin LCD_D5_Pin LCD_D4_Pin
                            LCD_EN_Pin LCD_RST_Pin MOTOR_SLEEPN_Pin COLOR_S0_Pin */
@@ -935,6 +936,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(USB_PWR_DET_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : SERVO_Pin COLOR_S3_Pin COLOR_S2_Pin LCD_BACKLIGHT_Pin */
+  GPIO_InitStruct.Pin = SERVO_Pin|COLOR_S3_Pin|COLOR_S2_Pin|LCD_BACKLIGHT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /*Configure GPIO pin : BUTTON_Pin */
   GPIO_InitStruct.Pin = BUTTON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -947,13 +955,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(COLOR_S1_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : COLOR_S3_Pin COLOR_S2_Pin LCD_BACKLIGHT_Pin */
-  GPIO_InitStruct.Pin = COLOR_S3_Pin|COLOR_S2_Pin|LCD_BACKLIGHT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : US_TRIG_Pin */
   GPIO_InitStruct.Pin = US_TRIG_Pin;
