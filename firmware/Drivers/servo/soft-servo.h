@@ -20,8 +20,7 @@ typedef struct {
 } SoftServo;
 
 void softServoInit(SoftServo* servo, SoftPwm* pwm, uint32_t compareStart, uint32_t compareEnd);
-SoftServo* softServoCreate(GPIO_TypeDef* port, uint16_t pin, uint32_t period,
-                           uint16_t compareStart, uint16_t compareEnd);
+SoftServo* softServoCreate(SoftPwm* pwm, uint16_t compareStart, uint16_t compareEnd);
 void softServoSetPosition(SoftServo* servo, int8_t position);
 void softServoHandler(SoftServo* servo);
 
