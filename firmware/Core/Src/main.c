@@ -50,9 +50,12 @@
 #define DFU_NON_MAGIC_WORD "NOPE"
 #define UART_DFU_COMMAND   "ENTER_DFU"
 
-#define LCD_TIMER (&htim2)
-#define LCD_BACKLIGHT_PERIOD 100
-#define LCD_BACKLIGHT_PERCENT 50
+#define LCD_TIMER              (&htim2)
+#define LCD_BL_TIMER           (&htim3)
+#define LCD_BL_CHANNEL         TIM_CHANNEL_1
+#define LCD_BL_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_1
+#define LCD_BL_TIMER_PERIOD    5333
+#define LCD_BL_PERCENT         50
 
 #define USB_UART (&huart1)
 
@@ -63,9 +66,13 @@
 #define BATTERY_INDICATOR_COL    15
 #define BATTERY_INDICATOR_PERIOD 10   // about 300 ms
 
-#define SERVO_PERIOD        400
-#define SERVO_START_POS      20           // TODO: calibrate endpoints
-#define SERVO_END_POS        40
+#define SERVO_TIMER          (&htim4)
+#define SERVO_CHANNEL        TIM_CHANNEL_4
+#define SERVO_ACTIVE_CHANNEL HAL_TIM_ACTIVE_CHANNEL_4
+#define SERVO_TIMER_PERIOD   0x10000
+#define SERVO_PWM_PERIOD       40000
+#define SERVO_START_POS         2000           // TODO: calibrate endpoints
+#define SERVO_END_POS           4000
 
 #define US_AND_COLOR_CAPTURE_TIMER (&htim4)
 #define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
@@ -173,14 +180,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         encoderTimerOverflowHandler(&encoder1);
         encoderTimerOverflowHandler(&encoder2);
         lcdHandler();
-        if (lcdBacklightPwm != NULL) {
-            softPwmHandler(lcdBacklightPwm);
-        }
-        /*
-        if (servo != NULL) {
-            softServoHandler(servo);
-        }
-        */
     } else if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
 
@@ -234,6 +233,18 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
                 break;
             }
             default: break;  // only needed to suppress unhandled enum value warning
+        }
+    }
+}
+
+void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim == SERVO_TIMER && htim->Channel==SERVO_ACTIVE_CHANNEL) {
+        if (servo != NULL) {
+            softServoHandler(servo);
+        }
+    } else if (htim == LCD_BL_TIMER && htim->Channel==LCD_BL_ACTIVE_CHANNEL) {
+        if (lcdBacklightPwm != NULL) {
+            softPwmHandler(lcdBacklightPwm);
         }
     }
 }
@@ -355,11 +366,12 @@ int main(void)
       FAIL;
   }
 
-  lcdBacklightPwm = softPwmCreate(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, LCD_BACKLIGHT_PERIOD);
+  lcdBacklightPwm = softPwmCreate(LCD_BL_TIMER, LCD_BL_CHANNEL, LCD_BL_TIMER_PERIOD,
+                                  LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, LCD_BL_TIMER_PERIOD);
   if (lcdBacklightPwm == NULL) {
       FAIL;
   }
-  softPwmSetDutyCylePercent(lcdBacklightPwm, LCD_BACKLIGHT_PERCENT);
+  softPwmSetDutyCylePercent(lcdBacklightPwm, LCD_BL_PERCENT);
 
   lcdInit(LCD_RST_GPIO_Port, LCD_RST_Pin, LCD_EN_GPIO_Port, LCD_EN_Pin,
           LCD_D4_GPIO_Port, LCD_D4_Pin, LCD_D5_GPIO_Port, LCD_D5_Pin,
@@ -397,7 +409,12 @@ int main(void)
       FAIL;
   }
 
-  servo = softServoCreate(SERVO_GPIO_Port, SERVO_Pin, SERVO_PERIOD, SERVO_START_POS, SERVO_END_POS);
+  SoftPwm* servoPwm = softPwmCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_TIMER_PERIOD,
+                                    SERVO_GPIO_Port, SERVO_Pin, SERVO_PWM_PERIOD);
+  if (servoPwm == NULL) {
+      FAIL;
+  }
+  servo = softServoCreate(servoPwm, SERVO_START_POS, SERVO_END_POS);
   if (servo == NULL) {
       FAIL;
   }
@@ -729,6 +746,10 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_OC_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -739,10 +760,15 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.OCMode = TIM_OCMODE_TIMING;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_OC_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
@@ -772,6 +798,7 @@ static void MX_TIM4_Init(void)
 
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM4_Init 1 */
 
@@ -783,6 +810,10 @@ static void MX_TIM4_Init(void)
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_IC_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_OC_Init(&htim4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -809,6 +840,14 @@ static void MX_TIM4_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_TIMING;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_OC_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
