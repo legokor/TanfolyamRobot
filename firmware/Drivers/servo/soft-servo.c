@@ -33,21 +33,16 @@ void softServoInit(SoftServo* servo, SoftPwm* pwm, uint32_t compareStart, uint32
 }
 
 /**
- * Create a Servo struct. This also creates the Pwm used for the servo control.
- * @note This function allocates memory for the structs!
+ * Create a Servo struct
+ * @note This function allocates memory for the struct!
  * @note compareStart and compareEnd values can be swapped for inverse rotation
  *
- * @param port GPIO port of the output signal
- * @param pin GPIO pin of the output signal
- * @param period of the PWM's internal counter
+ * @param pwm
  * @param compareStart output compare value for -90 degree position (1 ms)
  * @param compareEnd output compare value for +90 degree position (2 ms)
  * @return pointer to the created struct, NULL on error
  */
-SoftServo* softServoCreate(GPIO_TypeDef* port, uint16_t pin, uint32_t period,
-                           uint16_t compareStart, uint16_t compareEnd) {
-
-    SoftPwm* pwm = softPwmCreate(port, pin, period);
+SoftServo* softServoCreate(SoftPwm* pwm, uint16_t compareStart, uint16_t compareEnd) {
     if (pwm == NULL) {
         return NULL;
     }
