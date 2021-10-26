@@ -87,25 +87,26 @@
 
 #define MOTOR1_PWM1_TIMER         (&htim1)
 #define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
-#define MOTOR1_PWM1_TIMER_PERIOD  5333
+#define MOTOR1_PWM1_TIMER_PERIOD  4000
 #define MOTOR1_PWM1_OUTPUT_TYPE   PwmOutput_N
 #define MOTOR1_PWM2_TIMER         (&htim3)
 #define MOTOR1_PWM2_TIMER_CHANNEL TIM_CHANNEL_3
-#define MOTOR1_PWM2_TIMER_PERIOD  5333
+#define MOTOR1_PWM2_TIMER_PERIOD  4000
 #define MOTOR1_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR1_REVERSED           1
 
 #define MOTOR2_PWM1_TIMER         (&htim1)
 #define MOTOR2_PWM1_TIMER_CHANNEL TIM_CHANNEL_2
-#define MOTOR2_PWM1_TIMER_PERIOD  5333
+#define MOTOR2_PWM1_TIMER_PERIOD  4000
 #define MOTOR2_PWM1_OUTPUT_TYPE   PwmOutput_N
 #define MOTOR2_PWM2_TIMER         (&htim3)
 #define MOTOR2_PWM2_TIMER_CHANNEL TIM_CHANNEL_4
-#define MOTOR2_PWM2_TIMER_PERIOD  5333
+#define MOTOR2_PWM2_TIMER_PERIOD  4000
 #define MOTOR2_PWM2_OUTPUT_TYPE   PwmOutput_P
 #define MOTOR2_REVERSED           0
 
 #define MOTOR_CONTROL_TIMER       (&htim3)
+#define MOTOR_CONTROL_PRESCALE    16                // The speed controller should run on every n-th interrupt
 
 #define MOTOR1_ENCODER_RESOLUTION EncoderResolution_4
 #define MOTOR2_ENCODER_RESOLUTION EncoderResolution_4
@@ -198,12 +199,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+    static uint8_t scPsc = 0;
     if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
-        if (speedControl1 != NULL) {
-            speedControlHandler(speedControl1);
-        }
-        if (speedControl2 != NULL) {
-            speedControlHandler(speedControl2);
+        scPsc++;
+        if (scPsc == MOTOR_CONTROL_PRESCALE) {
+            scPsc = 0;
+            if (speedControl1 != NULL) {
+                speedControlHandler(speedControl1);
+            }
+            if (speedControl2 != NULL) {
+                speedControlHandler(speedControl2);
+            }
         }
     }
 }
@@ -244,11 +250,13 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
         if (servo != NULL) {
             softServoHandler(servo);
         }
-    } else if (htim == LCD_BL_TIMER && htim->Channel==LCD_BL_ACTIVE_CHANNEL) {
+    }
+    // TODO
+    /*else if (htim == LCD_BL_TIMER && htim->Channel==LCD_BL_ACTIVE_CHANNEL) {
         if (lcdBacklightPwm != NULL) {
             softPwmHandler(lcdBacklightPwm);
         }
-    }
+    }*/
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
@@ -368,6 +376,8 @@ int main(void)
       FAIL;
   }
 
+  // TODO
+/*
   lcdBacklightPwm = softPwmCreate(LCD_BL_TIMER, LCD_BL_CHANNEL, LCD_BL_TIMER_PERIOD,
                                   LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin,
                                   LCD_BL_TIMER_PERIOD, LCD_BL_PWM_INVERTED);
@@ -375,6 +385,8 @@ int main(void)
       FAIL;
   }
   softPwmSetDutyCylePercent(lcdBacklightPwm, LCD_BL_PERCENT);
+*/
+  HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, GPIO_PIN_SET);
 
   lcdInit(LCD_RST_GPIO_Port, LCD_RST_Pin, LCD_EN_GPIO_Port, LCD_EN_Pin,
           LCD_D4_GPIO_Port, LCD_D4_Pin, LCD_D5_GPIO_Port, LCD_D5_Pin,
@@ -612,9 +624,9 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 12;
+  htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 5333;
+  htim1.Init.Period = 4000;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -735,9 +747,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 12;
+  htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 5333;
+  htim3.Init.Period = 4000;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
