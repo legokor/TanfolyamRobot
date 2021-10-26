@@ -10,14 +10,30 @@ Tesztelt operációs rendszerek:
  * Ubuntu 20.04
  * Pop!_OS 21.04
 
-### További lépések Linux esetén
-A firmware letöltése a robotra virtuális soros porton keresztül történik. A soros portok csak akkor használhatóak, ha a felhasználó tagja `dialout` csoportnak.
+A robotra a firmware letöltése virtuális soros porton történik, a roboton az USB csatlakozó egy `FT232RL` chiphez kapcsolódik. 
+
+### Windows
+
+A robot csatlakoztatása után az eszközkezelőben (device manager) ellenőrizhetjük, hogy melyik portot használja a robot. Ezt jegyezzük meg, mert később szükség lesz rá.
+
+_TODO: screenshot_
+
+Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros port driverét. Ebben az esetben le kell töltenünk az [FTDI weboldaláról](https://ftdichip.com/drivers/vcp-drivers/). Érdemes a jobb oldali oszlopban a `setup executable` verziót választani.
+
+### Linux
+Linuxon a soros portok csak akkor használhatóak, ha a felhasználó tagja `dialout` csoportnak.
 
 ```
 sudo adduser $USER dialout
 ```
 
 Ezután oprendszertől függően ki és be kell jelentkezni, vagy újra kell indítani a gépet.
+
+A port általában `/dev/ttyUSBx`-ként jelenik meg. Legegyszerűbben úgy ellenőrizhetjük, hogy az alábbi parancsot lefuttatjuk a robot csatlakoztatása előtt és után, majd megnézzük milyen port jelent meg a listában.
+```
+ls /dev | grep tty
+```
+A port nevét jegyezzük meg, mert később szükség lesz rá.
 
 
 ## Projekt importálása
