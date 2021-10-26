@@ -20,12 +20,13 @@ typedef struct {
     uint16_t pwmPeriod;
     uint16_t compareValue;
     uint8_t pinState;
+    uint8_t invertedOutput;
 } SoftPwm;
 
 int softPwmInit(SoftPwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel, uint32_t timerPeriod,
-                GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod);
+                GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod, uint8_t invertedOutput);
 SoftPwm* softPwmCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint32_t timerPeriod,
-                       GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod);
+                       GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod, uint8_t invertedOutput);
 void softPwmSetCompareValue(SoftPwm* pwm, uint32_t compareValue);
 void softPwmSetDutyCylePercent(SoftPwm* pwm, float dutyCycle);
 void softPwmHandler(SoftPwm* pwm);

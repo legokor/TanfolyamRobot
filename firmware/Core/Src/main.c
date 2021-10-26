@@ -56,6 +56,7 @@
 #define LCD_BL_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_1
 #define LCD_BL_TIMER_PERIOD    5333
 #define LCD_BL_PERCENT         50
+#define LCD_BL_PWM_INVERTED     0
 
 #define USB_UART (&huart1)
 
@@ -69,6 +70,7 @@
 #define SERVO_TIMER          (&htim4)
 #define SERVO_CHANNEL        TIM_CHANNEL_4
 #define SERVO_ACTIVE_CHANNEL HAL_TIM_ACTIVE_CHANNEL_4
+#define SERVO_PWM_INVERTED         1
 #define SERVO_TIMER_PERIOD   0x10000
 #define SERVO_PWM_PERIOD       40000
 #define SERVO_START_POS         2000           // TODO: calibrate endpoints
@@ -367,7 +369,8 @@ int main(void)
   }
 
   lcdBacklightPwm = softPwmCreate(LCD_BL_TIMER, LCD_BL_CHANNEL, LCD_BL_TIMER_PERIOD,
-                                  LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, LCD_BL_TIMER_PERIOD);
+                                  LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin,
+                                  LCD_BL_TIMER_PERIOD, LCD_BL_PWM_INVERTED);
   if (lcdBacklightPwm == NULL) {
       FAIL;
   }
@@ -410,7 +413,7 @@ int main(void)
   }
 
   SoftPwm* servoPwm = softPwmCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_TIMER_PERIOD,
-                                    SERVO_GPIO_Port, SERVO_Pin, SERVO_PWM_PERIOD);
+                                    SERVO_GPIO_Port, SERVO_Pin, SERVO_PWM_PERIOD, SERVO_PWM_INVERTED);
   if (servoPwm == NULL) {
       FAIL;
   }

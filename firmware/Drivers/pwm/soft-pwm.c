@@ -62,10 +62,11 @@ volatile uint32_t* getCaptureCompareRegister(TIM_HandleTypeDef* timer, uint32_t 
  * @param port GPIO port of the output signal
  * @param pin GPIO pin of the output signal
  * @param pwmPeriod in timer ticks
+ * @param invertedOutput 0 for normal signal, 1 for inverted
  * @return 0 on success
  */
 int softPwmInit(SoftPwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel, uint32_t timerPeriod,
-                GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod) {
+                GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod, uint8_t invertedOutput) {
     if (!isValidTimerChannel(timerChannel)) {
         return -1;
     }
@@ -78,6 +79,7 @@ int softPwmInit(SoftPwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel, u
 
     pwm->compareValue = 0;
     pwm->pinState = 0;
+    pwm->invertedOutput = invertedOutput;
 
     HAL_TIM_OC_Start_IT(timer, timerChannel);
 
@@ -94,16 +96,17 @@ int softPwmInit(SoftPwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel, u
  * @param port GPIO port of the output signal
  * @param pin GPIO pin of the output signal
  * @param pwmPeriod in timer ticks
+ * @param invertedOutput 0 for normal signal, 1 for inverted
  * @return 0 on success
  */
 SoftPwm* softPwmCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint32_t timerPeriod,
-                       GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod) {
+                       GPIO_TypeDef* port, uint16_t pin, uint16_t pwmPeriod, uint8_t invertedOutput) {
     if (!isValidTimerChannel(timerChannel)) {
         return NULL;
     }
     SoftPwm* pwm = (SoftPwm*) malloc(sizeof(SoftPwm));
     if (pwm != NULL) {
-        softPwmInit(pwm, timer, timerChannel, timerPeriod, port, pin, pwmPeriod);
+        softPwmInit(pwm, timer, timerChannel, timerPeriod, port, pin, pwmPeriod, invertedOutput);
     }
     return pwm;
 }
@@ -118,7 +121,11 @@ void softPwmSetCompareValue(SoftPwm* pwm, uint32_t compareValue) {
         compareValue = pwm->pwmPeriod;
     }
 
-    pwm->compareValue = compareValue;
+    if (pwm->invertedOutput) {
+        pwm->compareValue = pwm->pwmPeriod - compareValue;
+    } else {
+        pwm->compareValue = compareValue;
+    }
 }
 
 /**
