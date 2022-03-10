@@ -14,7 +14,7 @@ A robotra a firmware letöltése virtuális soros porton történik, a roboton a
 
 ### Windows
 
-A robot csatlakoztatása után az eszközkezelőben (device manager) ellenőrizhetjük, hogy melyik portot használja a robot. Ezt jegyezzük meg, mert később szükség lesz rá.
+A robot csatlakoztatása után az eszközkezelőben (device manager) ellenőrizhetjük, hogy melyik portot használja a robot (pl. `COM6`). Ezt jegyezzük meg, mert később szükség lesz rá.
 
 <p align="center"><img src="docs/img/device_manager_com_port.png" align=center></p>
 
@@ -31,7 +31,7 @@ Ezután oprendszertől függően ki és be kell jelentkezni, vagy újra kell ind
 
 A port általában `/dev/ttyUSBx`-ként jelenik meg. Legegyszerűbben úgy ellenőrizhetjük, hogy az alábbi parancsot lefuttatjuk a robot csatlakoztatása előtt és után, majd megnézzük milyen port jelent meg a listában.
 ```
-ls /dev | grep tty
+ls /dev/tty*
 ```
 A port nevét jegyezzük meg, mert később szükség lesz rá.
 
@@ -63,7 +63,7 @@ A letöltéshez be kell állítnunk a megfelelő soros portot. Ezt a képen lát
 
 <p align="center"><img src="docs/img/external_tools.png" align=center></p>
 
-Válasszuk ki az operációs rendszernek megfelelő konfigurációt, majd az `Arguments` mezőben adjuk meg a használt soros portot. Ez Windows esetén pl. `COM3`, Linux esetén pedig `/dev/ttyUSB0`, vagy valami hasonló lesz.
+Válasszuk ki az operációs rendszernek megfelelő konfigurációt, majd az `Arguments` mezőben adjuk meg a használt soros portot. Ez Windows esetén pl. `COM6`, Linux esetén pedig `/dev/ttyUSB0`, vagy valami hasonló lesz.
 
 Első letöltésnél ebben az ablakban kell a `Run` gombra kattintatni, utána a toolbaron a run external tool gomb (play gomb piros táskával) automatikusan ezt fogja futtatni.
 
