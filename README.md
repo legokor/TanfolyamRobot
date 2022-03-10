@@ -16,7 +16,7 @@ A robotra a firmware letöltése virtuális soros porton történik, a roboton a
 
 A robot csatlakoztatása után az eszközkezelőben (device manager) ellenőrizhetjük, hogy melyik portot használja a robot. Ezt jegyezzük meg, mert később szükség lesz rá.
 
-_TODO: screenshot_
+<p align="center"><img src="docs/img/device_manager_com_port.png" align=center></p>
 
 Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros port driverét. Ebben az esetben le kell töltenünk az [FTDI weboldaláról](https://ftdichip.com/drivers/vcp-drivers/). Érdemes a jobb oldali oszlopban a `setup executable` verziót választani.
 
