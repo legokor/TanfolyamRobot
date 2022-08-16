@@ -25,3 +25,9 @@ In order to use the ST-Link part of the Nucleo with an external microcontroller,
 **Note: The debugger can not / should not power the board, so the batteries have to be connected!**
 
 The STM32CubeIDE should automatically detect the ST-Link. Use the upload/debug buttons on the top bar to flash and/or debug the firmware.
+
+## LCD contrast setting
+
+The contrast potentiometer is under the LCD. Connect the power, contrast, and backlight pins (1, 2, 3, 15, 16) to the board using jumper cables. Power on the board, and turn the potentiometer until white boxes appear in the first row of the display.
+
+<p align=center><img src="img/contrast.jpg" width=60%></p>
