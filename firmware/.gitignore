@@ -49,5 +49,6 @@ Release/
 *.idb
 *.pdb
 
-# Enable exe for stm32flash
+# Enable exe for stm32flash and uploader
+!tools/Tanfolyamrobot FTDI.exe
 !tools/stm32flash.exe
