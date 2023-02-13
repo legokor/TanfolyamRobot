@@ -4,6 +4,12 @@
 
 TODO
 
+## Some code info
+
+### 16 bit timer overflow
+
+All timers on the STM32 are 16 bit, so overflows occur on regular basis. In the code at first glance it might seem that theese events are not handled properly, because we just subtract the start counter value from the end counter value (for time measurement). But this is not the case, because 16 bit arithmetics give the correct result (for example 30000 - 25000 = 60536 which is correct).
+
 ## Firmware update
 
 STM32 microcontrollers have a built-in Device Firmware Updater, that makes it possible to upload the firmware over some peripherals. The STM32F103 series only supports this on UART1. The USB connector of the board is connected to an FTDI chip, which connects to the UART1 port of the microcontroller.

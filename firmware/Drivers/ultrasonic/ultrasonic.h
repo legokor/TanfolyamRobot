@@ -17,9 +17,9 @@ typedef struct {
     TIM_HandleTypeDef* captureTimer;
     uint16_t captureTimerPeriodNs;
     uint16_t delayTimerPeriodNs;
-    uint16_t captureStart;
-    uint16_t captureStop;
-    uint8_t busy;
+    volatile uint16_t captureStart;
+    volatile uint16_t captureStop;
+    volatile uint8_t busy;
 } UltraSonic;
 
 void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t triggerPin,

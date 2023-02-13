@@ -58,6 +58,8 @@ void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t trigger
     HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
 }
 
+
+
 /**
  * Call this from a timer's capture interrupt on rising edges of the echo signal
  * @param us
@@ -68,6 +70,10 @@ void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal) {
         us->captureStart = captureVal;
     }
 }
+
+
+
+
 
 /**
  * Call this from a timer's capture interrupt on falling edges of the echo signal
@@ -91,6 +97,7 @@ void usStartMeasurement(volatile UltraSonic* us) {
         return;
     }
 
+    us->captureStart = us->captureTimer->Instance->CNT;
     us->busy = 1;
 
     // Calculate trigger pulse width in timer periods
@@ -155,4 +162,8 @@ int16_t usMeasureBlocking(volatile UltraSonic* us) {
 
     return timeout ? -1 : distance;
 }
+
+
+
+
 
