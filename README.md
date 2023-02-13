@@ -69,3 +69,15 @@ Első letöltésnél ebben az ablakban kell a `Run` gombra kattintatni, utána a
 
 <p align="center"><img src="docs/img/external_tools_config.png" align=center></p>
 
+### Új Windows feltöltési mód (ajánlott)
+
+Ez a feltöltési mód robosztusabb, mint a korábbi, nem "brickelődik" a robot akkor sem, ha a feltöltés megszakad.
+
+Az `External Tools Configurations...` alatt az `Upload with DFU 2.0 (Windows)` opciót kell kiválasztani. Ez lentebb látható.
+
+<p align="center"><img src="docs/img/external_tools_config_new.png" align=center></p>
+
+Itt az első argumentumot kell megváltoztatni a fentebb említett COM portra, a többi argumentumot nem szükséges módosítani (második argumentum feltöltési baud-rate, harmadik a feltöltendő bináris elérési útvonala).
+
+A fentiekhez hasonlóan a beállítasok után a Run gombot kell megnyomni, ezek után a toolbaron a run external tool gomb (play gomb piros táskával) automatikusan ezt fogja futtatni.
+
