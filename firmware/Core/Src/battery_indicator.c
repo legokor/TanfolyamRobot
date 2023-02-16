@@ -6,6 +6,7 @@
  */
 #include "battery_indicator.h"
 #include "lcd.h"
+#include "robotcontrol-api.h"
 
 #define BATTERY_CELL_COUNT 2
 
@@ -29,11 +30,11 @@ uint8_t levelNum = sizeof(batteryChar) / 8;
 /**
  * Threshold voltages for the battery levels
  */
-uint16_t voltageThreshold[] = { BATTERY_CELL_COUNT * 3450,  // 5%
-                                BATTERY_CELL_COUNT * 3680,  // 10%
-                                BATTERY_CELL_COUNT * 3770,  // 30%
-                                BATTERY_CELL_COUNT * 3820,  // 50%
-                                BATTERY_CELL_COUNT * 3920,  // 70%
+uint16_t voltageThreshold[] = { BATTERY_CELL_COUNT * 3290,  // 5%
+                                BATTERY_CELL_COUNT * 3380,  // 10%
+                                BATTERY_CELL_COUNT * 3580,  // 30%
+                                BATTERY_CELL_COUNT * 3720,  // 50%
+                                BATTERY_CELL_COUNT * 3870,  // 70%
                                 BATTERY_CELL_COUNT * 4060,  // 90%
                                 BATTERY_CELL_COUNT * 4200   // 100%
 };

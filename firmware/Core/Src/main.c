@@ -63,6 +63,7 @@
 #define VBAT_ADC                 (&hadc1)
 #define VBAT_ADC_TIMER           (&htim4)
 #define ADC_TO_VBAT_MULTIPLIER   (3300 * 5 / 4096)
+#define ADC_TO_VBAT_OFFSET		 220
 #define BATTERY_INDICATOR_ROW    0
 #define BATTERY_INDICATOR_COL    15
 #define BATTERY_INDICATOR_PERIOD 10   // about 300 ms
@@ -217,7 +218,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
     if (hadc == VBAT_ADC) {
         uint16_t adcVal = HAL_ADC_GetValue(VBAT_ADC);
-        batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER;
+        batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER + ADC_TO_VBAT_OFFSET;
         batteryAdcBusy = 0;
     }
 }
