@@ -24,14 +24,14 @@
 
 #define SCALE 10000
 
-#define R_P_MAX 160
-#define R_P_MIN 38
+#define R_P_MAX 1100
+#define R_P_MIN 70
 
-#define G_P_MAX 190
-#define G_P_MIN 38
+#define G_P_MAX 1550
+#define G_P_MIN 70
 
-#define B_P_MAX 150
-#define B_P_MIN 32
+#define B_P_MAX 1800
+#define B_P_MIN 65
 
 #define R_MIN (SCALE / R_P_MAX)
 #define R_MAX (SCALE / R_P_MIN)
