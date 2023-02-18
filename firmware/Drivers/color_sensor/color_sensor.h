@@ -37,9 +37,9 @@ typedef struct {
 } ColorSensor;
 
 typedef struct {
-    uint16_t h;
-    uint8_t s;
-    uint8_t v;
+    uint16_t h; // range: 0-360
+    uint8_t s;  // range: 0-100
+    uint8_t v;  // range: 0-100
 } ColorHsv;
 
 void colorSensorInit(volatile ColorSensor* cs,
