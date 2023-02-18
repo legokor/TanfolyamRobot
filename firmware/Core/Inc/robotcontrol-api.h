@@ -63,7 +63,7 @@ void setServoPosition(int8_t position);
  * Get the distance measured by the ultrasonic ranging sensor
  * @return distance in cm
  */
-int16_t getUsDistance();
+uint16_t getUsDistance();
 
 /**
  * Do nothing for the specified time

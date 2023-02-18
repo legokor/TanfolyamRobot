@@ -85,6 +85,7 @@
 #define US_FALLING_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_2
 #define COLOR_CHANNEL              TIM_CHANNEL_3
 #define COLOR_ACTIVE_CHANNEL       HAL_TIM_ACTIVE_CHANNEL_3
+#define US_ASYNC_ACTIVE_CHANNEL    HAL_TIM_ACTIVE_CHANNEL_4
 
 #define MOTOR1_PWM1_TIMER         (&htim1)
 #define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
@@ -197,6 +198,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             HAL_ADC_Start_IT(VBAT_ADC);
         }
     }
+
+    if(htim == US_AND_COLOR_CAPTURE_TIMER){
+    	usStartMeasurementPulseAsync(&us);
+    }
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
@@ -258,6 +263,10 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
             softPwmHandler(lcdBacklightPwm);
         }
     }*/
+
+    if(htim == US_AND_COLOR_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
+    	usHandleCompareAsync(&us);
+    }
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {

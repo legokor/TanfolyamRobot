@@ -40,8 +40,8 @@ void setServoPosition(int8_t position) {
 }
 
 
-int16_t getUsDistance() {
-    return usMeasureBlocking(us);   // TODO: measure automatically, provide a non-blocking measurement function
+uint16_t getUsDistance() {
+    return usGetDistance(us);
 }
 
 
