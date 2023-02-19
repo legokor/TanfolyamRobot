@@ -39,6 +39,7 @@ typedef struct {
     TIM_HandleTypeDef* timer;
     uint32_t timerPeriod;
     uint32_t overflowCount;
+    uint8_t overflowWasReset;
     uint32_t lastTimerVal;
 
     uint8_t filterIndex;

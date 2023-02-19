@@ -110,10 +110,10 @@
 #define MOTOR_CONTROL_TIMER       (&htim3)
 #define MOTOR_CONTROL_PRESCALE    16                // The speed controller should run on every n-th interrupt
 
-#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_4
-#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_4
+#define MOTOR1_ENCODER_RESOLUTION EncoderResolution_1
+#define MOTOR2_ENCODER_RESOLUTION EncoderResolution_1
 #define MOTOR_ENCODER_TIMER       (&htim2)
-#define MOTOR_ENCODER_MAX_SPEED_CPS 12000
+#define MOTOR_ENCODER_MAX_SPEED_CPS 3000
 
 /* USER CODE END PD */
 
@@ -299,9 +299,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     switch (GPIO_Pin) {
         case ENC1_A_Pin: encoderHandlerA(&encoder1); break;
-        case ENC1_B_Pin: encoderHandlerB(&encoder1); break;
+        //case ENC1_B_Pin: encoderHandlerB(&encoder1); break;
         case ENC2_A_Pin: encoderHandlerA(&encoder2); break;
-        case ENC2_B_Pin: encoderHandlerB(&encoder2); break;
+        //case ENC2_B_Pin: encoderHandlerB(&encoder2); break;
     }
 }
 
@@ -983,9 +983,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC1_A_Pin ENC1_B_Pin ENC2_A_Pin ENC2_B_Pin */
-  GPIO_InitStruct.Pin = ENC1_A_Pin|ENC1_B_Pin|ENC2_A_Pin|ENC2_B_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  /*Configure GPIO pins : ENC1_A_Pin ENC2_A_Pin */
+  GPIO_InitStruct.Pin = ENC1_A_Pin|ENC2_A_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : ENC1_B_Pin ENC2_B_Pin */
+  GPIO_InitStruct.Pin = ENC1_B_Pin|ENC2_B_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -1031,9 +1037,6 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
