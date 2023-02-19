@@ -10,7 +10,7 @@
 
 #include "stm32f1xx_hal.h"
 
-#define SPEED_FILTER 16
+#define SPEED_FILTER 1
 
 /**
  * Resolution of the decoder
