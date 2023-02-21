@@ -131,6 +131,7 @@ void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t
  */
 void rgb2hsv(uint8_t r, uint8_t g, uint8_t b, uint16_t* hue, uint8_t* sat, uint8_t* val){
     uint8_t max, min;
+    float hue_f;
 
     min = (r < g) ? r : g;
     max = (r > g) ? r : g;
@@ -148,20 +149,21 @@ void rgb2hsv(uint8_t r, uint8_t g, uint8_t b, uint16_t* hue, uint8_t* sat, uint8
         *sat = 100 * delta / max;
 
         if (max == r) {
-            *hue = 60 * ( ( ((float)g - (float)b) / delta )    );    // TODO: optimize
+            hue_f = 60 * ( ( ((float)g - (float)b) / delta )    );    // TODO: optimize
         } else if (max == g) {
-            *hue = 60 * ( ( ((float)b - (float)r) / delta ) + 2);    // TODO: optimize
+            hue_f = 60 * ( ( ((float)b - (float)r) / delta ) + 2);    // TODO: optimize
         } else {
-            *hue = 60 * ( ( ((float)r - (float)g) / delta ) + 4);    // TODO: optimize
+            hue_f = 60 * ( ( ((float)r - (float)g) / delta ) + 4);    // TODO: optimize
         }
+        if (hue_f < 0) {
+                hue_f += 360;
+		}
+        *hue = (uint16_t)hue_f % 360;
     }
 
-    *hue = *hue % 360;
     
     // TODO: is this necessary? Isn't the output of % always +?
-    if (*hue < 0) {
-        *hue += 360;
-    }
+
 }
 
 /**
