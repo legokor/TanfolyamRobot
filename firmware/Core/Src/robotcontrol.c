@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-static volatile SoftServo* servo;
+static volatile Servo* servo;
 static volatile UltraSonic* us;
 static volatile ColorSensor* cs;
 static volatile SpeedControl* scL;
@@ -20,7 +20,7 @@ static UART_HandleTypeDef* uart;
 /**
  * Save the pointer to every driver instance used here
  */
-void robotControlInit(volatile SoftServo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
+void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
                       UART_HandleTypeDef* usbUart) {
@@ -36,7 +36,7 @@ void robotControlInit(volatile SoftServo* usServo, volatile UltraSonic* usSensor
 
 
 void setServoPosition(int8_t position) {
-    softServoSetPosition(servo, position);
+    servoSetPosition(servo, position);
 }
 
 

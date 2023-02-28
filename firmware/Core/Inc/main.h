@@ -92,14 +92,14 @@ void Error_Handler(void);
 #define MOTOR1_PWM2_GPIO_Port GPIOB
 #define MOTOR2_PWM2_Pin GPIO_PIN_1
 #define MOTOR2_PWM2_GPIO_Port GPIOB
+#define SERVO_Pin GPIO_PIN_10
+#define SERVO_GPIO_Port GPIOB
 #define USB_PWR_DET_Pin GPIO_PIN_12
 #define USB_PWR_DET_GPIO_Port GPIOB
 #define MOTOR1_PWM1_Pin GPIO_PIN_13
 #define MOTOR1_PWM1_GPIO_Port GPIOB
 #define MOTOR2_PWM1_Pin GPIO_PIN_14
 #define MOTOR2_PWM1_GPIO_Port GPIOB
-#define SERVO_Pin GPIO_PIN_15
-#define SERVO_GPIO_Port GPIOB
 #define BUTTON_Pin GPIO_PIN_15
 #define BUTTON_GPIO_Port GPIOA
 #define COLOR_S0_Pin GPIO_PIN_12

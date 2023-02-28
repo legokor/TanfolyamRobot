@@ -33,7 +33,7 @@
 #include "color_sensor.h"
 #include "encoder.h"
 #include "ultrasonic.h"
-#include "soft-servo.h"
+#include "servo.h"
 #include "motor.h"
 #include "speed_control.h"
 #include "application.h"
@@ -50,7 +50,7 @@
 #define DFU_NON_MAGIC_WORD "NOPE"
 #define UART_DFU_COMMAND   "ENTER_DFU"
 
-#define LCD_TIMER              (&htim2)
+#define LCD_TIMER              (&htim1)
 #define LCD_BL_TIMER           (&htim3)
 #define LCD_BL_CHANNEL         TIM_CHANNEL_1
 #define LCD_BL_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_1
@@ -68,14 +68,14 @@
 #define BATTERY_INDICATOR_COL    15
 #define BATTERY_INDICATOR_PERIOD 10   // about 300 ms
 
-#define SERVO_TIMER          (&htim4)
-#define SERVO_CHANNEL        TIM_CHANNEL_4
-#define SERVO_ACTIVE_CHANNEL HAL_TIM_ACTIVE_CHANNEL_4
+#define SERVO_TIMER          (&htim2)
+#define SERVO_CHANNEL        TIM_CHANNEL_3
+#define SERVO_ACTIVE_CHANNEL HAL_TIM_ACTIVE_CHANNEL_3
 #define SERVO_PWM_INVERTED         1
 #define SERVO_TIMER_PERIOD   0x10000
-#define SERVO_PWM_PERIOD       40000
-#define SERVO_START_POS         2000           // TODO: calibrate endpoints
-#define SERVO_END_POS           4000
+#define SERVO_PWM_PERIOD       20000
+#define SERVO_START_POS         680           // TODO: calibrate endpoints
+#define SERVO_END_POS           2640
 
 #define US_AND_COLOR_CAPTURE_TIMER (&htim4)
 #define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
@@ -86,6 +86,7 @@
 #define COLOR_CHANNEL              TIM_CHANNEL_3
 #define COLOR_ACTIVE_CHANNEL       HAL_TIM_ACTIVE_CHANNEL_3
 #define US_ASYNC_ACTIVE_CHANNEL    HAL_TIM_ACTIVE_CHANNEL_4
+#define US_ASYNC_CHANNEL    	   TIM_CHANNEL_4
 
 #define MOTOR1_PWM1_TIMER         (&htim1)
 #define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
@@ -112,7 +113,7 @@
 
 #define MOTOR1_ENCODER_RESOLUTION EncoderResolution_1
 #define MOTOR2_ENCODER_RESOLUTION EncoderResolution_1
-#define MOTOR_ENCODER_TIMER       (&htim2)
+#define MOTOR_ENCODER_TIMER       (&htim1)
 #define MOTOR_ENCODER_MAX_SPEED_CPS 3000
 
 /* USER CODE END PD */
@@ -149,7 +150,7 @@ volatile Encoder encoder2;
 volatile UltraSonic us;
 volatile ColorSensor colorSensor;
 
-SoftServo* servo;
+Servo* servo;
 
 volatile Motor* motor1;
 volatile Motor* motor2;
@@ -181,11 +182,14 @@ static void MX_ADC1_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
 
+    if(htim == MOTOR_ENCODER_TIMER){
+    	encoderTimerOverflowHandler(&encoder1);
+    	encoderTimerOverflowHandler(&encoder2);
+    }
     if (htim == LCD_TIMER) {
-        encoderTimerOverflowHandler(&encoder1);
-        encoderTimerOverflowHandler(&encoder2);
         lcdHandler();
-    } else if (htim == VBAT_ADC_TIMER) {
+    }
+    if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
 
         if (adcTimerItCount >= BATTERY_INDICATOR_PERIOD) {
@@ -252,11 +256,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
-    if (htim == SERVO_TIMER && htim->Channel==SERVO_ACTIVE_CHANNEL) {
-        if (servo != NULL) {
-            softServoHandler(servo);
-        }
-    }
     // TODO
     /*else if (htim == LCD_BL_TIMER && htim->Channel==LCD_BL_ACTIVE_CHANNEL) {
         if (lcdBacklightPwm != NULL) {
@@ -424,6 +423,9 @@ int main(void)
   if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_FALLING_CHANNEL) != HAL_OK) {
       FAIL;
   }
+  if (HAL_TIM_OC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_ASYNC_CHANNEL) != HAL_OK) {
+	  FAIL;
+  }
 
   colorSensorInit(&colorSensor,
                   COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
@@ -431,16 +433,6 @@ int main(void)
                   16);
 
   if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
-      FAIL;
-  }
-
-  SoftPwm* servoPwm = softPwmCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_TIMER_PERIOD,
-                                    SERVO_GPIO_Port, SERVO_Pin, SERVO_PWM_PERIOD, SERVO_PWM_INVERTED);
-  if (servoPwm == NULL) {
-      FAIL;
-  }
-  servo = softServoCreate(servoPwm, SERVO_START_POS, SERVO_END_POS);
-  if (servo == NULL) {
       FAIL;
   }
 
@@ -486,6 +478,8 @@ int main(void)
   }
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
+
+  servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS);
 
   robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, USB_UART);
 
@@ -706,14 +700,15 @@ static void MX_TIM2_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 63;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 3200;
+  htim2.Init.Period = 20000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -725,15 +720,28 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
+  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -821,6 +829,7 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
@@ -834,6 +843,15 @@ static void MX_TIM4_Init(void)
   htim4.Init.Period = 0xffff;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_IC_Init(&htim4) != HAL_OK)
   {
     Error_Handler();
@@ -968,11 +986,10 @@ static void MX_GPIO_Init(void)
                           |LCD_EN_Pin|LCD_RST_Pin|MOTOR_SLEEPN_Pin|COLOR_S0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SERVO_Pin|COLOR_S3_Pin|COLOR_S2_Pin|US_TRIG_Pin
-                          |LCD_BACKLIGHT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(COLOR_S1_GPIO_Port, COLOR_S1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(COLOR_S1_GPIO_Port, COLOR_S1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, COLOR_S3_Pin|COLOR_S2_Pin|US_TRIG_Pin|LCD_BACKLIGHT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LCD_D7_Pin LCD_D6_Pin LCD_D5_Pin LCD_D4_Pin
                            LCD_EN_Pin LCD_RST_Pin MOTOR_SLEEPN_Pin COLOR_S0_Pin */
@@ -1007,13 +1024,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(USB_PWR_DET_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SERVO_Pin COLOR_S3_Pin COLOR_S2_Pin LCD_BACKLIGHT_Pin */
-  GPIO_InitStruct.Pin = SERVO_Pin|COLOR_S3_Pin|COLOR_S2_Pin|LCD_BACKLIGHT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /*Configure GPIO pin : BUTTON_Pin */
   GPIO_InitStruct.Pin = BUTTON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -1026,6 +1036,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(COLOR_S1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : COLOR_S3_Pin COLOR_S2_Pin LCD_BACKLIGHT_Pin */
+  GPIO_InitStruct.Pin = COLOR_S3_Pin|COLOR_S2_Pin|LCD_BACKLIGHT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : US_TRIG_Pin */
   GPIO_InitStruct.Pin = US_TRIG_Pin;
