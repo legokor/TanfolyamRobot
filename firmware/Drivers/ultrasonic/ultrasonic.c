@@ -25,6 +25,9 @@ const uint8_t triggerWidthUs = 15;
 // measure in both directions, so we need to double that.
 const uint8_t usToCmDivider = 58;
 
+// How often the distance is measured in the background (1 overflow is roughly 33ms)
+const uint8_t timerOverflowCountForMeasurement = 3;
+
 /**
  * Initialize the UltraSonic struct
  * @param us empty UltraSonic struct
@@ -54,7 +57,11 @@ void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t trigger
     periodNs = 1000*1000 / frequencyKHz;
     us->captureTimerPeriodNs = periodNs;
 
-    us->busy = 0;
+    us->measurementValid = 0;
+    us->echoIsHigh = 0;
+    us->pulseActive = 0;
+    us->lastDistance = 0;
+    us->timerCounter = 0;
     HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
 }
 
@@ -66,8 +73,9 @@ void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t trigger
  * @param captureVal the captured value from the timer channel
  */
 void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal) {
-    if (us->busy) {
+    if (us->measurementValid && !us->echoIsHigh) {
         us->captureStart = captureVal;
+        us->echoIsHigh = 1;
     }
 }
 
@@ -81,41 +89,59 @@ void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal) {
  * @param captureVal the captured value from the timer channel
  */
 void usHandlerFallingCapture(volatile UltraSonic* us, uint16_t captureVal) {
-    if (us->busy) {
-        us->captureStop = captureVal;
-        us->busy = 0;
+    if (us->measurementValid && us->echoIsHigh) {
+        uint16_t captureStop = captureVal;
+        us->echoIsHigh = 0;
+        us->measurementValid = 0;
+
+        uint16_t echoWidthTicks = captureStop - us->captureStart;
+		uint32_t echoWidthUs = (echoWidthTicks * us->captureTimerPeriodNs) / 1000;
+		us->lastDistance = echoWidthUs / usToCmDivider;
     }
 }
 
 /**
- * Send trigger signal to the sensor
- * @note this function blocks for triggerWidthUs
+ * Start an async measurement pulse
  * @param us
  */
-void usStartMeasurement(volatile UltraSonic* us) {
-    if (us->busy) {
-        return;
-    }
+void usStartMeasurementPulseAsync(volatile UltraSonic* us) {
+	us->timerCounter++;
+	if(us->timerCounter==timerOverflowCountForMeasurement){
+		us->timerCounter = 0;
 
-    us->captureStart = us->captureTimer->Instance->CNT;
-    us->busy = 1;
+		uint16_t triggerDelay = (triggerWidthUs * 1000) / us->delayTimerPeriodNs;
+		us->delayTimer->Instance->CCR4 = us->delayTimer->Instance->CNT + triggerDelay;
 
-    // Calculate trigger pulse width in timer periods
-    uint16_t triggerDelay = (triggerWidthUs * 1000) / us->delayTimerPeriodNs;
+		us->measurementValid = 0;
+		us->pulseActive = 1;
+		HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_SET);
+	}
+}
 
-    // Start trigger pulse
-    HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_SET);
+/**
+ * End an async measurement pulse
+ * @param us
+ */
+void usEndMeasurementPulseAsync(volatile UltraSonic* us) {
+	HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
 
-    // Delay
-    uint16_t startTick = us->delayTimer->Instance->CNT;
-    uint16_t delta=0;
+	us->echoIsHigh = 0;
+	us->measurementValid = 1;
+	us->pulseActive = 0;
 
-    while (delta <= triggerDelay) {
-        delta = us->delayTimer->Instance->CNT - startTick;
-    }
+	us->delayTimer->Instance->CCR4 = us->captureTimer->Instance->CNT + TIMEOUT;
+}
 
-    // Stop trigger pulse
-    HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
+/**
+ * Handle compare event (end pulse signal or timeout)
+ * @param us
+ */
+void usHandleCompareAsync(volatile UltraSonic* us){
+	if(us->pulseActive){
+		usEndMeasurementPulseAsync(us);
+	}else{
+		us->measurementValid = 0;
+	}
 }
 
 /**
@@ -124,46 +150,9 @@ void usStartMeasurement(volatile UltraSonic* us) {
  * @return  -1 if the measurement hasn't finished yet
  *         >=0 if the measurement is done
  */
-int16_t usGetDistance(volatile UltraSonic* us) {
-    if (us->busy) {
-        return -1;
-    }
-
-    uint16_t echoWidthTicks = us->captureStop - us->captureStart;
-    uint32_t echoWidthUs = (echoWidthTicks * us->captureTimerPeriodNs) / 1000;
-
-    return echoWidthUs / usToCmDivider;
+uint16_t usGetDistance(volatile UltraSonic* us) {
+    return us->lastDistance;
 }
-
-/**
- * Start a measurement and wait until it completes
- * @param us
- * @return distance in cm
- */
-int16_t usMeasureBlocking(volatile UltraSonic* us) {
-    usStartMeasurement(us);
-
-    // Wait for completion
-    int16_t distance = -1;
-    uint8_t timeout = 0;
-
-    while (distance < 0 && timeout==0) {
-        distance = usGetDistance(us);
-
-        if (distance < 0) {
-            uint16_t now = us->captureTimer->Instance->CNT;
-            uint16_t start = us->captureStart;
-            uint16_t elapsed = now - start;
-            if (elapsed >= TIMEOUT) {
-                timeout = 1;
-            }
-        }
-    } ;
-
-    return timeout ? -1 : distance;
-}
-
-
 
 
 

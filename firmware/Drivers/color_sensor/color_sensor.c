@@ -121,47 +121,57 @@ void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t
 }
 
 /**
- * Read calibrated color in HSV
- * @param color
+ * Convert an RGB color value to HSV color model
+ * @param r
+ * @param g
+ * @param b
+ * @param hue
+ * @param sat
+ * @param val
  */
-void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color) {
-    uint8_t r, g, b;
-    colorSensorGetRgb(cs, &r, &g, &b);
-
+void rgb2hsv(uint8_t r, uint8_t g, uint8_t b, uint16_t* hue, uint8_t* sat, uint8_t* val){
     uint8_t max, min;
+    float hue_f;
 
     min = (r < g) ? r : g;
     max = (r > g) ? r : g;
     min = (min < b) ? min : b;
     max = (max > b) ? max : b;
 
-    int16_t hue;
-    uint8_t sat;
-    uint8_t val = (uint16_t)max * 100 / 255;
+    *val = (uint16_t)max * 100 / 255;
 
     uint8_t delta = max - min;
 
     if (delta == 0) {
-        sat = 0;
-        hue = 0;
+        *sat = 0;
+        *hue = 0;
     } else {
-        sat = 100 * delta / max;
+        *sat = 100 * delta / max;
 
         if (max == r) {
-            hue = 60 * ( ( ((float)g - (float)b) / delta )    );    // TODO: optimize
+            hue_f = 60 * ( ( ((float)g - (float)b) / delta )    );    // TODO: optimize
         } else if (max == g) {
-            hue = 60 * ( ( ((float)b - (float)r) / delta ) + 2);    // TODO: optimize
+            hue_f = 60 * ( ( ((float)b - (float)r) / delta ) + 2);    // TODO: optimize
         } else {
-            hue = 60 * ( ( ((float)r - (float)g) / delta ) + 4);    // TODO: optimize
+            hue_f = 60 * ( ( ((float)r - (float)g) / delta ) + 4);    // TODO: optimize
         }
+        if (hue_f < 0) {
+                hue_f += 360;
+		}
+        *hue = (uint16_t)hue_f % 360;
     }
 
-    hue = hue % 360;
-    if (hue < 0) {
-        hue += 360;
-    }
+    
+    // TODO: is this necessary? Isn't the output of % always +?
 
-    color->h = hue;
-    color->s = sat;
-    color->v = val;
+}
+
+/**
+ * Read calibrated color in HSV
+ * @param color
+ */
+void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color) {
+    uint8_t r, g, b;
+    colorSensorGetRgb(cs, &r, &g, &b);
+    rgb2hsv(r, g, b, &(color->h), &(color->s), &(color->v));
 }

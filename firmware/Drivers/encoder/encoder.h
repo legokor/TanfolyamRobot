@@ -10,7 +10,7 @@
 
 #include "stm32f1xx_hal.h"
 
-#define SPEED_FILTER 16
+#define SPEED_FILTER 1
 
 /**
  * Resolution of the decoder
@@ -39,6 +39,7 @@ typedef struct {
     TIM_HandleTypeDef* timer;
     uint32_t timerPeriod;
     uint32_t overflowCount;
+    uint8_t overflowWasReset;
     uint32_t lastTimerVal;
 
     uint8_t filterIndex;

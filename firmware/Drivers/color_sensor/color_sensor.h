@@ -37,9 +37,9 @@ typedef struct {
 } ColorSensor;
 
 typedef struct {
-    uint16_t h;
-    uint8_t s;
-    uint8_t v;
+    uint16_t h; // range: 0-360
+    uint8_t s;  // range: 0-100
+    uint8_t v;  // range: 0-100
 } ColorHsv;
 
 void colorSensorInit(volatile ColorSensor* cs,
@@ -49,6 +49,7 @@ void colorSensorInit(volatile ColorSensor* cs,
 void colorSensorCaptureHandler(volatile ColorSensor* cs, uint16_t captureVal);
 void colorSensorGetPeriods(volatile ColorSensor* cs, uint16_t* capRed, uint16_t* capGreen, uint16_t* capBlue, uint16_t* capClear);
 void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t* b);
+void rgb2hsv(uint8_t r, uint8_t g, uint8_t b, uint16_t* hue, uint8_t* sat, uint8_t* val);
 void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color);
 
 #endif /* COLOR_SENSOR_COLOR_SENSOR_H_ */

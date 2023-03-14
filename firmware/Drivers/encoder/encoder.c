@@ -32,7 +32,7 @@
 #include <string.h>
 
 // If the count does not change for this many timer overflows, we can assume that the motor is stopped.
-#define SPEED_TICK_TIMEOUT 100
+#define SPEED_TICK_TIMEOUT 500
 
 typedef enum {
     nop,
@@ -73,6 +73,7 @@ void encoderInit(volatile Encoder* encoder,
     encoder->timer = intervalTimer;
     encoder->timerPeriod = intervalTimer->Init.Period;
     encoder->overflowCount = 0;
+    encoder->overflowWasReset = 1;
     encoder->lastTimerVal = 0;
     memset(encoder->countInterval, 0, sizeof(encoder->countInterval));
     encoder->filterIndex = 0;
@@ -94,49 +95,52 @@ void encoderHandlerA(volatile Encoder* encoder) {
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
 
-    // Calculate elapsed time since last update
-    uint32_t elapsed = overflowCount * encoder->timerPeriod +
-                       (encoder->timerPeriod - encoder->lastTimerVal) + timerVal;
-
-    GPIO_PinState risingEdgeA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
-    GPIO_PinState stateB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
-
-    CounterOperation co = nop;
-
-    if (risingEdgeA) {
-        if (stateB == GPIO_PIN_RESET) {
-            co = inc;
-        } else {
-            co = dec;
-        }
-    } else {
-        if ( (encoder->resolution == EncoderResolution_2) || (encoder->resolution == EncoderResolution_4) ) {
-            if (stateB == GPIO_PIN_SET) {
-                co = inc;
-            } else {
-                co = dec;
-            }
-        }
-    }
-
-    if (co == nop) {
-        return;
-    }
-    if (co == inc) {
-        encoder->counter += encoder->direction;
-    } else if (co == dec) {
-        encoder->counter -= encoder->direction;
-        elapsed = -elapsed;
-    }
-
-    encoder->countInterval[encoder->filterIndex] = elapsed;         // TODO: store timestamps instead
-    encoder->filterIndex++;
-    if (encoder->filterIndex == SPEED_FILTER) {
-        encoder->filterIndex = 0;
-    }
-
     encoder->lastTimerVal = timerVal;
-    encoder->overflowCount -= overflowCount;
+    encoder->overflowCount = 0;
+
+	// Calculate elapsed time since last update
+	uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+
+	GPIO_PinState risingEdgeA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
+	GPIO_PinState stateB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
+
+	CounterOperation co = nop;
+
+	if (risingEdgeA) {
+		if (stateB == GPIO_PIN_RESET) {
+			co = inc;
+		} else {
+			co = dec;
+		}
+	} else {
+		if ( (encoder->resolution == EncoderResolution_2) || (encoder->resolution == EncoderResolution_4) ) {
+			if (stateB == GPIO_PIN_SET) {
+				co = inc;
+			} else {
+				co = dec;
+			}
+		}
+	}
+
+	if (co == nop) {
+		return;
+	}
+	if (co == inc) {
+		encoder->counter += encoder->direction;
+	} else if (co == dec) {
+		encoder->counter -= encoder->direction;
+		elapsed = -elapsed;
+	}
+
+	if(encoder->overflowWasReset){
+	    encoder->overflowWasReset = 0;
+	}else{
+		encoder->countInterval[encoder->filterIndex] = elapsed;         // TODO: store timestamps instead
+		encoder->filterIndex++;
+		if (encoder->filterIndex == SPEED_FILTER) {
+			encoder->filterIndex = 0;
+		}
+	}
 }
 
 /**
@@ -156,9 +160,11 @@ void encoderHandlerB(volatile Encoder* encoder) {
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
 
+    encoder->lastTimerVal = timerVal;
+    encoder->overflowCount = 0;
+
     // Calculate elapsed time since last update
-    uint32_t elapsed = overflowCount * encoder->timerPeriod +
-                       (encoder->timerPeriod - encoder->lastTimerVal) + timerVal;
+    uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
 
     GPIO_PinState risingEdgeB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
     GPIO_PinState stateA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
@@ -189,14 +195,15 @@ void encoderHandlerB(volatile Encoder* encoder) {
         elapsed = -elapsed;
     }
 
-    encoder->countInterval[encoder->filterIndex] = elapsed;         // TODO: store timestamps instead
-    encoder->filterIndex++;
-    if (encoder->filterIndex == SPEED_FILTER) {
-        encoder->filterIndex = 0;
-    }
-
-    encoder->lastTimerVal = timerVal;
-    encoder->overflowCount -= overflowCount;
+    if(encoder->overflowWasReset){
+		encoder->overflowWasReset = 0;
+	}else{
+		encoder->countInterval[encoder->filterIndex] = elapsed;         // TODO: store timestamps instead
+		encoder->filterIndex++;
+		if (encoder->filterIndex == SPEED_FILTER) {
+			encoder->filterIndex = 0;
+		}
+	}
 }
 
 /**
@@ -212,6 +219,7 @@ void encoderTimerOverflowHandler(Encoder* encoder) {
     if (encoder->overflowCount == SPEED_TICK_TIMEOUT) {
         memset(encoder->countInterval, 0, sizeof(encoder->countInterval));
         encoder->overflowCount = 0;
+        encoder->overflowWasReset = 1;
     }
 }
 
