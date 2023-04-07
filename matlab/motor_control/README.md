@@ -19,4 +19,4 @@
 The input and output vectors can be imported in the `systemIdentification` tool to create a model of the system. Alternatively, you can open the saved session, which already has a pretty well fitting nonlinear Hammerstein-Wiener model. The best results so far were achieved by using piecewise nonlinearity with 34 units on the input, and 68 units on the output.
 
 ### PID tuning
-The Simulink model has a simple step-response test setup. Before opening it, you should open the `systemIdentification` tool, open the saved session, and copy the model to the workspace.
+The PID tuning has been done with the MATLAB PID tuner application to achieve the desired step response. The identified plant and the designed controller can be found in `plant_and_controller_model.mat`. A Simulink model will be prepared to test the model in simulation.
