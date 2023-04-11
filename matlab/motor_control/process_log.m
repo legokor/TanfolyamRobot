@@ -3,6 +3,10 @@ t1 = log(:,1);
 setval = log(:,2);
 encval = log(:,3);
 
+% https://wiki.dfrobot.com/Micro_DC_Motor_with_Encoder-SJ01_SKU__FIT0450?fbclid=IwAR0TP3aaLxLFfeRF7M9MhlrzKIa82wVwdKaCqtzjLnnMDiR4Hk_KZ74YDyQ
+tick_per_rot = 960;
+r_wheel = 0.067; % [m]
+
 speed = 0 * encval;
 
 t = t1;
@@ -26,7 +30,7 @@ si = interp1(t, speed, ti);
 vi = interp1(t, setval, ti);
 
 t = ti;
-speed = si;
+speed = si%/tick_per_rot * 2 * pi * r_wheel;
 setval = vi;
 
 yyaxis left
@@ -34,3 +38,5 @@ plot(t, speed);
 hold on;
 yyaxis right
 plot(t, setval);
+legend('Speed $[\frac{m}{s}]$','Duty $[\%]$','Interpreter','latex','Location','northwest');
+xlabel('Time [s]');
