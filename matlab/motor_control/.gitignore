@@ -3,3 +3,6 @@ slprj/
 
 # Simulink cache
 *.slxc
+
+# MATLAB autosave
+*.asv
