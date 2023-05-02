@@ -35,6 +35,7 @@
 #include "ultrasonic.h"
 #include "servo.h"
 #include "motor.h"
+#include "uart.h"
 #include "speed_control.h"
 #include "application.h"
 /* USER CODE END Includes */
@@ -59,6 +60,8 @@
 #define LCD_BL_PWM_INVERTED     0
 
 #define USB_UART (&huart1)
+#define USB_UART_IR USART1_IRQn
+#define USB_UART_DMA_IR DMA1_Channel4_IRQn
 
 #define VBAT_ADC                 (&hadc1)
 #define VBAT_ADC_TIMER           (&htim4)
@@ -135,6 +138,7 @@ TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
 const uint8_t lcdRows = 2;
@@ -157,6 +161,8 @@ volatile Motor* motor2;
 volatile SpeedControl* speedControl1;
 volatile SpeedControl* speedControl2;
 
+volatile Uart uart1;
+
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
 
@@ -166,6 +172,7 @@ volatile SoftPwm* lcdBacklightPwm;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
@@ -295,6 +302,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
     }
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+	uart_handleTransmitCplt(&uart1, huart);
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     switch (GPIO_Pin) {
         case ENC1_A_Pin: encoderHandlerA(&encoder1); break;
@@ -369,6 +380,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
@@ -401,6 +413,8 @@ int main(void)
           LCD_D4_GPIO_Port, LCD_D4_Pin, LCD_D5_GPIO_Port, LCD_D5_Pin,
           LCD_D6_GPIO_Port, LCD_D6_Pin, LCD_D7_GPIO_Port, LCD_D7_Pin,
           lcdRows, lcdCols);
+
+  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 10);
 
   if (exitDfu) {
       lcdPuts(0, 0, "Exit DFU mode...");
@@ -481,7 +495,7 @@ int main(void)
 
   servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS);
 
-  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, USB_UART);
+  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1);
 
   HAL_Delay(1000);
   lcdClear();
@@ -916,7 +930,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 1000000;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -963,6 +977,22 @@ static void MX_USART3_UART_Init(void)
   /* USER CODE BEGIN USART3_Init 2 */
 
   /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
 
 }
 

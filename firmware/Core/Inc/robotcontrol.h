@@ -15,12 +15,13 @@
 #include "speed_control.h"
 #include "encoder.h"
 #include "color_sensor.h"
+#include "uart.h"
 
 #include "robotcontrol-api.h"
 
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-                      UART_HandleTypeDef* usbUart);
+                      volatile Uart* usbUart);
 
 #endif /* INC_ROBOTCONTROL_H_ */
