@@ -30,6 +30,8 @@
  */
 #include "encoder.h"
 #include <string.h>
+#include "main.h"
+#include "uart.h"
 
 // If the count does not change for this many timer overflows, we can assume that the motor is stopped.
 #define SPEED_TICK_TIMEOUT 500
@@ -79,6 +81,8 @@ void encoderInit(volatile Encoder* encoder,
     encoder->filterIndex = 0;
     encoder->maxSpeedCps = maxSpeedCps / 100;
 
+    encoder->overflowCountEncoderInterval = 0;
+
     encoder->initialized = 1;
 }
 
@@ -95,11 +99,15 @@ void encoderHandlerA(volatile Encoder* encoder) {
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
 
-    encoder->lastTimerVal = timerVal;
     encoder->overflowCount = 0;
 
 	// Calculate elapsed time since last update
 	uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+
+	uint32_t elapsedTotal = encoder->overflowCountEncoderInterval * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+	printEncoderT(encoder, 0);
+
+	encoder->lastTimerVal = timerVal;
 
 	GPIO_PinState risingEdgeA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
 	GPIO_PinState stateB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
@@ -215,6 +223,7 @@ void encoderTimerOverflowHandler(Encoder* encoder) {
         return;
     }
 
+    encoder->overflowCountEncoderInterval++;
     encoder->overflowCount++;
     if (encoder->overflowCount == SPEED_TICK_TIMEOUT) {
         memset(encoder->countInterval, 0, sizeof(encoder->countInterval));

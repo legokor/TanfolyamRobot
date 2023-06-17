@@ -42,6 +42,8 @@ typedef struct {
     uint8_t overflowWasReset;
     uint32_t lastTimerVal;
 
+    uint32_t overflowCountEncoderInterval;
+
     uint8_t filterIndex;
     int32_t countInterval[SPEED_FILTER];
     uint16_t maxSpeedCps;
@@ -58,5 +60,7 @@ void encoderTimerOverflowHandler(Encoder* encoder);
 uint32_t encoderGetCounterValue(volatile const Encoder* encoder);
 int32_t encoderGetCountsPerSecond(Encoder* encoder);
 float encoderGetSpeed(Encoder* encoder);
+
+void printEncoderT(Encoder* encoder, uint32_t elapsed);
 
 #endif /* ENCODER_ENCODER_H_ */
