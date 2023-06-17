@@ -95,11 +95,12 @@ void encoderHandlerA(volatile Encoder* encoder) {
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
 
-    encoder->lastTimerVal = timerVal;
     encoder->overflowCount = 0;
 
 	// Calculate elapsed time since last update
 	uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+
+	encoder->lastTimerVal = timerVal;
 
 	GPIO_PinState risingEdgeA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
 	GPIO_PinState stateB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
