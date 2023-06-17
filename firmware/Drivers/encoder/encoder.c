@@ -98,14 +98,16 @@ void encoderHandlerA(volatile Encoder* encoder) {
     // Get timer values
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
+    uint32_t overflowCountEncoderInterval = encoder->overflowCountEncoderInterval;
 
     encoder->overflowCount = 0;
+    encoder->overflowCountEncoderInterval = 0;
 
 	// Calculate elapsed time since last update
 	uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
 
-	uint32_t elapsedTotal = encoder->overflowCountEncoderInterval * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
-	printEncoderT(encoder, 0);
+	uint32_t elapsedTotal = overflowCountEncoderInterval * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+	printEncoderT(encoder, elapsedTotal);
 
 	encoder->lastTimerVal = timerVal;
 

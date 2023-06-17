@@ -83,12 +83,14 @@ uint32_t getEncoderPosition(uint8_t mot_lr) {
 int uartPrintf(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-/*
+
     char str[256];
     int size = vsprintf(str, fmt, args);
+    if(size <= 0)
+    	return;
     str[size] = '\0';
-*/
-    uart_transmit(uart1, fmt, args);
+
+    uart_transmit(uart1, str);
 
     return 0;
 }

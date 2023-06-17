@@ -56,6 +56,7 @@ SpeedControl* speedControlCreate(Motor* motor, Encoder* encoder) {
  */
 void speedControlSetSpeed(SpeedControl* sc, float speed) {
     sc->setPoint = speed;
+    motorSetSpeed(sc->motor, speed);
 }
 
 /**
@@ -64,31 +65,31 @@ void speedControlSetSpeed(SpeedControl* sc, float speed) {
  */
 void speedControlHandler(SpeedControl* sc) {
 
-    // Don't bother calculating stuff for stopped motor.
-    if ((sc->setPoint < 1) && (sc->setPoint > -1)) {
-        motorSetSpeed(sc->motor, 0);
-        return;
-    }
-
-    // Calculate error
-    float speed = encoderGetSpeed(sc->encoder);
-    float error = sc->setPoint - speed;
-
-    // Proportional part
-    float proportional = K_P * error;
-
-    // Integral part
-    sc->integrator = sc->integrator + 0.5f * K_I * DT * (error + sc->prevError);
-
-    // Integrator anti-windup
-    if (sc->integrator > I_LIM_MAX) {
-        sc->integrator = I_LIM_MAX;
-    } else if (sc->integrator < I_LIM_MIN) {
-        sc->integrator = I_LIM_MIN;
-    }
-
-    // Set output
-    float out = proportional + sc->integrator;
-    motorSetSpeed(sc->motor, out);
+//    // Don't bother calculating stuff for stopped motor.
+//    if ((sc->setPoint < 1) && (sc->setPoint > -1)) {
+//        motorSetSpeed(sc->motor, 0);
+//        return;
+//    }
+//
+//    // Calculate error
+//    float speed = encoderGetSpeed(sc->encoder);
+//    float error = sc->setPoint - speed;
+//
+//    // Proportional part
+//    float proportional = K_P * error;
+//
+//    // Integral part
+//    sc->integrator = sc->integrator + 0.5f * K_I * DT * (error + sc->prevError);
+//
+//    // Integrator anti-windup
+//    if (sc->integrator > I_LIM_MAX) {
+//        sc->integrator = I_LIM_MAX;
+//    } else if (sc->integrator < I_LIM_MIN) {
+//        sc->integrator = I_LIM_MIN;
+//    }
+//
+//    // Set output
+//    float out = proportional + sc->integrator;
+//    motorSetSpeed(sc->motor, out);
 }
 
