@@ -23,7 +23,6 @@ typedef struct {
 	char* writeCircularBuffer;
 	int32_t startOfWriteData;
 	int32_t endOfWriteData;
-	char* writeBuffer;
 	uint8_t transmissionInProgress;
 
 	char* readCircularBuffer;
@@ -53,7 +52,7 @@ void uart_handleReceiveCplt(volatile Uart* uart, UART_HandleTypeDef *huart);
 /*
  * Transmits the data (max lenght is writeBufferLenght)
  */
-void uart_transmit(volatile Uart* uart, const char *fmt, ...);
+void uart_transmit(volatile Uart* uart, const char *str);
 
 /*
  * Receives the data until the last received \n, ignores \r (max lenght is readBufferLenght)
