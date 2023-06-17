@@ -30,7 +30,6 @@ void uart_init(volatile Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr,
 	uart->endOfWriteData = writeBufferLenght - 1;
 	uart->transmissionInProgress = 0;
 
-	uart->writeBuffer = (char*)malloc(writeBufferLenght+1);
 	uart->writeCircularBuffer = (char*)malloc(writeBufferLenght+1);
 	uart->readCircularBuffer = (char*)malloc(readBufferLenght+1);
 
@@ -60,18 +59,13 @@ void uart_handleTransmitCplt(volatile Uart *uart, UART_HandleTypeDef *huart){
 }
 
 
-void uart_transmit(volatile Uart *uart, const char *fmt, ...){
-	va_list args;
-	va_start(args, fmt);
-
-	int size = vsprintf((char*)uart->writeBuffer, fmt, args);
-	if(size<=0)
-		return;
+void uart_transmit(volatile Uart *uart, const char *str){
+	int size = strlen(str);
 
 	int spaceTillBufferEnd = uart->writeBufferLenght - uart->endOfWriteData - 1;
 
 	if(spaceTillBufferEnd >= size){
-		memcpy((void*)uart->writeCircularBuffer + uart->endOfWriteData + 1, (const void*)uart->writeBuffer, size);
+		memcpy((void*)uart->writeCircularBuffer + uart->endOfWriteData + 1, (const void*)str, size);
 		HAL_NVIC_DisableIRQ(uart->uartIr);
 		HAL_NVIC_DisableIRQ(uart->sendDMAIr);
 		if(uart->startOfWriteData == -1){
@@ -87,8 +81,8 @@ void uart_transmit(volatile Uart *uart, const char *fmt, ...){
 		HAL_NVIC_EnableIRQ(uart->sendDMAIr);
 	}else{
 		if(spaceTillBufferEnd > 0)
-			memcpy((void*)uart->writeCircularBuffer + uart->endOfWriteData + 1, (const void*)uart->writeBuffer, spaceTillBufferEnd);
-		memcpy((void*)uart->writeCircularBuffer, (const void*)uart->writeBuffer + spaceTillBufferEnd, size - spaceTillBufferEnd);
+			memcpy((void*)uart->writeCircularBuffer + uart->endOfWriteData + 1, (const void*)str, spaceTillBufferEnd);
+		memcpy((void*)uart->writeCircularBuffer, (const void*)str + spaceTillBufferEnd, size - spaceTillBufferEnd);
 		HAL_NVIC_DisableIRQ(uart->uartIr);
 		HAL_NVIC_DisableIRQ(uart->sendDMAIr);
 		if(uart->startOfWriteData == -1){
