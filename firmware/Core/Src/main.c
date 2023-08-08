@@ -63,6 +63,10 @@
 #define USB_UART_IR USART1_IRQn
 #define USB_UART_DMA_IR DMA1_Channel4_IRQn
 
+#define ESP_UART (&huart3)
+#define ESP_UART_IR USART3_IRQn
+#define ESP_UART_DMA_IR DMA1_Channel2_IRQn
+
 #define VBAT_ADC                 (&hadc1)
 #define VBAT_ADC_TIMER           (&htim4)
 #define ADC_TO_VBAT_MULTIPLIER   (3300 * 5 / 4096)
@@ -139,6 +143,7 @@ TIM_HandleTypeDef htim4;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 const uint8_t lcdRows = 2;
@@ -162,6 +167,7 @@ volatile SpeedControl* speedControl1;
 volatile SpeedControl* speedControl2;
 
 volatile Uart uart1;
+volatile Uart uart3;
 
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
@@ -298,12 +304,22 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
         }
 
         // Receive next byte
-        HAL_UART_Receive_IT(USB_UART, &uartRxData, 1);
+        uart_handleReceiveCplt(&uart1, USB_UART);
+    }
+    if (huart == ESP_UART) {
+
+        // Receive next byte
+    	uart_handleReceiveCplt(&uart3, ESP_UART);
     }
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-	uart_handleTransmitCplt(&uart1, huart);
+	if (huart == USB_UART) {
+		uart_handleTransmitCplt(&uart1, huart);
+	}
+	if (huart == ESP_UART) {
+		uart_handleTransmitCplt(&uart3, huart);
+	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
@@ -414,7 +430,8 @@ int main(void)
           LCD_D6_GPIO_Port, LCD_D6_Pin, LCD_D7_GPIO_Port, LCD_D7_Pin,
           lcdRows, lcdCols);
 
-  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 10);
+  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500);
+  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500);
 
   if (exitDfu) {
       lcdPuts(0, 0, "Exit DFU mode...");
@@ -495,7 +512,7 @@ int main(void)
 
   servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS);
 
-  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1);
+  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
 
   HAL_Delay(1000);
   lcdClear();
@@ -990,6 +1007,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
   /* DMA1_Channel4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
