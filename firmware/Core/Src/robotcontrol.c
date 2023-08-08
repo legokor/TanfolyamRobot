@@ -16,6 +16,7 @@ static volatile SpeedControl* scR;
 static volatile Encoder* encoderL;
 static volatile Encoder* encoderR;
 static volatile Uart* uart1;
+static volatile Uart* uart3;
 
 /**
  * Save the pointer to every driver instance used here
@@ -23,7 +24,7 @@ static volatile Uart* uart1;
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-					  volatile Uart* usbUart) {
+					  volatile Uart* usbUart, volatile Uart* espUart) {
     servo = usServo;
     us = usSensor;
     cs = colorSensor;
@@ -32,6 +33,7 @@ void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, vo
     encoderL = encoderLeft;
     encoderR = encoderRight;
     uart1 = usbUart;
+    uart3 = espUart;
 }
 
 
@@ -95,6 +97,24 @@ int uartPrintf(const char *fmt, ...) {
     return 0;
 }
 
+int espPrintf(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    char str[256];
+    int size = vsprintf(str, fmt, args);
+    if(size <= 0)
+    	return;
+    str[size] = '\0';
+
+    uart_transmit(uart3, str);
+
+    return 0;
+}
+
+int espRead(char* data) {
+    return uart_receive(uart3, data);
+}
 
 void delayMs(uint32_t delay) {
     HAL_Delay(delay);

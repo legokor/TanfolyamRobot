@@ -48,6 +48,16 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
 int uartPrintf(const char *fmt, ...);
 
 /**
+ * Print to the ESP serial port. Works just like regular printf.
+ */
+int espPrintf(const char *fmt, ...);
+
+/**
+ * Read from the ESP serial port.
+ */
+int espRead(char* data);
+
+/**
  * Read color in HSV format
  * @param color
  */
