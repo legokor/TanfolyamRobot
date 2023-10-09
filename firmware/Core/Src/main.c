@@ -430,9 +430,6 @@ int main(void)
           LCD_D6_GPIO_Port, LCD_D6_Pin, LCD_D7_GPIO_Port, LCD_D7_Pin,
           lcdRows, lcdCols);
 
-  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500);
-  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500);
-
   if (exitDfu) {
       lcdPuts(0, 0, "Exit DFU mode...");
       HAL_Delay(1000);
@@ -514,9 +511,44 @@ int main(void)
 
   robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
 
-  HAL_Delay(1000);
   lcdClear();
   batteryIndicatorEnable();
+
+  if(HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_RESET){
+	  HAL_Delay(10000);
+
+	  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 1, 500, 500);
+	  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 1, 500, 500);
+
+	  HAL_GPIO_WritePin(ESP_GP0_GPIO_Port, ESP_GP0_Pin, GPIO_PIN_RESET);
+	  HAL_Delay(10000);
+	  HAL_GPIO_WritePin(ESP_RST_GPIO_Port, ESP_RST_Pin, GPIO_PIN_RESET);
+
+	  HAL_Delay(10000);
+	  HAL_GPIO_WritePin(ESP_RST_GPIO_Port, ESP_RST_Pin, GPIO_PIN_SET);
+
+	  lcdPrintf(0, 0, "ESP upload\nmode...");
+
+	  char buffer[505];
+	  while(1){
+		  if(uart_receive(&uart1, buffer)){
+			  lcdPrintf(0,0,"Receive1");
+			  uart_transmit(&uart3, buffer);
+		  }
+		  if(uart_receive(&uart3, buffer)){
+			  lcdPrintf(0,0,"Receive3");
+			  uart_transmit(&uart1, buffer);
+		  }
+	  }
+  }
+
+  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 0, 500, 500);
+  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 0, 500, 500);
+
+  HAL_GPIO_WritePin(ESP_RST_GPIO_Port, ESP_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(ESP_GP0_GPIO_Port, ESP_GP0_Pin, GPIO_PIN_SET);
+  HAL_Delay(500);
+  HAL_GPIO_WritePin(ESP_RST_GPIO_Port, ESP_RST_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 
@@ -947,7 +979,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 1000000;
+  huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -1033,7 +1065,8 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, LCD_D7_Pin|LCD_D6_Pin|LCD_D5_Pin|LCD_D4_Pin
-                          |LCD_EN_Pin|LCD_RST_Pin|MOTOR_SLEEPN_Pin|COLOR_S0_Pin, GPIO_PIN_RESET);
+                          |LCD_EN_Pin|LCD_RST_Pin|MOTOR_SLEEPN_Pin|ESP_RST_Pin
+                          |ESP_GP0_Pin|COLOR_S0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(COLOR_S1_GPIO_Port, COLOR_S1_Pin, GPIO_PIN_RESET);
@@ -1042,9 +1075,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, COLOR_S3_Pin|COLOR_S2_Pin|US_TRIG_Pin|LCD_BACKLIGHT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LCD_D7_Pin LCD_D6_Pin LCD_D5_Pin LCD_D4_Pin
-                           LCD_EN_Pin LCD_RST_Pin MOTOR_SLEEPN_Pin COLOR_S0_Pin */
+                           LCD_EN_Pin LCD_RST_Pin MOTOR_SLEEPN_Pin ESP_RST_Pin
+                           ESP_GP0_Pin COLOR_S0_Pin */
   GPIO_InitStruct.Pin = LCD_D7_Pin|LCD_D6_Pin|LCD_D5_Pin|LCD_D4_Pin
-                          |LCD_EN_Pin|LCD_RST_Pin|MOTOR_SLEEPN_Pin|COLOR_S0_Pin;
+                          |LCD_EN_Pin|LCD_RST_Pin|MOTOR_SLEEPN_Pin|ESP_RST_Pin
+                          |ESP_GP0_Pin|COLOR_S0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

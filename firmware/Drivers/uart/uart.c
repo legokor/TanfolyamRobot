@@ -15,7 +15,7 @@
 
 
 
-void uart_init(volatile Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr, IRQn_Type sendDMAIr, uint16_t writeBufferLenght, uint16_t readBufferLenght){
+void uart_init(volatile Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr, IRQn_Type sendDMAIr, uint8_t readAllChars, uint16_t writeBufferLenght, uint16_t readBufferLenght){
 	uart->huart = huart;
 	uart->writeBufferLenght = writeBufferLenght;
 	uart->readBufferLenght = readBufferLenght;
@@ -32,6 +32,7 @@ void uart_init(volatile Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr,
 
 	uart->writeCircularBuffer = (char*)malloc(writeBufferLenght+1);
 	uart->readCircularBuffer = (char*)malloc(readBufferLenght+1);
+	uart->readAllChars = readAllChars;
 
 	HAL_UART_Receive_IT(uart->huart, (uint8_t*)uart->readCircularBuffer, 1);
 	uart->ok = 1;
@@ -119,12 +120,12 @@ void uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart){
 
 	char c = uart->readCircularBuffer[uart->readPtr];
 
-	if(c == '\r'){
+	if(c == '\r' && uart->readAllChars == 0){
 		HAL_UART_Receive_IT(uart->huart, (uint8_t*)uart->readCircularBuffer + uart->readPtr, 1);
 		return;
 	}
 
-	if(uart->readCircularBuffer[uart->readPtr] == '\n'){
+	if(uart->readCircularBuffer[uart->readPtr] == '\n' || uart->readAllChars){
 		uart->mostRecentNewLinePos = uart->readPtr;
 	}
 

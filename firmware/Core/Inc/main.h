@@ -100,6 +100,10 @@ void Error_Handler(void);
 #define MOTOR1_PWM1_GPIO_Port GPIOB
 #define MOTOR2_PWM1_Pin GPIO_PIN_14
 #define MOTOR2_PWM1_GPIO_Port GPIOB
+#define ESP_RST_Pin GPIO_PIN_6
+#define ESP_RST_GPIO_Port GPIOC
+#define ESP_GP0_Pin GPIO_PIN_7
+#define ESP_GP0_GPIO_Port GPIOC
 #define BUTTON_Pin GPIO_PIN_15
 #define BUTTON_GPIO_Port GPIOA
 #define COLOR_S0_Pin GPIO_PIN_12
