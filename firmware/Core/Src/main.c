@@ -83,8 +83,9 @@
 #define SERVO_PWM_PERIOD       20000
 #define SERVO_START_POS         680           // TODO: calibrate endpoints
 #define SERVO_END_POS           2640
+#define SERVO_INIT_POS 			90
 
-#define US_AND_COLOR_CAPTURE_TIMER (&htim4)
+#define US_COLOR_ESP_TX_CAPTURE_TIMER (&htim4)
 #define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
 #define US_RISING_CHANNEL          TIM_CHANNEL_1
 #define US_RISING_ACTIVE_CHANNEL   HAL_TIM_ACTIVE_CHANNEL_1
@@ -216,8 +217,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
     }
 
-    if(htim == US_AND_COLOR_CAPTURE_TIMER){
+    if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER){
     	usStartMeasurementPulseAsync(&us);
+    	uart_SendDataToEsp(&uart3, &colorSensor, &speedControl1, &speedControl2, &servo, &us);
     }
 }
 
@@ -246,7 +248,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-    if (htim == US_AND_COLOR_CAPTURE_TIMER) {
+    if (htim == US_COLOR_ESP_TX_CAPTURE_TIMER) {
         switch (htim->Channel) {
             case US_RISING_ACTIVE_CHANNEL : {
                 uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, US_RISING_CHANNEL);
@@ -276,7 +278,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
         }
     }*/
 
-    if(htim == US_AND_COLOR_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
+    if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
     	usHandleCompareAsync(&us);
     }
 }
@@ -445,16 +447,16 @@ int main(void)
   lcdPuts(1, 8, "K\xefR");
 
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
-         US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
-         US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
+         US_COLOR_ESP_TX_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
+         US_COLOR_ESP_TX_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
 
-  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_RISING_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_RISING_CHANNEL) != HAL_OK) {
       FAIL;
   }
-  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_FALLING_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_FALLING_CHANNEL) != HAL_OK) {
       FAIL;
   }
-  if (HAL_TIM_OC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_ASYNC_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_OC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_ASYNC_CHANNEL) != HAL_OK) {
 	  FAIL;
   }
 
@@ -463,7 +465,7 @@ int main(void)
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
 
-  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
       FAIL;
   }
 
@@ -510,7 +512,7 @@ int main(void)
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
-  servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS);
+  servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS, SERVO_INIT_POS);
 
   robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
 

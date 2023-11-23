@@ -379,4 +379,3 @@ VP_TIM4_VS_ClockSourceINT.Signal=TIM4_VS_ClockSourceINT
 VP_TIM4_VS_no_output4.Mode=Output Compare4 No Output
 VP_TIM4_VS_no_output4.Signal=TIM4_VS_no_output4
 board=custom
-isbadioc=false

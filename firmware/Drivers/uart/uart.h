@@ -10,6 +10,10 @@
 
 
 #include "stm32f1xx_hal.h"
+#include "color_sensor.h"
+#include "speed_control.h"
+#include "servo.h"
+#include "ultrasonic.h"
 
 
 typedef struct {
@@ -60,6 +64,10 @@ void uart_transmit(volatile Uart* uart, const char *str);
  */
 uint8_t uart_receive(volatile Uart* uart, char* data);
 
-
+void uart_SendDataToEsp(volatile Uart* espUart,
+						volatile ColorSensor* colorSensor,
+						volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2,
+						volatile Servo* servo,
+						volatile UltraSonic* us);
 
 #endif /* UART_UART_H_ */

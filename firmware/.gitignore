@@ -52,3 +52,6 @@ Release/
 # Enable exe for stm32flash and uploader
 !tools/Tanfolyamrobot FTDI.exe
 !tools/stm32flash.exe
+
+# language settings
+**language.settings.xml
