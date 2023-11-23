@@ -54,4 +54,4 @@ Release/
 !tools/stm32flash.exe
 
 # language settings
-**language.settings.xml
+.settings/language.settings.xml
