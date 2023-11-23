@@ -174,4 +174,17 @@ uint8_t uart_receive(volatile Uart *uart, char* data){
 	return 1;
 }
 
+void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us){
+	char data[256];
+	uint8_t r, g, b;
+	uint32_t enc1, enc2;
+	colorSensorGetRgb(colorSensor, &r, &g, &b);
+	enc1 = encoderGetCountsPerSecond(speedControl1->encoder);
+	enc2 = encoderGetCountsPerSecond(speedControl2->encoder);
+	//D: R G B Speed1 Speed2 CPS1 CPS2 Servo US
+	sprintf(data, "D: %d %d %d %.1f %.1f %ld %ld %d %d",
+				r, g, b, speedControl1->setPoint, speedControl2->setPoint, enc1, enc2, servo->position, us->lastDistance);
+
+	uart_transmit(espUart, data);
+}
 
