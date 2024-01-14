@@ -182,7 +182,7 @@ void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSenso
 	enc1 = encoderGetCountsPerSecond(speedControl1->encoder);
 	enc2 = encoderGetCountsPerSecond(speedControl2->encoder);
 	//D: R G B Speed1 Speed2 CPS1 CPS2 Servo US
-	sprintf(data, "D: %d %d %d %.1f %.1f %ld %ld %d %d",
+	sprintf(data, "D: %d %d %d %.1f %.1f %ld %ld %d %d\n",
 				r, g, b, speedControl1->setPoint, speedControl2->setPoint, enc1, enc2, servo->position, us->lastDistance);
 
 	uart_transmit(espUart, data);
