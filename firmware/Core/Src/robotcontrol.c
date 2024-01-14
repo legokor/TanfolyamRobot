@@ -97,6 +97,7 @@ int uartPrintf(const char *fmt, ...) {
     return 0;
 }
 
+/*
 int espPrintf(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -111,6 +112,7 @@ int espPrintf(const char *fmt, ...) {
 
     return 0;
 }
+*/
 
 int espRead(char* data) {
     return uart_receive(uart3, data);
