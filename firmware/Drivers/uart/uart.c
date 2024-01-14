@@ -188,3 +188,9 @@ void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSenso
 	uart_transmit(espUart, data);
 }
 
+void uart_SendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP){
+	char data[256];
+	sprintf(data, "C:\t%s\t%s\t%s\n", SSID, password, IP);
+	uart_transmit(espUart, data);
+}
+

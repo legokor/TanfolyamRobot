@@ -520,6 +520,8 @@ int main(void)
   lcdClear();
   batteryIndicatorEnable();
 
+  uart_SendConfigToEsp(&uart3, WIFI_SSID, WIFI_PASSWORD, SERVER_IP);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -70,4 +70,9 @@ void uart_SendDataToEsp(volatile Uart* espUart,
 						volatile Servo* servo,
 						volatile UltraSonic* us);
 
+/*
+ * Send initial config to ESP
+ */
+void uart_SendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP);
+
 #endif /* UART_UART_H_ */
