@@ -12,10 +12,10 @@
 
 // TODO: put these somewhere else
 #define K_P 15.0
-#define K_I 15.0
+#define K_I 30.0
 #define DT 0.001
-#define I_LIM_MAX  1
-#define I_LIM_MIN -1
+#define I_LIM_MAX  70
+#define I_LIM_MIN -70
 
 /**
  * Initialize the speed control struct

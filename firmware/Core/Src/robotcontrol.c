@@ -89,7 +89,7 @@ int uartPrintf(const char *fmt, ...) {
     char str[256];
     int size = vsprintf(str, fmt, args);
     if(size <= 0)
-    	return;
+    	return -1;
     str[size] = '\0';
 
     uart_transmit(uart1, str);
