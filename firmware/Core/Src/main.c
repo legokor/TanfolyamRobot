@@ -173,6 +173,8 @@ volatile Uart uart3;
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
 
+volatile uint8_t pgm_ready = 0;
+
 volatile SoftPwm* lcdBacklightPwm;
 /* USER CODE END PV */
 
@@ -195,6 +197,9 @@ static void MX_ADC1_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
+
+    if(!pgm_ready)
+    	return;
 
     if(htim == MOTOR_ENCODER_TIMER){
     	encoderTimerOverflowHandler(&encoder1);
@@ -219,11 +224,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER){
     	usStartMeasurementPulseAsync(&us);
-    	uart_SendDataToEsp(&uart3, &colorSensor, &speedControl1, &speedControl2, &servo, &us);
+    	uart_SendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
     }
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+	if(!pgm_ready)
+	    return;
+
     static uint8_t scPsc = 0;
     if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
         scPsc++;
@@ -240,6 +248,9 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+	if(!pgm_ready)
+	    return;
+
     if (hadc == VBAT_ADC) {
         uint16_t adcVal = HAL_ADC_GetValue(VBAT_ADC);
         batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER + ADC_TO_VBAT_OFFSET;
@@ -248,6 +259,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+	if(!pgm_ready)
+	    return;
+
     if (htim == US_COLOR_ESP_TX_CAPTURE_TIMER) {
         switch (htim->Channel) {
             case US_RISING_ACTIVE_CHANNEL : {
@@ -271,12 +285,8 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
-    // TODO
-    /*else if (htim == LCD_BL_TIMER && htim->Channel==LCD_BL_ACTIVE_CHANNEL) {
-        if (lcdBacklightPwm != NULL) {
-            softPwmHandler(lcdBacklightPwm);
-        }
-    }*/
+	if(!pgm_ready)
+	    return;
 
     if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
     	usHandleCompareAsync(&us);
@@ -284,6 +294,9 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
+	if(!pgm_ready)
+	    return;
+
     static uint8_t dfuReceived = 0;
 
     if (huart == USB_UART) {
@@ -316,6 +329,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+	if(!pgm_ready)
+	    return;
+
 	if (huart == USB_UART) {
 		uart_handleTransmitCplt(&uart1, huart);
 	}
@@ -325,6 +341,9 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if(!pgm_ready)
+	    return;
+
     switch (GPIO_Pin) {
         case ENC1_A_Pin: encoderHandlerA(&encoder1); break;
         //case ENC1_B_Pin: encoderHandlerB(&encoder1); break;
@@ -515,6 +534,8 @@ int main(void)
   servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS, SERVO_INIT_POS);
 
   robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
+
+  pgm_ready = 1;
 
   HAL_Delay(1000);
   lcdClear();
@@ -1106,10 +1127,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(US_TRIG_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }

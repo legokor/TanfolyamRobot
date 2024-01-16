@@ -185,6 +185,8 @@ void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSenso
 	sprintf(data, "D: %d %d %d %.1f %.1f %ld %ld %d %d\n",
 				r, g, b, speedControl1->setPoint, speedControl2->setPoint, enc1, enc2, servo->position, us->lastDistance);
 
+	//uartPrintf("Setpoints: %.1f %.1f   Cps: %ld %ld\n", speedControl1->setPoint, speedControl2->setPoint, enc1, enc2);
+
 	uart_transmit(espUart, data);
 }
 

@@ -10,8 +10,6 @@
 
 #include "stm32f1xx_hal.h"
 
-#define SPEED_FILTER 1
-
 /**
  * Resolution of the decoder
  */
@@ -42,8 +40,7 @@ typedef struct {
     uint8_t overflowWasReset;
     uint32_t lastTimerVal;
 
-    uint8_t filterIndex;
-    int32_t countInterval[SPEED_FILTER];
+    int32_t countInterval;
     uint16_t maxSpeedCps;
 } Encoder;
 
