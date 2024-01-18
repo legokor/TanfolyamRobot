@@ -18,6 +18,8 @@ enum State {
 
 State currentState = IDLE;
 
+ESP8266WebServer server(80); // Server on port 80
+
 void setup() {
     Serial.begin(115200);
     Serial.println();
@@ -31,9 +33,26 @@ void setup() {
     }
 
     Serial.println("Connected to WiFi");
+
+        // Handle POST requests
+    server.on("/receiveData", HTTP_POST, []() {
+      if (server.hasArg("plain")) {
+        String message = server.arg("plain");
+        // Handle the received message
+        // For example, print it to the serial monitor
+        Serial.println("Received message: " + message);
+      }
+      server.send(200, "text/plain", "Data received");
+    });
+
+    server.begin(); // Start the server
+
 }
 
 void loop() {
+
+  server.handleClient();
+
   if (Serial.available() > 0) {
     char incomingChar = Serial.read();
 
