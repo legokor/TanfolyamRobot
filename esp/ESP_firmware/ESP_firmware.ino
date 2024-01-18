@@ -1,6 +1,16 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ArduinoJson.h>
+#include <ESP8266WebServer.h>
+
+constexpr bool DEBUG_ENABLED = false;
+
+void dlog(String str){
+    if(DEBUG_ENABLED){
+        Serial.print("DEBUG: ");
+        Serial.println(str);
+    }
+}
 
 const char* ssid = "Andi";
 const char* password = "Gomboc02";
@@ -22,17 +32,17 @@ ESP8266WebServer server(80); // Server on port 80
 
 void setup() {
     Serial.begin(115200);
-    Serial.println();
-    Serial.println("Serial started");
+    dlog("");
+    dlog("Serial started");
 
     WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED) {
         delay(1000);
-        Serial.println("Connecting to WiFi...");
+        dlog("Connecting to WiFi...");
     }
 
-    Serial.println("Connected to WiFi");
+    dlog("Connected to WiFi");
 
         // Handle POST requests
     server.on("/receiveData", HTTP_POST, []() {
@@ -40,7 +50,11 @@ void setup() {
         String message = server.arg("plain");
         // Handle the received message
         // For example, print it to the serial monitor
-        Serial.println("Received message: " + message);
+        dlog("Received message: " + message);
+        char msg[500];
+        sscanf(message.c_str(), "{\"message\":\"%[^\"]\"}", msg);
+        strcat(msg, "\n");
+        Serial.println(msg);
       }
       server.send(200, "text/plain", "Data received");
     });
@@ -117,7 +131,7 @@ void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
 
 void processSerialData(const char *data) {
   //Serial.print("Received Data: ");
-  //Serial.println(data);
+  //dlog(data);
   //strcpy(htmlMessage, data);
   int servo, motora, motorb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
   float wheelaspeed, wheelbspeed, imu_acc_a, imu_acc_b, imu_acc_c, imu_gyro_x, imu_gyro_y, imu_gyro_z, imu_temp;
@@ -132,10 +146,9 @@ void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelb
     WiFiClient client;
     
     if (!client.connect("192.168.168.102", 5000)) {
-        Serial.println("Connection failed");
+        dlog("Connection failed");
         return;
     }
-    Serial.println("NA CSAAAAA");
     
     StaticJsonDocument<256> doc;
     
@@ -178,7 +191,7 @@ void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelb
     
     while (client.available()) {
         String line = client.readStringUntil('\r');
-        Serial.print(line);
+        dlog(line);
     }
     
     client.stop();

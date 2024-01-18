@@ -14,5 +14,14 @@ int application() {
 
     delayMs(2000);
 
+    while(1){
+    	char data[300];
+    	if(espRead(data)){
+    		lcdPrintf(0, 0, "                ");
+    		lcdPrintf(1, 0, "                ");
+    		lcdPrintf(0, 0, data);
+    	}
+    }
+
     return 0;
 }
