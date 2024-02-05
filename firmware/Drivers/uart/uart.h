@@ -51,7 +51,7 @@ void uart_handleTransmitCplt(volatile Uart* uart, UART_HandleTypeDef *huart);
 /*
  * Call when the HAL_UART_RxCpltCallback function is called
  */
-void uart_handleReceiveCplt(volatile Uart* uart, UART_HandleTypeDef *huart);
+void uart_handleReceiveCplt(volatile Uart* uart, UART_HandleTypeDef *huart, uint8_t initCplt);
 
 /*
  * Transmits the data (max lenght is writeBufferLenght)

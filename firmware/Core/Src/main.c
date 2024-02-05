@@ -29,7 +29,6 @@
 #include "lcd.h"
 #include "soft-pwm.h"
 #include "battery_indicator.h"
-#include "dfu.h"
 #include "color_sensor.h"
 #include "encoder.h"
 #include "ultrasonic.h"
@@ -47,10 +46,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define DFU_MAGIC_WORD     "LEGO"
-#define DFU_NON_MAGIC_WORD "NOPE"
-#define UART_DFU_COMMAND   "ENTER_DFU"
-
 #define LCD_TIMER              (&htim1)
 #define LCD_BL_TIMER           (&htim3)
 #define LCD_BL_CHANNEL         TIM_CHANNEL_1
@@ -150,10 +145,6 @@ DMA_HandleTypeDef hdma_usart3_tx;
 const uint8_t lcdRows = 2;
 const uint8_t lcdCols = 16;
 
-const char uartDfuCommand[] = UART_DFU_COMMAND;
-const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
-volatile uint8_t uartRxData;
-
 volatile Encoder encoder1;
 volatile Encoder encoder2;
 
@@ -173,7 +164,8 @@ volatile Uart uart3;
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
 
-volatile uint8_t pgm_ready = 0;
+volatile uint8_t pgmReady = 0;
+volatile uint8_t espReady = 0;
 
 volatile SoftPwm* lcdBacklightPwm;
 /* USER CODE END PV */
@@ -198,7 +190,7 @@ static void MX_ADC1_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
 
-    if(!pgm_ready)
+    if(!pgmReady)
     	return;
 
     if(htim == MOTOR_ENCODER_TIMER){
@@ -229,7 +221,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
-	if(!pgm_ready)
+	if(!pgmReady)
 	    return;
 
     static uint8_t scPsc = 0;
@@ -248,7 +240,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-	if(!pgm_ready)
+	if(!pgmReady)
 	    return;
 
     if (hadc == VBAT_ADC) {
@@ -259,7 +251,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-	if(!pgm_ready)
+	if(!pgmReady)
 	    return;
 
     if (htim == US_COLOR_ESP_TX_CAPTURE_TIMER) {
@@ -285,7 +277,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
-	if(!pgm_ready)
+	if(!pgmReady)
 	    return;
 
     if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
@@ -294,42 +286,12 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
-	if(!pgm_ready)
-	    return;
-
-    static uint8_t dfuReceived = 0;
-
-    if (huart == USB_UART) {
-        /*
-         * Parse UART DFU command
-         */
-        if (uartRxData == uartDfuCommand[dfuReceived]) {
-            dfuReceived++;
-        } else {
-            dfuReceived = 0;
-        }
-        if (dfuReceived == uartDfuCommandLen) {
-            dfuReceived = 0;
-
-            batteryIndicatorDisable();
-            lcdClear();
-            lcdPuts(0, 4, "DFU mode");
-            HAL_Delay(100);
-            rebootIntoDfu(DFU_MAGIC_WORD);
-        }
-
-        // Receive next byte
-        uart_handleReceiveCplt(&uart1, USB_UART);
-    }
-    if (huart == ESP_UART) {
-
-        // Receive next byte
-    	uart_handleReceiveCplt(&uart3, ESP_UART);
-    }
+	uart_handleReceiveCplt(&uart1, USB_UART, pgmReady);
+	uart_handleReceiveCplt(&uart3, ESP_UART, pgmReady && espReady);
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-	if(!pgm_ready)
+	if(!pgmReady)
 	    return;
 
 	if (huart == USB_UART) {
@@ -341,7 +303,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if(!pgm_ready)
+	if(!pgmReady)
 	    return;
 
     switch (GPIO_Pin) {
@@ -380,23 +342,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-  /*
-   * Reboot into DFU if the magic word is set
-   */
-  if (checkMagicWord(DFU_MAGIC_WORD)) {
-      setMagicWord(DFU_NON_MAGIC_WORD);
-      enterDfuMode();
-  }
-
-  /*
-   * When leaving DFU, the non-magic word is set
-   */
-  uint8_t exitDfu = 0;
-  if (checkMagicWord(DFU_NON_MAGIC_WORD)) {
-      setMagicWord("\x00\x00\x00\x00");
-      exitDfu = 1;
-  }
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -430,10 +375,6 @@ int main(void)
       FAIL;
   }
 
-  if (HAL_UART_Receive_IT(USB_UART, &uartRxData, 1) != HAL_OK) {
-      FAIL;
-  }
-
   // TODO
 /*
   lcdBacklightPwm = softPwmCreate(LCD_BL_TIMER, LCD_BL_CHANNEL, LCD_BL_TIMER_PERIOD,
@@ -453,12 +394,6 @@ int main(void)
 
   uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500);
   uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500);
-
-  if (exitDfu) {
-      lcdPuts(0, 0, "Exit DFU mode...");
-      HAL_Delay(1000);
-      lcdClear();
-  }
 
   batteryIndicatorInit();
 
@@ -535,9 +470,9 @@ int main(void)
 
   robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
 
-  pgm_ready = 1;
-
-  HAL_Delay(1000);
+  pgmReady = 1;
+  HAL_Delay(1200);
+  espReady = 1;
   lcdClear();
   batteryIndicatorEnable();
 
