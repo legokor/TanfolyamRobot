@@ -113,10 +113,14 @@ void uart_transmit(volatile Uart *uart, const char *str){
 }
 
 
-void uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart){
+void uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart, uint8_t initCplt){
 	if(uart->huart != huart)
 		return;
 
+	if(!initCplt){
+		HAL_UART_Receive_IT(uart->huart, (uint8_t*)uart->readCircularBuffer, 1);
+		return;
+	}
 	char c = uart->readCircularBuffer[uart->readPtr];
 
 	if(c == '\r'){
