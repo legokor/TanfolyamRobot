@@ -1,19 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ArduinoJson.h>
-#include <ESP8266WebServer.h>
-
-constexpr bool DEBUG_ENABLED = false;
-
-void dlog(String str){
-    if(DEBUG_ENABLED){
-        Serial.print("DEBUG: ");
-        Serial.println(str);
-    }
-}
 
 const char* ssid = "Andi";
 const char* password = "Gomboc02";
+const char* ipaddr = "192.168.0.100";
+char[30] host = "Host: ";
 
 
 const int bufferSize = 128;  // Adjust the buffer size as needed
@@ -22,51 +14,59 @@ char htmlMessage[bufferSize] = {};
 int bufferIndex = 0;
 
 enum State {
+  PRECONFIG,
   IDLE,
   READING
 };
 
-State currentState = IDLE;
-
-ESP8266WebServer server(80); // Server on port 80
+State currentState = PRECONFIG;
 
 void setup() {
     Serial.begin(115200);
-    dlog("");
-    dlog("Serial started");
+    Serial.println();
+    Serial.println("Serial started");
+
+
+    while(currentState != IDLE){        
+      if (Serial.available() > 0) {
+        char incomingChar = Serial.read();
+    
+        switch (currentState) {
+          case PRECONFIG:
+            if (incomingChar == 'C') {
+              currentState = READING;
+              bufferIndex = 0;
+            }
+            break;
+    
+          case READING:
+            if (incomingChar == '\n') {
+              serialBuffer[bufferIndex] = '\0';  // Null-terminate the string
+              currentState = IDLE;
+              break;
+            } else {
+                serialBuffer[bufferIndex] = incomingChar;
+                bufferIndex++;
+            }
+            break;
+        }
+  }  
+    }
+
+    sscanf(serialBuffer, ":\t%s\t%s\t%s", ssid, password, ipaddr);
+    strcat(host, ipaddr);
 
     WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED) {
         delay(1000);
-        dlog("Connecting to WiFi...");
+        Serial.println("Connecting to WiFi...");
     }
 
-    dlog("Connected to WiFi");
-
-        // Handle POST requests
-    server.on("/receiveData", HTTP_POST, []() {
-      if (server.hasArg("plain")) {
-        String message = server.arg("plain");
-        // Handle the received message
-        // For example, print it to the serial monitor
-        dlog("Received message: " + message);
-        char msg[500];
-        sscanf(message.c_str(), "{\"message\":\"%[^\"]\"}", msg);
-        strcat(msg, "\n");
-        Serial.println(msg);
-      }
-      server.send(200, "text/plain", "Data received");
-    });
-
-    server.begin(); // Start the server
-
+    Serial.println("Connected to WiFi");
 }
 
 void loop() {
-
-  server.handleClient();
-
   if (Serial.available() > 0) {
     char incomingChar = Serial.read();
 
@@ -131,7 +131,7 @@ void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
 
 void processSerialData(const char *data) {
   //Serial.print("Received Data: ");
-  //dlog(data);
+  //Serial.println(data);
   //strcpy(htmlMessage, data);
   int servo, motora, motorb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
   float wheelaspeed, wheelbspeed, imu_acc_a, imu_acc_b, imu_acc_c, imu_gyro_x, imu_gyro_y, imu_gyro_z, imu_temp;
@@ -145,10 +145,11 @@ void processSerialData(const char *data) {
 void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelbspeed, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp) {
     WiFiClient client;
     
-    if (!client.connect("192.168.168.102", 5000)) {
-        dlog("Connection failed");
+    if (!client.connect(ipaddr, 5000)) {
+        Serial.println("Connection failed");
         return;
     }
+    Serial.println("NA CSAAAAA");
     
     StaticJsonDocument<256> doc;
     
@@ -182,7 +183,7 @@ void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelb
     serializeJson(doc, jsonStr);
     
     client.println("POST /publishData HTTP/1.1");
-    client.println("Host: 192.168.168.102");
+    client.println(host);
     client.println("Content-Type: application/json");
     client.print("Content-Length: ");
     client.println(jsonStr.length());
@@ -191,7 +192,7 @@ void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelb
     
     while (client.available()) {
         String line = client.readStringUntil('\r');
-        dlog(line);
+        Serial.print(line);
     }
     
     client.stop();
