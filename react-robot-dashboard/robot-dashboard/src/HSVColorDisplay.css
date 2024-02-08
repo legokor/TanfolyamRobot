@@ -1,0 +1,28 @@
+.hsv-color-display {
+    color: #fff;
+    background-color: #333; /* Adjust the color to match your theme */
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 20px; /* Space between sections */
+  }
+  
+  .hsv-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .color-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    display: inline-block;
+    margin-left: 20px;
+  }
+  
+  /* If you want to style the paragraphs for better spacing */
+  .hsv-content p {
+    margin: 5px 0; /* Adjust the margin as needed */
+  }
+  
