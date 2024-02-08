@@ -1,0 +1,15 @@
+.ultrasonic-sensor {
+    color: #fff;
+    background-color: #333; /* Adjust the color to match your theme */
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 20px; /* Space between sections */
+    text-align: center;
+  }
+  
+  /* If you want to add more styles to the <p> tag */
+  .ultrasonic-sensor p {
+    margin: 10px 0; /* Adjust the margin as needed */
+  }
+  

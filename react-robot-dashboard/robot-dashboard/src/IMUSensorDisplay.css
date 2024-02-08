@@ -1,0 +1,51 @@
+.imu-sensor-display {
+    color: #fff;
+    background-color: #333; /* Adjust the color to match your theme */
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin-bottom: 20px; /* Space between sections */
+  }
+  
+  .imu-matrix {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .imu-column {
+    background-color: #222; /* Adjust the color to match your theme */
+    border: 1px solid #555; /* Adjust the color to match your theme */
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0 5px;
+    flex: 1; /* Equal width */
+  }
+  
+  .imu-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .imu-value {
+    background-color: #333; /* Slightly different background for values */
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  
+  /* Last value margin adjustment */
+  .imu-value:last-child {
+    margin-bottom: 0;
+  }
+  
+  @media (max-width: 600px) {
+    .imu-matrix {
+      flex-direction: column;
+    }
+  
+    .imu-column {
+      margin-bottom: 10px;
+    }
+  }
+  
