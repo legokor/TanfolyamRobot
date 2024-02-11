@@ -9,9 +9,9 @@
 
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdio.h>
 
 
 
@@ -179,17 +179,20 @@ uint8_t uart_receive(volatile Uart *uart, char* data){
 }
 
 void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us){
-	char data[256];
 	uint8_t r, g, b;
-	uint32_t enc1, enc2;
 	colorSensorGetRgb(colorSensor, &r, &g, &b);
-	enc1 = encoderGetCountsPerSecond(speedControl1->encoder);
-	enc2 = encoderGetCountsPerSecond(speedControl2->encoder);
-	//D: R G B Speed1 Speed2 CPS1 CPS2 Servo US
-	sprintf(data, "D: %d %d %d %.1f %.1f %ld %ld %d %d\n",
-				r, g, b, speedControl1->setPoint, speedControl2->setPoint, enc1, enc2, servo->position, us->lastDistance);
+	int cps1 = encoderGetCountsPerSecond(speedControl1->encoder);
+	int cps2 = encoderGetCountsPerSecond(speedControl2->encoder);
+	int cnt1 = encoderGetCounterValue(speedControl1->encoder);
+	int cnt2 = encoderGetCounterValue(speedControl2->encoder);
 
-	//uartPrintf("Setpoints: %.1f %.1f   Cps: %ld %ld\n", speedControl1->setPoint, speedControl2->setPoint, enc1, enc2);
+	char data[256];
+	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US
+	//For some reason when sprintf is called from an interrupt handler it cannot contain any %f formatted values
+	//otherwise it sometimes produces garbage output
+	sprintf(data, "D: %d %d %d %d %d %d %d %d %d %d %d\n", (int)r, (int)g, (int)b,
+			(int)speedControl1->setPoint, (int)speedControl2->setPoint,
+			cps1, cps2, cnt1, cnt2, servo->position, us->lastDistance);
 
 	uart_transmit(espUart, data);
 }

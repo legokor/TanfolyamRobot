@@ -42,8 +42,10 @@ const RobotPage = () => {
           <MotorServoDisplay
             motora={data.motora}
             motorb={data.motorb}
-            wheelaspeed={data.wheelaspeed}
-            wheelbspeed={data.wheelbspeed}
+            cpsa={data.cpsa}
+            cpsb={data.cpsb}
+            cnta={data.cnta}
+            cntb={data.cntb}
             servo={data.servo}
           />
         )}

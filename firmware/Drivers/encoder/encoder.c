@@ -221,7 +221,7 @@ void encoderTimerOverflowHandler(Encoder* encoder) {
  * @param encoder
  * @return counter value
  */
-uint32_t encoderGetCounterValue(volatile const Encoder* encoder) {
+int32_t encoderGetCounterValue(volatile const Encoder* encoder) {
     return encoder->counter;
 }
 
