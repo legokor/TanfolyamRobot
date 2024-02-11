@@ -78,7 +78,7 @@
 #define SERVO_PWM_PERIOD       20000
 #define SERVO_START_POS         680           // TODO: calibrate endpoints
 #define SERVO_END_POS           2640
-#define SERVO_INIT_POS 			90
+#define SERVO_INIT_POS 			0
 
 #define US_COLOR_ESP_TX_CAPTURE_TIMER (&htim4)
 #define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
@@ -189,6 +189,7 @@ static void MX_ADC1_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
+    static uint32_t telemetryItCounter = 0;
 
     if(!pgmReady)
     	return;
@@ -216,7 +217,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER){
     	usStartMeasurementPulseAsync(&us);
-    	uart_SendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
+    	telemetryItCounter++;
+    	if(telemetryItCounter == 4){
+    		telemetryItCounter = 0;
+    		uart_SendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
+    	}
     }
 }
 

@@ -79,6 +79,10 @@ void setup() {
 
 void loop() {
   server.handleClient();
+
+//   sendJson(88, 69, 75, 1, 2, 3, 4, 22, 33, 44, 55, 1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8);
+//   delay(100);
+//   return;
   
   if (Serial.available() > 0) {
     char incomingChar = Serial.read();
@@ -182,12 +186,11 @@ void getConfig(){
 }
 
 void processSerialData(const char *data) {
-  int servo, motora, motorb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
-  float wheelaspeed, wheelbspeed, imu_acc_a, imu_acc_b, imu_acc_c, imu_gyro_x, imu_gyro_y, imu_gyro_z, imu_temp;
+  int servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
   
-  sscanf(data, " %d %d %d %f %f %ld %ld %d %d", &rgb_r, &rgb_g, &rgb_b, &wheelaspeed, &wheelbspeed, &motora, &motorb, &servo, &usonic);
+  sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic);
   rgb2hsv(rgb_r, rgb_g, rgb_b, &hsv_h, &hsv_s, &hsv_v);
-  sendJson(servo, motora, motorb, wheelaspeed, wheelbspeed, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  sendJson(servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
 void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
@@ -223,11 +226,11 @@ void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
   }
 }
 
-void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelbspeed, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp) {
+void sendJson(int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp) {
     WiFiClient client;
     
     if (!client.connect(ipaddr, 5000)) {
-        Serial.println("Connection failed");
+        dlog("Connection failed");
         return;
     }
   
@@ -236,8 +239,10 @@ void sendJson(int servo, int motora, int motorb, float wheelaspeed, float wheelb
     doc["servo"] = servo;
     doc["motora"] = motora;
     doc["motorb"] = motorb;
-    doc["wheelaspeed"] = wheelaspeed;
-    doc["wheelbspeed"] = wheelbspeed;
+    doc["cpsa"] = cpsa;
+    doc["cpsb"] = cpsb;
+    doc["cnta"] = cnta;
+    doc["cntb"] = cntb;
     doc["usonic"] = usonic;
     
     JsonObject hsv = doc.createNestedObject("hsv");

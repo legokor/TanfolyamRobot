@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1 style={titleStyle}>LEGO Tanfolyam Robot Dashboard</h1>
+        <h1 style={titleStyle}>LEGO TanfolyamRobot Dashboard</h1>
         <RobotPage />
       </header>
     </div>
