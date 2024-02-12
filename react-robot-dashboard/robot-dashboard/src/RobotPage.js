@@ -5,6 +5,7 @@ import HSVColorDisplay from './HSVColorDisplay';
 import IMUSensorDisplay from './IMUSensorDisplay';
 import MotorServoDisplay from './MotorServoDisplay';
 import Terminal from './Terminal';
+import Console from './Console';
 
 const RobotPage = () => {
   const [data, setData] = useState(null);
@@ -49,6 +50,9 @@ const RobotPage = () => {
             servo={data.servo}
           />
         )}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Console data={data} />
       </div>
       <div style={{ justifyContent: 'space-around',  bottom: 0, width: '100%' }}>
         <Terminal onSendMessage={sendMessage} />
