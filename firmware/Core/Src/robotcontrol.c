@@ -97,7 +97,7 @@ int uartPrintf(const char *fmt, ...) {
     return 0;
 }
 
-/*
+
 int espPrintf(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -105,14 +105,18 @@ int espPrintf(const char *fmt, ...) {
     char str[256];
     int size = vsprintf(str, fmt, args);
     if(size <= 0)
-    	return;
+    	return -1;
     str[size] = '\0';
 
-    uart_transmit(uart3, str);
+    for(int p = 0; p < size; p++){
+    	if(str[p] == '\n')
+    		str[p] = ' ';
+    }
+
+    uart_sendTextToEsp(uart3, str);
 
     return 0;
 }
-*/
 
 int espRead(char* data) {
     return uart_receive(uart3, data);

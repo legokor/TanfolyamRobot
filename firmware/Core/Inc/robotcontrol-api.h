@@ -54,7 +54,7 @@ int uartPrintf(const char *fmt, ...);
 /**
  * Print to the ESP serial port. Works just like regular printf.
  */
-//int espPrintf(const char *fmt, ...);  TODO: someone implement it pls.
+int espPrintf(const char *fmt, ...);
 
 /**
  * Read from the ESP serial port.
