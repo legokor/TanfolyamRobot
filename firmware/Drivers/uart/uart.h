@@ -64,15 +64,18 @@ void uart_transmit(volatile Uart* uart, const char *str);
  */
 uint8_t uart_receive(volatile Uart* uart, char* data);
 
-void uart_SendDataToEsp(volatile Uart* espUart,
+void uart_sendDataToEsp(volatile Uart* espUart,
 						volatile ColorSensor* colorSensor,
 						volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2,
 						volatile Servo* servo,
 						volatile UltraSonic* us);
 
+//text must not contain any \n characters
+void uart_sendTextToEsp(volatile Uart* espUart, const char* text);
+
 /*
  * Send initial config to ESP
  */
-void uart_SendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP);
+void uart_sendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP);
 
 #endif /* UART_UART_H_ */

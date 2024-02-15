@@ -220,7 +220,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     	telemetryItCounter++;
     	if(telemetryItCounter == 4){
     		telemetryItCounter = 0;
-    		uart_SendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
+    		uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
     	}
     }
 }
@@ -481,7 +481,7 @@ int main(void)
   lcdClear();
   batteryIndicatorEnable();
 
-  uart_SendConfigToEsp(&uart3, WIFI_SSID, WIFI_PASSWORD, SERVER_IP);
+  uart_sendConfigToEsp(&uart3, WIFI_SSID, WIFI_PASSWORD, SERVER_IP);
 
   /* USER CODE END 2 */
 

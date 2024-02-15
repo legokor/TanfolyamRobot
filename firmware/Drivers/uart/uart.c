@@ -178,7 +178,12 @@ uint8_t uart_receive(volatile Uart *uart, char* data){
 	return 1;
 }
 
-void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us){
+static volatile char prevData[256] = "";
+static volatile uint8_t sendDataEnabled = 1;
+
+void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us){
+	if(!sendDataEnabled)
+		return;
 	uint8_t r, g, b;
 	colorSensorGetRgb(colorSensor, &r, &g, &b);
 	int cps1 = encoderGetCountsPerSecond(speedControl1->encoder);
@@ -190,14 +195,25 @@ void uart_SendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSenso
 	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US
 	//For some reason when sprintf is called from an interrupt handler it cannot contain any %f formatted values
 	//otherwise it sometimes produces garbage output
-	sprintf(data, "D: %d %d %d %d %d %d %d %d %d %d %d\n", (int)r, (int)g, (int)b,
+	sprintf(prevData, "D: %d %d %d %d %d %d %d %d %d %d %d", (int)r, (int)g, (int)b,
 			(int)speedControl1->setPoint, (int)speedControl2->setPoint,
 			cps1, cps2, cnt1, cnt2, servo->position, us->lastDistance);
+
+	strcpy(data, prevData);
+	strcat(data, "\n");
 
 	uart_transmit(espUart, data);
 }
 
-void uart_SendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP){
+void uart_sendTextToEsp(volatile Uart* espUart, const char* text){
+	char data[512];
+	sendDataEnabled = 0;
+	sprintf(data, "%s %s\n", prevData, text);
+	sendDataEnabled = 1;
+	uart_transmit(espUart, data);
+}
+
+void uart_sendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP){
 	char data[256];
 	sprintf(data, "C:\t%s\t%s\t%s\n", SSID, password, IP);
 	uart_transmit(espUart, data);

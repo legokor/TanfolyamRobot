@@ -187,10 +187,11 @@ void getConfig(){
 
 void processSerialData(const char *data) {
   int servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
+  char text[256] = "";
   
-  sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic);
+  sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d %[^\"]", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic, text);
   rgb2hsv(rgb_r, rgb_g, rgb_b, &hsv_h, &hsv_s, &hsv_v);
-  sendJson(servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  sendJson(servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, text);
 }
 
 void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
@@ -226,7 +227,7 @@ void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
   }
 }
 
-void sendJson(int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp) {
+void sendJson(int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp, const char* text) {
     WiFiClient client;
     
     if (!client.connect(ipaddr, 5000)) {
@@ -244,6 +245,8 @@ void sendJson(int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, i
     doc["cnta"] = cnta;
     doc["cntb"] = cntb;
     doc["usonic"] = usonic;
+    if(strlen(text) > 0)
+        doc["consolemessage"] = String(text);
     
     JsonObject hsv = doc.createNestedObject("hsv");
     hsv["h"] = hsv_h;
