@@ -5,7 +5,9 @@
 
 const char* WIFI_SSID = "Andi";
 const char* WIFI_PASSWORD = "Gomboc02";
-const char* SERVER_IP = "192.168.45.102";
+
+#define MANUAL_IP FALSE
+const char* SERVER_IP = "192.168.1.239";
 
 int application() {
 
