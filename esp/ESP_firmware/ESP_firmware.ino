@@ -58,7 +58,7 @@ ModuleStatus moduleStatus = ModuleStatus::PRECONFIG;
 
 void loop() {
     static ReceiveState receiveState = ReceiveState::IDLE;
-    static char serialBuffer[bufferSize];
+    static char receiveOutBuffer[bufferSize];
     static int serialPtr = 0;
     static EspState espState = EspState::PRECONFIG;
     
@@ -77,6 +77,7 @@ void loop() {
     }
     
     while(Serial.available()){
+        static char serialBuffer[bufferSize];
         char c = Serial.read();
 
         switch(receiveState){
@@ -105,6 +106,7 @@ void loop() {
                     receiveState = ReceiveState::IDLE;
                     dataAvailable = false;
                     configAvailable = true;
+                    strcpy(receiveOutBuffer, serialBuffer);
                 }else{
                     serialBuffer[serialPtr++] = c;
                     if(serialPtr == bufferSize)
@@ -116,6 +118,7 @@ void loop() {
                     serialBuffer[serialPtr] = 0;
                     receiveState = ReceiveState::IDLE;
                     dataAvailable = true;
+                    strcpy(receiveOutBuffer, serialBuffer);
                 }else{
                     serialBuffer[serialPtr++] = c;
                     if(serialPtr == bufferSize)
@@ -130,7 +133,7 @@ void loop() {
     if(configAvailable){
         char ssidTmp[bufferSize / 2];
         char passwordTmp[bufferSize / 2];
-        if(sscanf(serialBuffer, "\t%s\t%s\t%s", ssidTmp, passwordTmp, ipAddress) == 3){
+        if(sscanf(receiveOutBuffer, "\t%s\t%s\t%s", ssidTmp, passwordTmp, ipAddress) == 3){
             if(strcmp(ssidTmp, ssid) != 0 || strcmp(passwordTmp, password) != 0){
                 strcpy(ssid, ssidTmp);
                 strcpy(password, passwordTmp);
@@ -184,7 +187,7 @@ void loop() {
         case EspState::CONNECTED:
             if(dataAvailable){
                 dlog("Data received");
-                processSerialData(serialBuffer, ipAddress);
+                processSerialData(receiveOutBuffer, ipAddress);
             }
             if(DEBUG_ENABLED){
                 static unsigned long debugSendTime = 0;

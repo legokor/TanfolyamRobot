@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Console = ({ data }) => {
   const [messages, setMessages] = useState([]);
+  const consoleRef = useRef(null);
 
   useEffect(() => {
     if (data && data.consolemessage && data.consolemessage !== "") {
@@ -9,15 +10,21 @@ const Console = ({ data }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (consoleRef.current) {
+      consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div style={{
+    <div ref={consoleRef} style={{
       height: '300px',
       width: '100%',
       overflowY: 'scroll',
       backgroundColor: '#0e0e0e',
       color: '#FFFFFF', // Corrected color value
       fontFamily: 'monospace',
-      fontSize: '50px',
+      fontSize: '40px',
       padding: '10px',
       boxSizing: 'border-box',
       textAlign: 'left', // Ensure text aligns to the left
