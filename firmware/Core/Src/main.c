@@ -168,6 +168,8 @@ volatile uint8_t pgmReady = 0;
 volatile uint8_t espReady = 0;
 
 volatile SoftPwm* lcdBacklightPwm;
+
+static volatile char espState = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -187,6 +189,23 @@ static void MX_ADC1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void updateEspState(){
+	switch(espState){
+	case 0:
+		lcdPutc(1, 15, 'X');	//ESP not detected
+		break;
+	case 1:
+		lcdPutc(1, 15, '~');	//ESP connecting to WiFi
+		break;
+	case 2:
+		lcdPutc(1, 15, '.');	//ESP connecting to server
+		break;
+	case 3:
+		lcdPutc(1, 15, '+');	//ESP connected to server
+		break;
+	}
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
     static uint32_t telemetryItCounter = 0;
@@ -206,6 +225,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         if (adcTimerItCount >= BATTERY_INDICATOR_PERIOD) {
             adcTimerItCount = 0;
+            updateEspState();
             batteryIndicatorDisplay(BATTERY_INDICATOR_ROW, BATTERY_INDICATOR_COL, batteryVoltage);
         }
 
@@ -292,7 +312,9 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 	uart_handleReceiveCplt(&uart1, USB_UART, pgmReady);
-	uart_handleReceiveCplt(&uart3, ESP_UART, pgmReady && espReady);
+	char c = uart_handleReceiveCplt(&uart3, ESP_UART, pgmReady && espReady);
+	if(c)
+		espState = c;
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
@@ -397,8 +419,10 @@ int main(void)
           LCD_D6_GPIO_Port, LCD_D6_Pin, LCD_D7_GPIO_Port, LCD_D7_Pin,
           lcdRows, lcdCols);
 
-  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500);
-  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500);
+  char ignoreableChars[10] = {'\r', 1, 2, 3, 0};
+
+  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500, ignoreableChars);
+  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500, ignoreableChars);
 
   batteryIndicatorInit();
 
