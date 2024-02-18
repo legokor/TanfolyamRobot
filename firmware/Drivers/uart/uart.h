@@ -35,13 +35,15 @@ typedef struct {
 	uint8_t readPtrOverflow;
 	int32_t mostRecentNewLinePos;
 	uint8_t ok;
+
+	char* ignoreableChars;
 } Uart;
 
 
 /*
  * Initializes the UART object
  */
-void uart_init(volatile Uart* uart, UART_HandleTypeDef *huart, IRQn_Type uartIr, IRQn_Type sendDMAIr, uint16_t writeBufferLenght, uint16_t readBufferLenght);
+void uart_init(volatile Uart* uart, UART_HandleTypeDef *huart, IRQn_Type uartIr, IRQn_Type sendDMAIr, uint16_t writeBufferLenght, uint16_t readBufferLenght, char* ignoreableChars);
 
 /*
  * Call when the HAL_UART_TxCpltCallback function is called
@@ -50,8 +52,9 @@ void uart_handleTransmitCplt(volatile Uart* uart, UART_HandleTypeDef *huart);
 
 /*
  * Call when the HAL_UART_RxCpltCallback function is called
+ * Returns the received char if it is part of ignoreableChars, otherwise returns 0
  */
-void uart_handleReceiveCplt(volatile Uart* uart, UART_HandleTypeDef *huart, uint8_t initCplt);
+char uart_handleReceiveCplt(volatile Uart* uart, UART_HandleTypeDef *huart, uint8_t initCplt);
 
 /*
  * Transmits the data (max lenght is writeBufferLenght)
