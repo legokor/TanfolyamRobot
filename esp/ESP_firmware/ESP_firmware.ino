@@ -68,6 +68,7 @@ void loop() {
 
     bool configAvailable = false;
     bool dataAvailable = false;
+    bool prevSerialContainsText = false;
 
     unsigned long now = millis();
     static unsigned long statusSendTime = 0;
@@ -118,7 +119,13 @@ void loop() {
                     serialBuffer[serialPtr] = 0;
                     receiveState = ReceiveState::IDLE;
                     dataAvailable = true;
-                    strcpy(receiveOutBuffer, serialBuffer);
+                    bool containsText = serialDataContainsText(serialBuffer);
+                    if(containsText){
+                        strcpy(receiveOutBuffer, serialBuffer);
+                        prevSerialContainsText = true;
+                    }else if(!prevSerialContainsText){
+                        strcpy(receiveOutBuffer, serialBuffer);
+                    }
                 }else{
                     serialBuffer[serialPtr++] = c;
                     if(serialPtr == bufferSize)
@@ -231,11 +238,23 @@ void sendStatus(ModuleStatus status){
 
 void processSerialData(const char *data, const char* ipaddr) {
     int servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
-    char text[256] = "";
+    
+    static char text[256] = "";
     
     sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d %[^\"]", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic, text);
     rgb2hsv(rgb_r, rgb_g, rgb_b, &hsv_h, &hsv_s, &hsv_v);
-    sendJson(ipaddr, servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, text);
+    if(sendJson(ipaddr, servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, text))
+        strcpy(text, "");
+}
+
+bool serialDataContainsText(const char *data){
+    int tokenNum = 0;
+    while(*data){
+        if(*data == ' ')
+            tokenNum++;
+        data++;
+    }
+    return tokenNum > 11;
 }
 
 void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
@@ -271,13 +290,14 @@ void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
     }
 }
 
-void sendJson(const char* ipaddr, int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp, const char* text) {
+bool sendJson(const char* ipaddr, int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp, const char* text) {
     WiFiClient client;
+    client.setTimeout(300);
     
     if (!client.connect(ipaddr, 5000)) {
         moduleStatus = ModuleStatus::CONNECTING_TO_SERVER;
         dlog("Connection failed");
-        return;
+        return false;
     }
     moduleStatus = ModuleStatus::CONNECTED_TO_SERVER;
 
@@ -332,4 +352,5 @@ void sendJson(const char* ipaddr, int servo, int motora, int motorb, int cpsa, i
     // }
     
     client.stop();
+    return true;
 }
