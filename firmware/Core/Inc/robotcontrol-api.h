@@ -13,6 +13,10 @@
 #define MOT_R 0
 #define MOT_L 1
 
+extern const char* WIFI_SSID;
+extern const char* WIFI_PASSWORD;
+extern const char* SERVER_IP;
+
 typedef struct {
     uint16_t h;
     uint8_t s;
@@ -46,6 +50,16 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
  * Print to the USB serial port. Works just like regular printf.
  */
 int uartPrintf(const char *fmt, ...);
+
+/**
+ * Print to the ESP serial port. Works just like regular printf.
+ */
+int espPrintf(const char *fmt, ...);
+
+/**
+ * Read from the ESP serial port.
+ */
+int espRead(char* data);
 
 /**
  * Read color in HSV format

@@ -1,0 +1,39 @@
+.motor-servo-display {
+    color: #fff;
+    background-color: #333; /* Adjust the color to match your theme */
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 30px; /* Increase space between components */
+  }
+  
+  .data-matrix {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px; /* This adds space between the columns */
+  }
+  
+  .data-column {
+    background-color: #222; /* Adjust the color to match your theme */
+    border: 1px solid #555; /* Adjust the color to match your theme */
+    padding: 10px;
+    border-radius: 5px;
+    flex-basis: calc(33% - 10px); /* Adjust the width of columns, assuming 3 columns */
+  }
+  
+  .data-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .data-value {
+    background-color: #333; /* Slightly different background for values */
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  /* Rest of your styles for responsiveness */
+  

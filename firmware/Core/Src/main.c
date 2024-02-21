@@ -29,12 +29,12 @@
 #include "lcd.h"
 #include "soft-pwm.h"
 #include "battery_indicator.h"
-#include "dfu.h"
 #include "color_sensor.h"
 #include "encoder.h"
 #include "ultrasonic.h"
 #include "servo.h"
 #include "motor.h"
+#include "uart.h"
 #include "speed_control.h"
 #include "application.h"
 /* USER CODE END Includes */
@@ -46,10 +46,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define DFU_MAGIC_WORD     "LEGO"
-#define DFU_NON_MAGIC_WORD "NOPE"
-#define UART_DFU_COMMAND   "ENTER_DFU"
-
 #define LCD_TIMER              (&htim1)
 #define LCD_BL_TIMER           (&htim3)
 #define LCD_BL_CHANNEL         TIM_CHANNEL_1
@@ -59,6 +55,12 @@
 #define LCD_BL_PWM_INVERTED     0
 
 #define USB_UART (&huart1)
+#define USB_UART_IR USART1_IRQn
+#define USB_UART_DMA_IR DMA1_Channel4_IRQn
+
+#define ESP_UART (&huart3)
+#define ESP_UART_IR USART3_IRQn
+#define ESP_UART_DMA_IR DMA1_Channel2_IRQn
 
 #define VBAT_ADC                 (&hadc1)
 #define VBAT_ADC_TIMER           (&htim4)
@@ -76,8 +78,9 @@
 #define SERVO_PWM_PERIOD       20000
 #define SERVO_START_POS         680           // TODO: calibrate endpoints
 #define SERVO_END_POS           2640
+#define SERVO_INIT_POS 			0
 
-#define US_AND_COLOR_CAPTURE_TIMER (&htim4)
+#define US_COLOR_ESP_TX_CAPTURE_TIMER (&htim4)
 #define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
 #define US_RISING_CHANNEL          TIM_CHANNEL_1
 #define US_RISING_ACTIVE_CHANNEL   HAL_TIM_ACTIVE_CHANNEL_1
@@ -135,14 +138,12 @@ TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 const uint8_t lcdRows = 2;
 const uint8_t lcdCols = 16;
-
-const char uartDfuCommand[] = UART_DFU_COMMAND;
-const uint8_t uartDfuCommandLen = strlen(uartDfuCommand);
-volatile uint8_t uartRxData;
 
 volatile Encoder encoder1;
 volatile Encoder encoder2;
@@ -157,15 +158,24 @@ volatile Motor* motor2;
 volatile SpeedControl* speedControl1;
 volatile SpeedControl* speedControl2;
 
+volatile Uart uart1;
+volatile Uart uart3;
+
 volatile uint16_t batteryVoltage = 0;
 volatile uint8_t batteryAdcBusy = 0;
 
+volatile uint8_t pgmReady = 0;
+volatile uint8_t espReady = 0;
+
 volatile SoftPwm* lcdBacklightPwm;
+
+static volatile char espState = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
@@ -179,8 +189,29 @@ static void MX_ADC1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void updateEspState(){
+	switch(espState){
+	case 0:
+		lcdPutc(1, 15, 'X');	//ESP not detected
+		break;
+	case 1:
+		lcdPutc(1, 15, '~');	//ESP connecting to WiFi
+		break;
+	case 2:
+		lcdPutc(1, 15, '.');	//ESP connecting to server
+		break;
+	case 3:
+		lcdPutc(1, 15, '+');	//ESP connected to server
+		break;
+	}
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     static uint32_t adcTimerItCount = 0;
+    static uint32_t telemetryItCounter = 0;
+
+    if(!pgmReady)
+    	return;
 
     if(htim == MOTOR_ENCODER_TIMER){
     	encoderTimerOverflowHandler(&encoder1);
@@ -194,6 +225,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         if (adcTimerItCount >= BATTERY_INDICATOR_PERIOD) {
             adcTimerItCount = 0;
+            updateEspState();
             batteryIndicatorDisplay(BATTERY_INDICATOR_ROW, BATTERY_INDICATOR_COL, batteryVoltage);
         }
 
@@ -203,12 +235,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
     }
 
-    if(htim == US_AND_COLOR_CAPTURE_TIMER){
+    if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER){
     	usStartMeasurementPulseAsync(&us);
+    	telemetryItCounter++;
+    	if(telemetryItCounter == 4){
+    		telemetryItCounter = 0;
+    		uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
+    	}
     }
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+	if(!pgmReady)
+	    return;
+
     static uint8_t scPsc = 0;
     if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
         scPsc++;
@@ -225,6 +265,9 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+	if(!pgmReady)
+	    return;
+
     if (hadc == VBAT_ADC) {
         uint16_t adcVal = HAL_ADC_GetValue(VBAT_ADC);
         batteryVoltage =  adcVal * ADC_TO_VBAT_MULTIPLIER + ADC_TO_VBAT_OFFSET;
@@ -233,7 +276,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-    if (htim == US_AND_COLOR_CAPTURE_TIMER) {
+	if(!pgmReady)
+	    return;
+
+    if (htim == US_COLOR_ESP_TX_CAPTURE_TIMER) {
         switch (htim->Channel) {
             case US_RISING_ACTIVE_CHANNEL : {
                 uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, US_RISING_CHANNEL);
@@ -256,46 +302,37 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
-    // TODO
-    /*else if (htim == LCD_BL_TIMER && htim->Channel==LCD_BL_ACTIVE_CHANNEL) {
-        if (lcdBacklightPwm != NULL) {
-            softPwmHandler(lcdBacklightPwm);
-        }
-    }*/
+	if(!pgmReady)
+	    return;
 
-    if(htim == US_AND_COLOR_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
+    if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
     	usHandleCompareAsync(&us);
     }
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
-    static uint8_t dfuReceived = 0;
+	uart_handleReceiveCplt(&uart1, USB_UART, pgmReady);
+	char c = uart_handleReceiveCplt(&uart3, ESP_UART, pgmReady && espReady);
+	if(c)
+		espState = c;
+}
 
-    if (huart == USB_UART) {
-        /*
-         * Parse UART DFU command
-         */
-        if (uartRxData == uartDfuCommand[dfuReceived]) {
-            dfuReceived++;
-        } else {
-            dfuReceived = 0;
-        }
-        if (dfuReceived == uartDfuCommandLen) {
-            dfuReceived = 0;
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+	if(!pgmReady)
+	    return;
 
-            batteryIndicatorDisable();
-            lcdClear();
-            lcdPuts(0, 4, "DFU mode");
-            HAL_Delay(100);
-            rebootIntoDfu(DFU_MAGIC_WORD);
-        }
-
-        // Receive next byte
-        HAL_UART_Receive_IT(USB_UART, &uartRxData, 1);
-    }
+	if (huart == USB_UART) {
+		uart_handleTransmitCplt(&uart1, huart);
+	}
+	if (huart == ESP_UART) {
+		uart_handleTransmitCplt(&uart3, huart);
+	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if(!pgmReady)
+	    return;
+
     switch (GPIO_Pin) {
         case ENC1_A_Pin: encoderHandlerA(&encoder1); break;
         //case ENC1_B_Pin: encoderHandlerB(&encoder1); break;
@@ -332,23 +369,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-  /*
-   * Reboot into DFU if the magic word is set
-   */
-  if (checkMagicWord(DFU_MAGIC_WORD)) {
-      setMagicWord(DFU_NON_MAGIC_WORD);
-      enterDfuMode();
-  }
-
-  /*
-   * When leaving DFU, the non-magic word is set
-   */
-  uint8_t exitDfu = 0;
-  if (checkMagicWord(DFU_NON_MAGIC_WORD)) {
-      setMagicWord("\x00\x00\x00\x00");
-      exitDfu = 1;
-  }
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -369,6 +389,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
@@ -378,10 +399,6 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   if (HAL_TIM_Base_Start_IT(LCD_TIMER) != HAL_OK) {
-      FAIL;
-  }
-
-  if (HAL_UART_Receive_IT(USB_UART, &uartRxData, 1) != HAL_OK) {
       FAIL;
   }
 
@@ -402,11 +419,10 @@ int main(void)
           LCD_D6_GPIO_Port, LCD_D6_Pin, LCD_D7_GPIO_Port, LCD_D7_Pin,
           lcdRows, lcdCols);
 
-  if (exitDfu) {
-      lcdPuts(0, 0, "Exit DFU mode...");
-      HAL_Delay(1000);
-      lcdClear();
-  }
+  char ignoreableChars[10] = {'\r', 1, 2, 3, 0};
+
+  uart_init(&uart1, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500, ignoreableChars);
+  uart_init(&uart3, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500, ignoreableChars);
 
   batteryIndicatorInit();
 
@@ -414,16 +430,16 @@ int main(void)
   lcdPuts(1, 8, "K\xefR");
 
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
-         US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
-         US_AND_COLOR_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
+         US_COLOR_ESP_TX_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
+         US_COLOR_ESP_TX_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
 
-  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_RISING_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_RISING_CHANNEL) != HAL_OK) {
       FAIL;
   }
-  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_FALLING_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_FALLING_CHANNEL) != HAL_OK) {
       FAIL;
   }
-  if (HAL_TIM_OC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, US_ASYNC_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_OC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_ASYNC_CHANNEL) != HAL_OK) {
 	  FAIL;
   }
 
@@ -432,7 +448,7 @@ int main(void)
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
 
-  if (HAL_TIM_IC_Start_IT(US_AND_COLOR_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
+  if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
       FAIL;
   }
 
@@ -479,13 +495,17 @@ int main(void)
 
   HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
-  servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS);
+  servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS, SERVO_INIT_POS);
 
-  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, USB_UART);
+  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
 
-  HAL_Delay(1000);
+  pgmReady = 1;
+  HAL_Delay(1200);
+  espReady = 1;
   lcdClear();
   batteryIndicatorEnable();
+
+  uart_sendConfigToEsp(&uart3, WIFI_SSID, WIFI_PASSWORD, SERVER_IP);
 
   /* USER CODE END 2 */
 
@@ -916,7 +936,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 1000000;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -963,6 +983,25 @@ static void MX_USART3_UART_Init(void)
   /* USER CODE BEGIN USART3_Init 2 */
 
   /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
 
 }
 
@@ -1052,10 +1091,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(US_TRIG_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }

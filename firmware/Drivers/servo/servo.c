@@ -21,14 +21,13 @@
  * @param compareStart timer output compare value for -90 degree position (1 ms)
  * @param compareEnd timer output compare value for +90 degree position (2 ms)
  */
-void servoInit(Servo* servo, Pwm* pwm, uint16_t compareStart, uint16_t compareEnd) {
+void servoInit(Servo* servo, Pwm* pwm, uint16_t compareStart, uint16_t compareEnd, int8_t position) {
     servo->pwm = pwm;
     servo->compareStart = compareStart;
     servo->compareEnd = compareEnd;
+    servo->position = position;
 
-    uint16_t mid = compareStart + (compareEnd - compareStart)/2;
-
-    pwmSetCompareValue(servo->pwm, mid);
+    servoSetPosition(servo, position);
 }
 
 /**
@@ -46,7 +45,7 @@ void servoInit(Servo* servo, Pwm* pwm, uint16_t compareStart, uint16_t compareEn
  * @return pointer to the created struct, NULL on error
  */
 Servo* servoCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t timerPeriod,
-                   PwmOutput outputType, uint16_t compareStart, uint16_t compareEnd) {
+                   PwmOutput outputType, uint16_t compareStart, uint16_t compareEnd, int8_t position) {
 
     Pwm* pwm = pwmCreate(timer, timerChannel, timerPeriod, outputType);
 
@@ -57,7 +56,7 @@ Servo* servoCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t tim
     Servo* servo = (Servo*) malloc(sizeof(Servo));
 
     if (servo != NULL) {
-        servoInit(servo, pwm, compareStart, compareEnd);
+        servoInit(servo, pwm, compareStart, compareEnd, position);
     }
 
     return servo;
@@ -75,6 +74,7 @@ void servoSetPosition(Servo* servo, int8_t position) {
     if (position < -90) {
         position = -90;
     }
+    servo->position = position;
 
     int32_t s = servo->compareStart;
     int32_t e = servo->compareEnd;

@@ -75,8 +75,7 @@ void encoderInit(volatile Encoder* encoder,
     encoder->overflowCount = 0;
     encoder->overflowWasReset = 1;
     encoder->lastTimerVal = 0;
-    memset(encoder->countInterval, 0, sizeof(encoder->countInterval));
-    encoder->filterIndex = 0;
+    encoder->countInterval = 0;
     encoder->maxSpeedCps = maxSpeedCps / 100;
 
     encoder->initialized = 1;
@@ -95,11 +94,12 @@ void encoderHandlerA(volatile Encoder* encoder) {
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
 
-    encoder->lastTimerVal = timerVal;
     encoder->overflowCount = 0;
 
 	// Calculate elapsed time since last update
-	uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+	int32_t elapsed = overflowCount * encoder->timerPeriod + timerVal - encoder->lastTimerVal;
+
+	encoder->lastTimerVal = timerVal;
 
 	GPIO_PinState risingEdgeA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
 	GPIO_PinState stateB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
@@ -135,11 +135,7 @@ void encoderHandlerA(volatile Encoder* encoder) {
 	if(encoder->overflowWasReset){
 	    encoder->overflowWasReset = 0;
 	}else{
-		encoder->countInterval[encoder->filterIndex] = elapsed;         // TODO: store timestamps instead
-		encoder->filterIndex++;
-		if (encoder->filterIndex == SPEED_FILTER) {
-			encoder->filterIndex = 0;
-		}
+		encoder->countInterval = elapsed;
 	}
 }
 
@@ -160,11 +156,12 @@ void encoderHandlerB(volatile Encoder* encoder) {
     uint32_t timerVal = encoder->timer->Instance->CNT;
     uint32_t overflowCount = encoder->overflowCount;
 
-    encoder->lastTimerVal = timerVal;
     encoder->overflowCount = 0;
 
     // Calculate elapsed time since last update
-    uint32_t elapsed = overflowCount * encoder->timerPeriod - encoder->lastTimerVal + timerVal;
+    int32_t elapsed = overflowCount * encoder->timerPeriod + timerVal - encoder->lastTimerVal;
+
+    encoder->lastTimerVal = timerVal;
 
     GPIO_PinState risingEdgeB = HAL_GPIO_ReadPin(encoder->portB, encoder->pinB);
     GPIO_PinState stateA = HAL_GPIO_ReadPin(encoder->portA, encoder->pinA);
@@ -198,11 +195,7 @@ void encoderHandlerB(volatile Encoder* encoder) {
     if(encoder->overflowWasReset){
 		encoder->overflowWasReset = 0;
 	}else{
-		encoder->countInterval[encoder->filterIndex] = elapsed;         // TODO: store timestamps instead
-		encoder->filterIndex++;
-		if (encoder->filterIndex == SPEED_FILTER) {
-			encoder->filterIndex = 0;
-		}
+		encoder->countInterval = elapsed;
 	}
 }
 
@@ -217,7 +210,7 @@ void encoderTimerOverflowHandler(Encoder* encoder) {
 
     encoder->overflowCount++;
     if (encoder->overflowCount == SPEED_TICK_TIMEOUT) {
-        memset(encoder->countInterval, 0, sizeof(encoder->countInterval));
+        encoder->countInterval = 0;
         encoder->overflowCount = 0;
         encoder->overflowWasReset = 1;
     }
@@ -228,7 +221,7 @@ void encoderTimerOverflowHandler(Encoder* encoder) {
  * @param encoder
  * @return counter value
  */
-uint32_t encoderGetCounterValue(volatile const Encoder* encoder) {
+int32_t encoderGetCounterValue(volatile const Encoder* encoder) {
     return encoder->counter;
 }
 
@@ -238,28 +231,19 @@ uint32_t encoderGetCounterValue(volatile const Encoder* encoder) {
  * @return speed in CPS
  */
 int32_t encoderGetCountsPerSecond(Encoder* encoder) {
-    uint32_t x[SPEED_FILTER];          // TODO: store timestamps instead
-
     __disable_irq();
-    memcpy(x, encoder->countInterval, sizeof(encoder->countInterval));
+    int32_t counts = encoder->countInterval;
     __enable_irq();
 
-    int32_t avg = 0;
-    for (uint8_t i=0; i<SPEED_FILTER; i++) {
-        avg += x[i];
-    }
-
-    avg /= SPEED_FILTER;
-
     if (encoder->direction == -1) {
-        avg = -avg;
+    	counts = -counts;
     }
 
-    if (avg == 0) {
+    if (counts == 0) {
         return 0;
     }
 
-    return 64000000.0f / avg;
+    return 64000000.0f / counts;
 }
 
 /**
