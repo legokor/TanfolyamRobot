@@ -12,7 +12,7 @@
 
 // TODO: put these somewhere else
 #define K_P 15.0
-#define K_I 30.0
+#define K_I 20.0
 #define DT 0.001
 #define I_LIM_MAX  70
 #define I_LIM_MIN -70
@@ -78,7 +78,7 @@ void speedControlHandler(SpeedControl* sc) {
     float proportional = K_P * error;
 
     // Integral part
-    sc->integrator = sc->integrator + 0.5f * K_I * DT * (error + sc->prevError);
+    sc->integrator = sc->integrator + 0.5f * K_I * DT * error;
 
     // Integrator anti-windup
     if (sc->integrator > I_LIM_MAX) {
