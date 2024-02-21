@@ -133,7 +133,7 @@
     <ClInclude Include="ftd2xx.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\ftd2xx.lib" />
+    <Library Include="ftd2xx.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

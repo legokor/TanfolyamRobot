@@ -10,8 +10,6 @@
 
 #include "stm32f1xx_hal.h"
 
-#define SPEED_FILTER 1
-
 /**
  * Resolution of the decoder
  */
@@ -34,7 +32,7 @@ typedef struct {
     int8_t direction;
 
     uint8_t initialized;
-    uint32_t counter;
+    int32_t counter;
 
     TIM_HandleTypeDef* timer;
     uint32_t timerPeriod;
@@ -42,8 +40,7 @@ typedef struct {
     uint8_t overflowWasReset;
     uint32_t lastTimerVal;
 
-    uint8_t filterIndex;
-    int32_t countInterval[SPEED_FILTER];
+    int32_t countInterval;
     uint16_t maxSpeedCps;
 } Encoder;
 
@@ -55,7 +52,7 @@ void encoderInit(volatile Encoder* encoder,
 void encoderHandlerA(volatile Encoder* encoder);
 void encoderHandlerB(volatile Encoder* encoder);
 void encoderTimerOverflowHandler(Encoder* encoder);
-uint32_t encoderGetCounterValue(volatile const Encoder* encoder);
+int32_t encoderGetCounterValue(volatile const Encoder* encoder);
 int32_t encoderGetCountsPerSecond(Encoder* encoder);
 float encoderGetSpeed(Encoder* encoder);
 

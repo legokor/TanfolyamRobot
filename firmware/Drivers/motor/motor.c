@@ -41,7 +41,7 @@ void motorInit(Motor* motor, Pwm* pwm1, Pwm* pwm2, uint8_t reversed) {
     motor->pwm1 = pwm1;
     motor->pwm2 = pwm2;
     motor->reversed = reversed;
-    motor->runMode = MotorRunMode_Coast;
+    motor->runMode = MotorRunMode_Brake;
     motor->speed = 0;
     motorSetSpeed(motor, motor->speed);
 }

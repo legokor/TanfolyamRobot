@@ -15,7 +15,8 @@ static volatile SpeedControl* scL;
 static volatile SpeedControl* scR;
 static volatile Encoder* encoderL;
 static volatile Encoder* encoderR;
-static UART_HandleTypeDef* uart;
+static volatile Uart* uart1;
+static volatile Uart* uart3;
 
 /**
  * Save the pointer to every driver instance used here
@@ -23,7 +24,7 @@ static UART_HandleTypeDef* uart;
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-                      UART_HandleTypeDef* usbUart) {
+					  volatile Uart* usbUart, volatile Uart* espUart) {
     servo = usServo;
     us = usSensor;
     cs = colorSensor;
@@ -31,7 +32,8 @@ void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, vo
     scR = scRight;
     encoderL = encoderLeft;
     encoderR = encoderRight;
-    uart = usbUart;
+    uart1 = usbUart;
+    uart3 = espUart;
 }
 
 
@@ -86,12 +88,39 @@ int uartPrintf(const char *fmt, ...) {
 
     char str[256];
     int size = vsprintf(str, fmt, args);
+    if(size <= 0)
+    	return -1;
+    str[size] = '\0';
 
-    HAL_UART_Transmit_IT(uart, (uint8_t*)str, size);
+    uart_transmit(uart1, str);
 
-    return size;
+    return 0;
 }
 
+
+int espPrintf(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    char str[256];
+    int size = vsprintf(str, fmt, args);
+    if(size <= 0)
+    	return -1;
+    str[size] = '\0';
+
+    for(int p = 0; p < size; p++){
+    	if(str[p] == '\n')
+    		str[p] = ' ';
+    }
+
+    uart_sendTextToEsp(uart3, str);
+
+    return 0;
+}
+
+int espRead(char* data) {
+    return uart_receive(uart3, data);
+}
 
 void delayMs(uint32_t delay) {
     HAL_Delay(delay);
