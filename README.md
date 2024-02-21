@@ -4,80 +4,40 @@
 
 A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html).
 
-Tesztelt operációs rendszerek:
- * Windows 10
- * Ubuntu 18.04
- * Ubuntu 20.04
- * Pop!_OS 21.04
+Jelenleg erőforrások hiánya miatt sajnos csak Windows 10-en teszteljük a szoftvert. Más platformokon is valószínűleg működni fog, a feltöltő scriptet leszámítva.
 
-A robotra a firmware letöltése virtuális soros porton történik, a roboton az USB csatlakozó egy `FT232RL` chiphez kapcsolódik. 
+## Robot illesztőszoftver
 
-### Windows
+A robotra a firmware letöltése virtuális soros porton történik, a roboton az USB csatlakozó egy `FT232RL` chiphez kapcsolódik.
 
-A robot csatlakoztatása után az eszközkezelőben (device manager) ellenőrizhetjük, hogy melyik portot használja a robot (pl. `COM6`). Ezt jegyezzük meg, mert később szükség lesz rá.
+Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros port driverét. Ebben az esetben le kell töltenünk azt az [FTDI weboldaláról](https://ftdichip.com/wp-content/uploads/2021/08/CDM212364_Setup.zip), majd pedig kibontani és telepíteni.
 
-<p align="center"><img src="docs/img/device_manager_com_port.png" align=center></p>
+## Kiinduló projekt letöltése, importálása
 
-Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros port driverét. Ebben az esetben le kell töltenünk az [FTDI weboldaláról](https://ftdichip.com/drivers/vcp-drivers/). Érdemes a jobb oldali oszlopban a `setup executable` verziót választani.
+A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a `firmware v2.0` nevű fájlt.
 
-### Linux
-Linuxon a soros portok csak akkor használhatóak, ha a felhasználó tagja `dialout` csoportnak.
+A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego Tanfolyam` mappába, majd bontsuk ki. Ezek után nyissuk meg a CubeIDE-t, ez először kérni fog tőlünk egy `workspace`-t. Válasszuk azt a mappát, amin belül található a TanfolyamRobot mappa. ***FONTOS:*** figyeljünk arra, hogy a `workspace`-nek választott mappán belül ez legyen az eredményül kapott fájlszerkezet: `./TanfolyamRobot/firmware/...`.
 
-```
-sudo adduser $USER dialout
-```
+<p align="center"><img src="docs/img/workspace.jpg" align=center></p>
 
-Ezután oprendszertől függően ki és be kell jelentkezni, vagy újra kell indítani a gépet.
+A CubeIDE-ben belül zárjuk be az indításkor megnyílt `Information Center` ablakot, majd importáljuk be a projektünket a következő módon: `File -> Import... -> General -> Existing Projects into Workspace -> Next`, a felugró ablakban pedig válasszuk ki a `Root directory`-ként a fentebb említett `firmware` mappát.
 
-A port általában `/dev/ttyUSBx`-ként jelenik meg. Legegyszerűbben úgy ellenőrizhetjük, hogy az alábbi parancsot lefuttatjuk a robot csatlakoztatása előtt és után, majd megnézzük milyen port jelent meg a listában.
-```
-ls /dev/tty*
-```
-A port nevét jegyezzük meg, mert később szükség lesz rá.
+<p align="center"><img src="docs/img/project_import.jpg" align=center></p>
+<p align="center"><img src="docs/img/project_location.jpg" align=center></p>
 
+## Projekt áttekintése, build és upload
 
-## Projekt importálása
+Az imént megnyitott projektünk fájljait az IDE bal oldalán láthatjuk. A kód számunkra lényegi része a `tanfolyamrobot/Application/application.c` fájl lesz. Itt kell majd megoldanunk a tanfolyam során a feladatokat. Az itt található `application()` függvény gombnyomásra indul. Ha ebből a függvényből visszatér a programunk, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
 
-GitHubon a [Releases](https://github.com/legokor/TanfolyamRobot/releases) alatt töltsük le a projekt aktuális verzióját, és csomagoljuk ki egy tetszőleges helyre.
+<p align="center"><img src="docs/img/application_c.jpg" align=center></p>
 
-Az STM32CubeIDE indításakor meg kell adnunk egy workspace mappát. Ez esetünkben teljesen mindegy, mert a projektet nem a workspace-ben tároljuk, hanem ott, ahova kicsomagoltuk. Maradhat default, és bepipálhatjuk, hogy legközelebb ne kérdezze meg.
+Amennyiben ki szeretnénk próbálni az általunk írt kódot a roboton, úgy nyomjunk rá a CubeIDE tetején látható kis táskás zöld play gombra, a felnyíló ablakban pedig válasszuk ki az `Upload with DFU 2.0 - Debug` és nyomjunk rá a `Run` gombra (ezt a kiválasztást csak első alkalommal kell megcsinálnunk).
 
-Zárjuk be az `Information Center` tabot. A `File > Import...` ablakban válasszuk a `General > Existing Projects into Workspace` opciót.
+<p align="center"><img src="docs/img/upload_button.jpg" align=center></p>
+<p align="center"><img src="docs/img/upload_config.jpg" align=center></p>
 
-A következő oldalon keressük ki a kicsomagolt projekt mappáját. Ekkor megjelenik egy `tanfolyamrobot` nevű projekt a listában. Fontos, hogy a `Copy projects into workspace` opció **NE** legyen kiválasztva.
+## Telemetria indítása
 
-<p align="center"><img src="docs/img/import_project.png" align=center></p>
+A robot különböző futásidejű adatait, debug üzeneteit egy webes felületen tudjuk nyomonkövetni. Ehhez mindössze annyit kell tennünk, hogy egy WiFi hálózatra csatlakozunk fel a robottal, majd pedig duplán klikkelünk a `TanfolyamRobot/start_telemetry.bat` fájlra.
 
-
-## Fejlesztés
-
-A tanfolyam során az `application.c` fájlban fogunk dolgozni. Az itt található `application()` függvény gombnyomásra indul. Ha ebből a függvényből visszatértek, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
-
-<p align="center"><img src="docs/img/appplication_source_file.png" align=center></p>
-
-A letöltő program mindig a debug buildet tölti le, ezért fontos, hogy a toolbaron a kalapács melletti nyíl alatt ez legyen kiválasztva.
-
-<p align="center"><img src="docs/img/debug_build.png" align=center></p>
-
-A letöltéshez be kell állítnunk a megfelelő soros portot. Ezt a képen látható `External Tools Configurations...` alatt tehetjük meg.
-
-<p align="center"><img src="docs/img/external_tools.png" align=center></p>
-
-Válasszuk ki az operációs rendszernek megfelelő konfigurációt, majd az `Arguments` mezőben adjuk meg a használt soros portot. Ez Windows esetén pl. `COM6`, Linux esetén pedig `/dev/ttyUSB0`, vagy valami hasonló lesz.
-
-Első letöltésnél ebben az ablakban kell a `Run` gombra kattintatni, utána a toolbaron a run external tool gomb (play gomb piros táskával) automatikusan ezt fogja futtatni.
-
-<p align="center"><img src="docs/img/external_tools_config.png" align=center></p>
-
-### Új Windows feltöltési mód (ajánlott)
-
-Ez a feltöltési mód robosztusabb, mint a korábbi, nem "brickelődik" a robot akkor sem, ha a feltöltés megszakad.
-
-Az `External Tools Configurations...` alatt az `Upload with DFU 2.0 (Windows)` opciót kell kiválasztani. Ez lentebb látható.
-
-<p align="center"><img src="docs/img/external_tools_config_new.png" align=center></p>
-
-Itt az első argumentumot kell megváltoztatni a fentebb említett COM portra, a többi argumentumot nem szükséges módosítani (második argumentum feltöltési baud-rate, harmadik a feltöltendő bináris elérési útvonala).
-
-A fentiekhez hasonlóan a beállítasok után a Run gombot kell megnyomni, ezek után a toolbaron a run external tool gomb (play gomb piros táskával) automatikusan ezt fogja futtatni.
 
