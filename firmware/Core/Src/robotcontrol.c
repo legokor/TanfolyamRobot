@@ -71,7 +71,7 @@ int setMotorSpeed(uint8_t mot_lr, float speed) {
 }
 
 
-uint32_t getEncoderPosition(uint8_t mot_lr) {
+int getEncoderPosition(uint8_t mot_lr) {
     if (mot_lr == MOT_L) {
         return encoderGetCounterValue(scL->encoder);
     }
