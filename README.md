@@ -4,7 +4,7 @@
 
 A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html). ***FONTOS:*** figyeljünk arra, hogy letöltéskor az `1.10.1`-es verziót kell választani, máskülönben igen körülményes a projekt indítása!
 
-Jelenleg erőforrások hiánya miatt sajnos csak Windows 10-en teszteljük a szoftvert. Más platformokon is valószínűleg működni fog, a feltöltő scriptet leszámítva.
+Jelenleg erőforrások hiánya miatt sajnos csak Windows 10/11-en teszteljük a szoftvert. Más platformokon is valószínűleg működni fog, a feltöltő scriptet leszámítva.
 
 ## Robot illesztőszoftver
 
@@ -25,7 +25,11 @@ A CubeIDE-ben belül zárjuk be az indításkor megnyílt `Information Center` a
 <p align="center"><img src="docs/img/project_import.jpg" align=center></p>
 <p align="center"><img src="docs/img/project_location.jpg" align=center></p>
 
-## Projekt áttekintése, build és upload
+## Telemetria indítása
+
+A robot különböző futásidejű adatait, debug üzeneteit egy webes felületen tudjuk nyomonkövetni. Ehhez mindössze annyit kell tennünk, hogy egy WiFi hálózatra csatlakozunk fel a robottal, majd pedig duplán klikkelünk a `TanfolyamRobot/start_telemetry.bat` fájlra. Ez utóbbit végezzük el egyszer otthon, mivel első alkalommal sok függőséget fog letölteni a script (miután ezzel megvagyunk és megnyílt a weboldal nyugodtan zárjuk be a megnyílt konzolokat és a weboldalt).
+
+## *Csak a tanfolyamon kell:* projekt áttekintése, build és upload
 
 Az imént megnyitott projektünk fájljait az IDE bal oldalán láthatjuk. A kód számunkra lényegi része a `tanfolyamrobot/Application/application.c` fájl lesz. Itt kell majd megoldanunk a tanfolyam során a feladatokat. Az itt található `application()` függvény gombnyomásra indul. Ha ebből a függvényből visszatér a programunk, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
 
@@ -36,8 +40,5 @@ Amennyiben ki szeretnénk próbálni az általunk írt kódot a roboton, úgy ny
 <p align="center"><img src="docs/img/upload_button.jpg" align=center></p>
 <p align="center"><img src="docs/img/upload_config.jpg" align=center></p>
 
-## Telemetria indítása
-
-A robot különböző futásidejű adatait, debug üzeneteit egy webes felületen tudjuk nyomonkövetni. Ehhez mindössze annyit kell tennünk, hogy egy WiFi hálózatra csatlakozunk fel a robottal, majd pedig duplán klikkelünk a `TanfolyamRobot/start_telemetry.bat` fájlra.
 
 
