@@ -13,7 +13,13 @@
 #include "color_sensor.h"
 #include "speed_control.h"
 #include "servo.h"
-#include "ultrasonic.h"
+#if US_SENSOR
+	#include "ultrasonic.h"
+#elif IR_SENSOR
+	#include "infrared.h"
+#else
+	#error "No ranging module defined as active"
+#endif
 
 
 typedef struct {
@@ -71,7 +77,15 @@ void uart_sendDataToEsp(volatile Uart* espUart,
 						volatile ColorSensor* colorSensor,
 						volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2,
 						volatile Servo* servo,
+#if US_SENSOR
 						volatile UltraSonic* us);
+#elif IR_SENSOR
+						volatile InfraRed* ir);
+#else
+	#error "No ranging module defined as active"
+#endif
+						
+
 
 //text must not contain any \n characters
 void uart_sendTextToEsp(volatile Uart* espUart, const char* text);

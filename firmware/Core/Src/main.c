@@ -31,12 +31,18 @@
 #include "battery_indicator.h"
 #include "color_sensor.h"
 #include "encoder.h"
-#include "ultrasonic.h"
 #include "servo.h"
 #include "motor.h"
 #include "uart.h"
 #include "speed_control.h"
 #include "application.h"
+#if US_SENSOR
+	#include "ultrasonic.h"
+#elif IR_SENSOR
+	#include "infrared.h"
+#else
+	#error "No ranging module defined as active"
+#endif
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,16 +86,35 @@
 #define SERVO_END_POS           2640
 #define SERVO_INIT_POS 			0
 
-#define US_COLOR_ESP_TX_CAPTURE_TIMER (&htim4)
-#define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
-#define US_RISING_CHANNEL          TIM_CHANNEL_1
-#define US_RISING_ACTIVE_CHANNEL   HAL_TIM_ACTIVE_CHANNEL_1
-#define US_FALLING_CHANNEL         TIM_CHANNEL_2
-#define US_FALLING_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_2
+#if US_SENSOR
+	#define US_COLOR_ESP_TX_CAPTURE_TIMER (&htim4)
+	#define US_TIMER_FREQUENCY_HZ      (2*1000*1000)
+	#define US_RISING_CHANNEL          TIM_CHANNEL_1
+	#define US_RISING_ACTIVE_CHANNEL   HAL_TIM_ACTIVE_CHANNEL_1
+	#define US_FALLING_CHANNEL         TIM_CHANNEL_2
+	#define US_FALLING_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_2
+#elif IR_SENSOR
+	#define IR_COLOR_ESP_TX_CAPTURE_TIMER (&htim4)
+	#define IR_TIMER_FREQUENCY_HZ      (2*1000*1000)
+	#define IR_RISING_CHANNEL          TIM_CHANNEL_1
+	#define IR_RISING_ACTIVE_CHANNEL   HAL_TIM_ACTIVE_CHANNEL_1
+	#define IR_FALLING_CHANNEL         TIM_CHANNEL_2
+	#define IR_FALLING_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_2
+#else
+	#error "No ranging module defined as active"
+#endif
+
 #define COLOR_CHANNEL              TIM_CHANNEL_3
 #define COLOR_ACTIVE_CHANNEL       HAL_TIM_ACTIVE_CHANNEL_3
-#define US_ASYNC_ACTIVE_CHANNEL    HAL_TIM_ACTIVE_CHANNEL_4
-#define US_ASYNC_CHANNEL    	   TIM_CHANNEL_4
+
+#if US_SENSOR
+	#define US_ASYNC_ACTIVE_CHANNEL    HAL_TIM_ACTIVE_CHANNEL_4
+	#define US_ASYNC_CHANNEL    	   TIM_CHANNEL_4
+#elif IR_SENSOR
+
+#else
+	#error "No ranging module defined as active"
+#endif
 
 #define MOTOR1_PWM1_TIMER         (&htim1)
 #define MOTOR1_PWM1_TIMER_CHANNEL TIM_CHANNEL_1
@@ -148,7 +173,13 @@ const uint8_t lcdCols = 16;
 volatile Encoder encoder1;
 volatile Encoder encoder2;
 
+#if US_SENSOR
 volatile UltraSonic us;
+#elif IR_SENSOR
+volatile InfraRed ir;
+#else
+	#error "No ranging module defined as active"
+#endif
 volatile ColorSensor colorSensor;
 
 Servo* servo;
@@ -234,13 +265,24 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             HAL_ADC_Start_IT(VBAT_ADC);
         }
     }
-
+#if US_SENSOR
     if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER){
     	usStartMeasurementPulseAsync(&us);
+#elif IR_SENSOR
+	if(htim == IR_COLOR_ESP_TX_CAPTURE_TIMER){
+#else
+	#error "No ranging module defined as active"
+#endif	
     	telemetryItCounter++;
     	if(telemetryItCounter == 4){
     		telemetryItCounter = 0;
+#if US_SENSOR
     		uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
+#elif IR_SENSOR
+			uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &ir);
+#else
+	#error "No ranging module defined as active"
+#endif
     	}
     }
 }
@@ -278,9 +320,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 	if(!pgmReady)
 	    return;
-
+#if US_SENSOR
     if (htim == US_COLOR_ESP_TX_CAPTURE_TIMER) {
+#elif IR_SENSOR
+    if (htim == IR_COLOR_ESP_TX_CAPTURE_TIMER) {
+#else
+	#error "No ranging module defined as active"
+#endif
         switch (htim->Channel) {
+#if US_SENSOR
             case US_RISING_ACTIVE_CHANNEL : {
                 uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, US_RISING_CHANNEL);
                 usHandlerRisingCapture(&us, captureVal);
@@ -291,6 +339,20 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
                 usHandlerFallingCapture(&us, captureVal);
                 break;
             }
+#elif IR_SENSOR
+            case IR_RISING_ACTIVE_CHANNEL : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, IR_RISING_CHANNEL);
+                irHandlerRisingCapture(&ir, captureVal);
+                break;
+            }
+            case IR_FALLING_ACTIVE_CHANNEL : {
+                uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, IR_FALLING_CHANNEL);
+                irHandlerFallingCapture(&ir, captureVal);
+                break;
+            }
+#else
+	#error "No ranging module defined as active"
+#endif
             case COLOR_ACTIVE_CHANNEL : {
                 uint16_t captureVal = HAL_TIM_ReadCapturedValue(htim, COLOR_CHANNEL);
                 colorSensorCaptureHandler(&colorSensor, captureVal);
@@ -304,10 +366,15 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(!pgmReady)
 	    return;
-
+#if US_SENSOR
     if(htim == US_COLOR_ESP_TX_CAPTURE_TIMER && htim->Channel == US_ASYNC_ACTIVE_CHANNEL){
     	usHandleCompareAsync(&us);
     }
+#elif IR_SENSOR
+
+#else
+	#error "No ranging module defined as active"
+#endif
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
@@ -429,6 +496,7 @@ int main(void)
   lcdPuts(0, 4, "LEGO");
   lcdPuts(1, 8, "K\xefR");
 
+#if US_SENSOR
   usInit(&us, US_TRIG_GPIO_Port, US_TRIG_Pin,
          US_COLOR_ESP_TX_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ,
          US_COLOR_ESP_TX_CAPTURE_TIMER, US_TIMER_FREQUENCY_HZ);
@@ -442,15 +510,35 @@ int main(void)
   if (HAL_TIM_OC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, US_ASYNC_CHANNEL) != HAL_OK) {
 	  FAIL;
   }
+#elif IR_SENSOR											 
+  irInit(&ir, IR_COLOR_ESP_TX_CAPTURE_TIMER, IR_TIMER_FREQUENCY_HZ);
+															   
+
+  if (HAL_TIM_IC_Start_IT(IR_COLOR_ESP_TX_CAPTURE_TIMER, IR_RISING_CHANNEL) != HAL_OK) {
+      FAIL;
+  }
+  if (HAL_TIM_IC_Start_IT(IR_COLOR_ESP_TX_CAPTURE_TIMER, IR_FALLING_CHANNEL) != HAL_OK) {
+      FAIL;
+  }
+#else
+	#error "No ranging module defined as active"
+#endif
 
   colorSensorInit(&colorSensor,
                   COLOR_S0_GPIO_Port, COLOR_S0_Pin, COLOR_S1_GPIO_Port, COLOR_S1_Pin,
                   COLOR_S2_GPIO_Port, COLOR_S2_Pin, COLOR_S3_GPIO_Port, COLOR_S3_Pin,
                   16);
-
+#if US_SENSOR
   if (HAL_TIM_IC_Start_IT(US_COLOR_ESP_TX_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
       FAIL;
   }
+#elif IR_SENSOR
+  if (HAL_TIM_IC_Start_IT(IR_COLOR_ESP_TX_CAPTURE_TIMER, COLOR_CHANNEL) != HAL_OK) {
+      FAIL;
+  }
+#else
+	#error "No ranging module defined as active"
+#endif
 
   if (HAL_TIM_Base_Start_IT(VBAT_ADC_TIMER) != HAL_OK) {
       FAIL;
@@ -497,7 +585,13 @@ int main(void)
 
   servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS, SERVO_INIT_POS);
 
+#if US_SENSOR
   robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
+#elif IR_SENSOR
+  robotControlInit(servo, &ir, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
+#else
+	#error "No ranging module defined as active"
+#endif
 
   pgmReady = 1;
   HAL_Delay(1200);

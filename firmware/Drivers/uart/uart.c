@@ -187,7 +187,13 @@ uint8_t uart_receive(volatile Uart *uart, char* data){
 static volatile char prevData[256] = "";
 static volatile uint8_t sendDataEnabled = 1;
 
+#if US_SENSOR
 void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us){
+#elif IR_SENSOR
+void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile InfraRed* ir){
+#else
+	#error "No ranging module defined as active"
+#endif
 	if(!sendDataEnabled)
 		return;
 	uint8_t r, g, b;
@@ -198,12 +204,19 @@ void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSenso
 	int cnt2 = encoderGetCounterValue(speedControl2->encoder);
 
 	char data[256];
-	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US
+	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US/IR
 	//For some reason when sprintf is called from an interrupt handler it cannot contain any %f formatted values
 	//otherwise it sometimes produces garbage output
 	sprintf(prevData, "D: %d %d %d %d %d %d %d %d %d %d %d", (int)r, (int)g, (int)b,
 			(int)speedControl1->setPoint, (int)speedControl2->setPoint,
-			cps1, cps2, cnt1, cnt2, servo->position, us->lastDistance);
+			cps1, cps2, cnt1, cnt2, servo->position, 
+#if US_SENSOR
+			us->lastDistance);
+#elif IR_SENSOR
+			ir->lastDistance/10);
+#else
+	#error "No ranging module defined as active"
+#endif
 
 	strcpy(data, prevData);
 	strcat(data, "\n");
