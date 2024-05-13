@@ -9,7 +9,13 @@
 #include <stdarg.h>
 
 static volatile Servo* servo;
+#if US_SENSOR
 static volatile UltraSonic* us;
+#elif IR_SENSOR
+static volatile InfraRed* ir;
+#else
+	#error "No ranging module defined as active"
+#endif
 static volatile ColorSensor* cs;
 static volatile SpeedControl* scL;
 static volatile SpeedControl* scR;
@@ -21,12 +27,27 @@ static volatile Uart* uart3;
 /**
  * Save the pointer to every driver instance used here
  */
+#if US_SENSOR
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
 					  volatile Uart* usbUart, volatile Uart* espUart) {
+#elif IR_SENSOR
+void robotControlInit(volatile Servo* usServo, volatile InfraRed* irSensor, volatile ColorSensor* colorSensor,
+                      volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
+                      volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
+					  volatile Uart* usbUart, volatile Uart* espUart) {
+#else
+	#error "No ranging module defined as active"
+#endif
     servo = usServo;
+#if US_SENSOR
     us = usSensor;
+#elif IR_SENSOR
+    ir = irSensor;
+#else
+	#error "No ranging module defined as active"
+#endif
     cs = colorSensor;
     scL = scLeft;
     scR = scRight;
@@ -41,10 +62,17 @@ void setServoPosition(int8_t position) {
     servoSetPosition(servo, position);
 }
 
-
+#if US_SENSOR
 uint16_t getUsDistance() {
     return usGetDistance(us);
 }
+#elif IR_SENSOR
+uint16_t getIrDistance() {
+    return irGetDistance(ir);
+}
+#else
+	#error "No ranging module defined as active"
+#endif
 
 
 void getColorHsv(Color* color) {

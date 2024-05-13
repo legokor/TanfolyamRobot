@@ -77,12 +77,21 @@ void getColorHsv(Color* color);
  */
 void setServoPosition(int8_t position);
 
+#if US_SENSOR
 /**
  * Get the distance measured by the ultrasonic ranging sensor
  * @return distance in cm
  */
 uint16_t getUsDistance();
-
+#elif IR_SENSOR
+/**
+ * Get the distance measured by the infrared ranging sensor
+ * @return distance in mm
+ */
+uint16_t getIrDistance();
+#else
+	#error "No ranging module defined as active"
+#endif
 /**
  * Do nothing for the specified time
  * @param delay in ms
