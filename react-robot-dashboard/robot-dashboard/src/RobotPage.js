@@ -14,7 +14,7 @@ const RobotPage = () => {
 
   useEffect(() => {
     const port = selectedColor ? 14200 + ['red', 'green', 'gray', 'pink', 'black'].indexOf(selectedColor) : 5000;
-    const newSocket = openSocket(`${window.location.href}:${port}`);
+    const newSocket = openSocket(`${window.location.href.split(':').pop()}:${port}`);
     setSocket(newSocket);
 
     newSocket.on('Data recieved', (robotData) => {
