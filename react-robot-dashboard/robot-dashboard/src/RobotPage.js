@@ -47,6 +47,9 @@ const RobotPage = () => {
           {data && <UltrasonicSensor distance={data.usonic} />}
           {data && <HSVColorDisplay hsv={data.hsv} />}
         </div>
+        <div style={sensorWrapperStyle}>
+          {data && <IMUSensorDisplay imuData={data.imu} />}
+        </div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
         {data && (
