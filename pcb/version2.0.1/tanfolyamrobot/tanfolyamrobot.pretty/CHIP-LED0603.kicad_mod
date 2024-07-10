@@ -1,0 +1,65 @@
+(footprint "CHIP-LED0603" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (descr "<b>Hyper CHIPLED Hyper-Bright LED</b><p>\nLB Q993<br>\nSource: http://www.osram.convergy.de/ ... Lb_q993.pdf")
+  (fp_text reference "REF**" (at -0.635 0.635 90) (layer "F.SilkS")
+      (effects (font (size 1.1684 1.1684) (thickness 0.1016)) (justify left bottom))
+    (tstamp 1c9b8615-5092-4af0-890e-dfbd3fe15373)
+  )
+  (fp_text value "CHIP-LED0603" (at 1.905 0.635 90) (layer "F.Fab")
+      (effects (font (size 1.1684 1.1684) (thickness 0.1016)) (justify left bottom))
+    (tstamp 07627f15-16ec-4a88-9dca-583b09d62a1d)
+  )
+  (fp_poly
+    (pts
+      (xy -0.45 0)
+      (xy -0.3 0)
+      (xy -0.3 -0.3)
+      (xy -0.45 -0.3)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.SilkS") (tstamp 0a406d81-9a20-4262-b3ea-6293e1af6a6c))
+  (fp_poly
+    (pts
+      (xy -0.15 0)
+      (xy 0.15 0)
+      (xy 0.15 -0.3)
+      (xy -0.15 -0.3)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.SilkS") (tstamp 474d9287-f0b3-4809-8e66-b2908e3a1b06))
+  (fp_poly
+    (pts
+      (xy 0.3 0)
+      (xy 0.45 0)
+      (xy 0.45 -0.3)
+      (xy 0.3 -0.3)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.SilkS") (tstamp 6610f421-4004-4db4-80a5-58f784f0034e))
+  (fp_line (start -0.4 -0.45) (end -0.4 0.45)
+    (stroke (width 0.1016) (type solid)) (layer "F.Fab") (tstamp ab64fd8b-39b5-4355-b219-68a15fcdb013))
+  (fp_line (start 0.4 -0.45) (end 0.4 0.45)
+    (stroke (width 0.1016) (type solid)) (layer "F.Fab") (tstamp 84402156-4076-495b-ac61-ba523a2a39d1))
+  (fp_poly
+    (pts
+      (xy -0.45 -0.45)
+      (xy 0.45 -0.45)
+      (xy 0.45 -0.85)
+      (xy -0.45 -0.85)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.Fab") (tstamp f254cb69-1f30-4564-abdb-c93f5870bc37))
+  (fp_poly
+    (pts
+      (xy -0.45 0.85)
+      (xy 0.45 0.85)
+      (xy 0.45 0.45)
+      (xy -0.45 0.45)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.Fab") (tstamp fae050e9-ad18-4887-8cb7-9655274fe0e2))
+  (pad "A" smd rect (at 0 0.75) (size 0.8 0.8) (layers "F.Cu" "F.Paste" "F.Mask")
+    (solder_mask_margin 0.1016) (thermal_bridge_angle 0) (tstamp c269950c-4f45-48b5-a8ef-1ed39c3565a8))
+  (pad "C" smd rect (at 0 -0.75) (size 0.8 0.8) (layers "F.Cu" "F.Paste" "F.Mask")
+    (solder_mask_margin 0.1016) (thermal_bridge_angle 0) (tstamp 7fe5ae5b-cba0-495a-963d-ab4730106d09))
+)
