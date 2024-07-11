@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=dkiovics
 Group=dkiovics
-WorkingDirectory=/WS/Tanfrobot/TanfolyamRobot/react-robot-dashboard
-ExecStart=/WS/Tanfrobot/TanfolyamRobot/react-robot-dashboard/start.sh
+WorkingDirectory=/WS/TanfolyamRobot/react-robot-dashboard
+ExecStart=/WS/TanfolyamRobot/react-robot-dashboard/start.sh
 
 [Install]
 WantedBy=multi-user.target
