@@ -2,6 +2,6 @@
 
 echo "Starting the React Robot Dashboard"
 
-(cd /WS/Tanfrobot/TanfolyamRobot/react-robot-dashboard/my-robot-server && npm start) &
+(cd my-robot-server && npm start) &
 
-(cd /WS/Tanfrobot/TanfolyamRobot/react-robot-dashboard/robot-dashboard && serve -s build)
+(cd robot-dashboard && serve -s build)
