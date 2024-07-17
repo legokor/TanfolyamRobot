@@ -188,9 +188,9 @@ static volatile char prevData[256] = "";
 static volatile uint8_t sendDataEnabled = 1;
 
 #if US_SENSOR
-void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us){
+void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us, Mpu9250* imu, Orientation orientation){
 #elif IR_SENSOR
-void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile InfraRed* ir){
+void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile InfraRed* ir, Mpu9250* imu, Orientation orientation){
 #else
 	#error "No ranging module defined as active"
 #endif
@@ -203,20 +203,27 @@ void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSenso
 	int cnt1 = encoderGetCounterValue(speedControl1->encoder);
 	int cnt2 = encoderGetCounterValue(speedControl2->encoder);
 
+	Vec3 acc = mpu9250_readAccData(imu);
+	Vec3 gyro = mpu9250_readGyroData(imu);
+	Vec3 mag = mpu9250_readMagData(imu);
+	float temp = mpu9250_readTempData(imu);
+
 	char data[256];
-	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US/IR
+	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US/IR ACC_X ACC_Y ACC_Z GYRO_X GYRO_Y GYRO_Z MAG_X MAG_Y MAG_Z TEMP
 	//For some reason when sprintf is called from an interrupt handler it cannot contain any %f formatted values
 	//otherwise it sometimes produces garbage output
-	sprintf(prevData, "D: %d %d %d %d %d %d %d %d %d %d %d", (int)r, (int)g, (int)b,
+	sprintf(prevData, "D: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", (int)r, (int)g, (int)b,
 			(int)speedControl1->setPoint, (int)speedControl2->setPoint,
 			cps1, cps2, cnt1, cnt2, servo->position, 
 #if US_SENSOR
-			us->lastDistance);
+			us->lastDistance,
 #elif IR_SENSOR
-			ir->lastDistance/10);
+			ir->lastDistance/10,
 #else
 	#error "No ranging module defined as active"
 #endif
+			(int)(acc.x * 100), (int)(acc.y * 100), (int)(acc.z * 100), (int)gyro.x, (int)gyro.y, (int)gyro.z,
+			(int)(mag.x * 10), (int)(mag.y * 10), (int)(mag.z * 10), (int)(temp * 10), (int)(orientation.pitch * 10), (int)(orientation.roll * 10));
 
 	strcpy(data, prevData);
 	strcat(data, "\n");

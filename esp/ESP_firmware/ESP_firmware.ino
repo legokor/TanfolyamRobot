@@ -2,10 +2,13 @@
 #include <WiFiClient.h>
 #include <ArduinoJson.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
 
 constexpr bool DEBUG_ENABLED = false;
 constexpr int bufferSize = 128; 
 ESP8266WebServer server(80);
+
+const String COLOR = "red";      //might be red, green, gray, pink, black (according to the server/UI code)
 
 enum class ReceiveState{
     CONFIG1,
@@ -140,7 +143,8 @@ void loop() {
     if(configAvailable){
         char ssidTmp[bufferSize / 2];
         char passwordTmp[bufferSize / 2];
-        if(sscanf(receiveOutBuffer, "\t%s\t%s\t%s", ssidTmp, passwordTmp, ipAddress) == 3){
+        if((!DEBUG_ENABLED && sscanf(receiveOutBuffer, "\t%s\t%s\t%s", ssidTmp, passwordTmp, ipAddress) == 3) 
+            || (DEBUG_ENABLED && sscanf(receiveOutBuffer, "%s %s %s", ssidTmp, passwordTmp, ipAddress) == 3)){
             if(strcmp(ssidTmp, ssid) != 0 || strcmp(passwordTmp, password) != 0){
                 strcpy(ssid, ssidTmp);
                 strcpy(password, passwordTmp);
@@ -201,7 +205,7 @@ void loop() {
                 if(now >= debugSendTime){
                     debugSendTime = now + 250;
                     dlog("Sending dummy debug data...");
-                    sendJson(ipAddress, 88, 69, 75, 1, 2, 3, 4, 22, 33, 44, 55, 1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8, "");
+                    sendJson(ipAddress, 88, 69, 75, 1, 2, 3, 4, 22, 33, 44, 55, 1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8, 1, 1, 1, 33, 44, "");
                 }
             }
             break;
@@ -237,13 +241,15 @@ void sendStatus(ModuleStatus status){
 }
 
 void processSerialData(const char *data, const char* ipaddr) {
-    int servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b;
+    int servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b, acc_x, acc_y, acc_z, mag_x, mag_y, mag_z, gyro_x, gyro_y, gyro_z, pitch, roll, temp;
     
     static char text[256] = "";
     
-    sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d %[^\"]", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic, text);
+    sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %[^\"]", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic,
+                &acc_x, &acc_y, &acc_z, &gyro_x, &gyro_y, &gyro_z, &mag_x, &mag_y, &mag_z, &temp, &pitch, &roll, text);
     rgb2hsv(rgb_r, rgb_g, rgb_b, &hsv_h, &hsv_s, &hsv_v);
-    if(sendJson(ipaddr, servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, text))
+    if(sendJson(ipaddr, servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 
+                acc_x / 100.0f, acc_y / 100.0f, acc_z / 100.0f, gyro_x, gyro_y, gyro_z, mag_x / 10.0f, mag_y / 10.0f, mag_z / 10.0f, temp / 10.0f, pitch / 10.0f, roll / 10.0f, text))
         strcpy(text, "");
 }
 
@@ -290,19 +296,19 @@ void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){
     }
 }
 
-bool sendJson(const char* ipaddr, int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_temp, const char* text) {
+bool sendJson(const char* ipaddr, int servo, int motora, int motorb, int cpsa, int cpsb, int cnta, int cntb, int usonic, int hsv_h, int hsv_s, int hsv_v, 
+                float imu_acc_a, float imu_acc_b, float imu_acc_c, float imu_gyro_x, float imu_gyro_y, float imu_gyro_z, float imu_mag_x, float imu_mag_y, 
+                float imu_mag_z, float imu_temp, float pitch, float roll, const char* text) {
     WiFiClient client;
-    client.setTimeout(300);
-    
-    if (!client.connect(ipaddr, 5000)) {
-        moduleStatus = ModuleStatus::CONNECTING_TO_SERVER;
-        dlog("Connection failed");
-        return false;
-    }
-    moduleStatus = ModuleStatus::CONNECTED_TO_SERVER;
+    HTTPClient http;
+    http.setTimeout(300);
+    http.begin(client, ipaddr, 5000, "/publishData");
+    http.addHeader("Content-Type", "application/json");
 
-    StaticJsonDocument<512> doc;
+    static StaticJsonDocument<512> doc;
+    doc.clear();
     
+    doc["color"] = COLOR;
     doc["servo"] = servo;
     doc["motora"] = motora;
     doc["motorb"] = motorb;
@@ -322,35 +328,44 @@ bool sendJson(const char* ipaddr, int servo, int motora, int motorb, int cpsa, i
     JsonObject imu = doc.createNestedObject("imu");
     
     JsonObject imu_acc = imu.createNestedObject("acc");
-    imu_acc["a"] = imu_acc_a;
-    imu_acc["b"] = imu_acc_b;
-    imu_acc["c"] = imu_acc_c;
+    imu_acc["x"] = imu_acc_a;
+    imu_acc["y"] = imu_acc_b;
+    imu_acc["z"] = imu_acc_c;
     
     JsonObject imu_gyro = imu.createNestedObject("gyro");
     imu_gyro["x"] = imu_gyro_x;
     imu_gyro["y"] = imu_gyro_y;
     imu_gyro["z"] = imu_gyro_z;
+
+    JsonObject imu_mag = imu.createNestedObject("mag");
+    imu_mag["x"] = imu_mag_x;
+    imu_mag["y"] = imu_mag_y;
+    imu_mag["z"] = imu_mag_z;
+
+    JsonObject imu_angle = imu.createNestedObject("angle");
+    imu_angle["pitch"] = pitch;
+    imu_angle["roll"] = roll;
     
     imu["temp"] = imu_temp;
     
     String jsonStr;
     serializeJson(doc, jsonStr);
     
-    char host[30] = "Host: ";
-    strcat(host, ipaddr);
-    client.println("POST /publishData HTTP/1.1");
-    client.println(host);
-    client.println("Content-Type: application/json");
-    client.print("Content-Length: ");
-    client.println(jsonStr.length());
-    client.println();
-    client.println(jsonStr);
+    int code = http.POST(jsonStr);
+    if(code < 0) {
+        moduleStatus = ModuleStatus::CONNECTING_TO_SERVER;
+        dlog("Connection failed");
+        http.end();
+        return false;
+    }
+    dlog(String("Server responded with code: ") + code);
+    moduleStatus = ModuleStatus::CONNECTED_TO_SERVER;
     
     // while (client.available()) {
     //     String line = client.readStringUntil('\r');
     //     Serial.print(line);
     // }
     
-    client.stop();
+    http.end();
     return true;
 }

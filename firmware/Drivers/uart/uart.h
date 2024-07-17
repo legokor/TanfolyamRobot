@@ -20,6 +20,7 @@
 #else
 	#error "No ranging module defined as active"
 #endif
+#include "mpu9250.h"
 
 
 typedef struct {
@@ -78,9 +79,9 @@ void uart_sendDataToEsp(volatile Uart* espUart,
 						volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2,
 						volatile Servo* servo,
 #if US_SENSOR
-						volatile UltraSonic* us);
+						volatile UltraSonic* us, Mpu9250* imu, Orientation orientation);
 #elif IR_SENSOR
-						volatile InfraRed* ir);
+						volatile InfraRed* ir, Mpu9250* imu, Orientation orientation);
 #else
 	#error "No ranging module defined as active"
 #endif

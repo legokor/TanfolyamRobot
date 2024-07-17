@@ -24,10 +24,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <math.h>
 #include <stdio.h>
 #include "robotcontrol.h"
 #include "lcd.h"
-#include "soft-pwm.h"
 #include "battery_indicator.h"
 #include "color_sensor.h"
 #include "encoder.h"
@@ -43,6 +43,7 @@
 #else
 	#error "No ranging module defined as active"
 #endif
+#include "mpu9250.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,7 +53,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LCD_TIMER              (&htim1)
+#define LCD_IMU_TIMER              (&htim1)
 #define LCD_BL_TIMER           (&htim3)
 #define LCD_BL_CHANNEL         TIM_CHANNEL_1
 #define LCD_BL_ACTIVE_CHANNEL  HAL_TIM_ACTIVE_CHANNEL_1
@@ -67,6 +68,11 @@
 #define ESP_UART (&huart3)
 #define ESP_UART_IR USART3_IRQn
 #define ESP_UART_DMA_IR DMA1_Channel2_IRQn
+
+#define IMU_I2C (&hi2c2)
+#define IMU_I2C_DMA_IR DMA1_Channel5_IRQn
+#define IMU_I2C_IT_IR I2C2_EV_IRQn
+#define IMU_GYRO_OFFSET_EN 1
 
 #define VBAT_ADC                 (&hadc1)
 #define VBAT_ADC_TIMER           (&htim4)
@@ -156,6 +162,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
+I2C_HandleTypeDef hi2c2;
+
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -198,7 +206,11 @@ volatile uint8_t batteryAdcBusy = 0;
 volatile uint8_t pgmReady = 0;
 volatile uint8_t espReady = 0;
 
-volatile SoftPwm* lcdBacklightPwm;
+volatile Orientation orientation;
+
+//volatile SoftPwm* lcdBacklightPwm;
+
+Mpu9250 imu;
 
 static volatile char espState = 0;
 /* USER CODE END PV */
@@ -214,12 +226,48 @@ static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void updateOrientation(float dt) {
+	Vec3 gyro = mpu9250_readGyroData(&imu);
+	Vec3 acc = mpu9250_readAccData(&imu);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//This is the added IMU code from the videos:
+	//https://youtu.be/4BoIE8YQwM8
+	//https://youtu.be/j-kE0AMEWy4
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//Gyro angle calculations
+	orientation.pitch += gyro.y * dt;                                    //Calculate the traveled pitch angle and add this to the angle_pitch variable.
+	orientation.roll += gyro.x * dt;                                     //Calculate the traveled roll angle and add this to the angle_roll variable.
+
+	//0.01745 = (3.142(PI) / 180degr)
+	orientation.pitch -= orientation.roll * sin(gyro.z * 0.01745f * dt);      	//If the IMU has yawed transfer the roll angle to the pitch angel.
+	orientation.roll += orientation.pitch * sin(gyro.z * 0.01745f * dt);      	//If the IMU has yawed transfer the pitch angle to the roll angel.
+
+	//Accelerometer angle calculations
+	float acc_total_vector = sqrt((acc.x * acc.x) + (acc.y * acc.y) + (acc.z * acc.z));    //Calculate the total accelerometer vector.
+
+	float angle_pitch_acc = 0, angle_roll_acc = 0;
+
+	if (fabs(acc.y) < acc_total_vector) {                                       //Prevent the asin function to produce a NaN.
+		angle_pitch_acc = -asin((float)acc.x / acc_total_vector) * 57.296;      //Calculate the pitch angle.
+	}
+	if (fabs(acc.x) < acc_total_vector) {                                       //Prevent the asin function to produce a NaN.
+		angle_roll_acc = asin((float)acc.y / acc_total_vector) * 57.296;        //Calculate the roll angle.
+	}
+
+	orientation.pitch = orientation.pitch * 0.995 + angle_pitch_acc * 0.005;    //Correct the drift of the gyro pitch angle with the accelerometer pitch angle.
+	orientation.roll = orientation.roll * 0.995 + angle_roll_acc * 0.005;     	//Correct the drift of the gyro roll angle with the accelerometer roll angle.
+}
+
 void updateEspState(){
 	switch(espState){
 	case 0:
@@ -248,8 +296,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     	encoderTimerOverflowHandler(&encoder1);
     	encoderTimerOverflowHandler(&encoder2);
     }
-    if (htim == LCD_TIMER) {
+    if (htim == LCD_IMU_TIMER) {
         lcdHandler();
+        static int cnt = 0;
+        cnt++;
+        if(cnt == 78){ 		//Every <5ms (>200Hz)
+        	cnt = 0;
+        	mpu9250_timPeriodEllapsedCallback(&imu);
+        }
+        static int cnt2 = 0;
+        cnt2++;
+        if(cnt2 == 130){	//Every 8.125ms
+        	cnt2 = 0;
+        	updateOrientation(0.008125f);
+        }
     }
     if (htim == VBAT_ADC_TIMER) {
         adcTimerItCount++;
@@ -277,9 +337,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     	if(telemetryItCounter == 4){
     		telemetryItCounter = 0;
 #if US_SENSOR
-    		uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us);
+    		uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &us, &imu, orientation);
 #elif IR_SENSOR
-			uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &ir);
+			uart_sendDataToEsp(&uart3, &colorSensor, speedControl1, speedControl2, servo, &ir, &imu, orientation);
 #else
 	#error "No ranging module defined as active"
 #endif
@@ -292,7 +352,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
 	    return;
 
     static uint8_t scPsc = 0;
-    if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt insted of the pulse finished interrupt
+    if (htim == MOTOR_CONTROL_TIMER) {        // TODO: maybe use the period interrupt instead of the pulse finished interrupt
         scPsc++;
         if (scPsc == MOTOR_CONTROL_PRESCALE) {
             scPsc = 0;
@@ -396,6 +456,15 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 	}
 }
 
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
+	if(!pgmReady)
+		return;
+
+	if(hi2c == IMU_I2C) {
+		mpu9250_i2cReceiveCpltCallback(&imu);
+	}
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(!pgmReady)
 	    return;
@@ -464,8 +533,9 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_ADC1_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-  if (HAL_TIM_Base_Start_IT(LCD_TIMER) != HAL_OK) {
+  if (HAL_TIM_Base_Start_IT(LCD_IMU_TIMER) != HAL_OK) {
       FAIL;
   }
 
@@ -585,16 +655,31 @@ int main(void)
 
   servo = servoCreate(SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P, SERVO_START_POS, SERVO_END_POS, SERVO_INIT_POS);
 
+  mpu9250_init(&imu, IMU_I2C, 0x68, 0x0C, IMU_I2C_IT_IR);
+  mpu9250_setDefaultSettings(&imu);
+
 #if US_SENSOR
-  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
+  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3, &imu);
 #elif IR_SENSOR
-  robotControlInit(servo, &ir, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3);
+  robotControlInit(servo, &ir, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3, &imu);
 #else
 	#error "No ranging module defined as active"
 #endif
 
   pgmReady = 1;
-  HAL_Delay(1200);
+  HAL_Delay(800);
+
+  if(IMU_GYRO_OFFSET_EN){
+	  lcdClear();
+	  lcdPuts(0, 1, "Gyro calib..");
+	  lcdPuts(1, 3, "DO NOT MOVE!");
+	  mpu9250_calculateGyroOffset(&imu);
+	  mpu9250_enableGyroOffsetSubtraction(&imu, 1);
+  }
+
+  orientation.pitch = 0;
+  orientation.roll = 0;
+
   espReady = 1;
   lcdClear();
   batteryIndicatorEnable();
@@ -718,6 +803,40 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 400000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
 
 }
 

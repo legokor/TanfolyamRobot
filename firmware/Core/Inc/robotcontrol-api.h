@@ -9,6 +9,7 @@
 #define INC_ROBOTCONTROL_API_H_
 
 #include <stdint.h>
+#include "vec3.h"
 
 #define MOT_R 0
 #define MOT_L 1
@@ -92,6 +93,30 @@ uint16_t getIrDistance();
 #else
 	#error "No ranging module defined as active"
 #endif
+
+/**
+ * Get the accelerometer data for all 3 axis. All values are in the +-4g range
+ * @return Vec3 with all 3 axis
+ */
+Vec3 getAccData();
+
+/**
+ * Get the gyroscope data for all 3 axis. All values are in the +-4000°/s range
+ * @return Vec3 with all 3 axis
+ */
+Vec3 getGyroData();
+
+/**
+ * Get the magnetometer data for all 3 axis.
+ * @return Vec3 with all 3 axis
+ */
+Vec3 getMagData();
+
+/**
+ * Get the temperature of the IMU IC.
+ */
+float getTemp();
+
 /**
  * Do nothing for the specified time
  * @param delay in ms

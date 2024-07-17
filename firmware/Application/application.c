@@ -3,11 +3,11 @@
  */
 #include "robotcontrol-api.h"
 
-const char* WIFI_SSID = "Andi";
-const char* WIFI_PASSWORD = "Gomboc02";
+const char* WIFI_SSID = "Tanfrobot";
+const char* WIFI_PASSWORD = "jelszoDani";
 
-#define MANUAL_IP FALSE
-const char* SERVER_IP = "192.168.112.82";
+#define MANUAL_IP TRUE
+const char* SERVER_IP = "192.168.137.141";
 
 int application()
 {
