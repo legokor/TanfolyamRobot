@@ -24,12 +24,12 @@
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-                      volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imu);
+                      volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imu, volatile Orientation* orientation);
 #elif IR_SENSOR
 void robotControlInit(volatile Servo* usServo, volatile InfraRed* irSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-                      volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imu);
+                      volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imu, volatile Orientation* orientation);
 #else
 	#error "No ranging module defined as active"
 #endif

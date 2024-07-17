@@ -113,6 +113,12 @@ Vec3 getGyroData();
 Vec3 getMagData();
 
 /**
+ * Get the robot's orientation in terms of pitch and roll (in degrees)
+ * @return Orientation with pitch and roll members
+ */
+Orientation getOrientation();
+
+/**
  * Get the temperature of the IMU IC.
  */
 float getTemp();

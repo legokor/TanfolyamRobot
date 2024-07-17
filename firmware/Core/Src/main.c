@@ -659,9 +659,9 @@ int main(void)
   mpu9250_setDefaultSettings(&imu);
 
 #if US_SENSOR
-  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3, &imu);
+  robotControlInit(servo, &us, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3, &imu, &orientation);
 #elif IR_SENSOR
-  robotControlInit(servo, &ir, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3, &imu);
+  robotControlInit(servo, &ir, &colorSensor, speedControl2, speedControl1, &encoder2, &encoder1, &uart1, &uart3, &imu, &orientation);
 #else
 	#error "No ranging module defined as active"
 #endif

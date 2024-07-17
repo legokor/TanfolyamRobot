@@ -24,6 +24,7 @@ static volatile Encoder* encoderR;
 static volatile Uart* uart1;
 static volatile Uart* uart3;
 static Mpu9250* imu;
+static volatile Orientation* r_orientation;
 
 /**
  * Save the pointer to every driver instance used here
@@ -32,12 +33,12 @@ static Mpu9250* imu;
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-					  volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imuIn) {
+					  volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imuIn, volatile Orientation* orientation) {
 #elif IR_SENSOR
 void robotControlInit(volatile Servo* usServo, volatile InfraRed* irSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
-					  volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imuIn) {
+					  volatile Uart* usbUart, volatile Uart* espUart, Mpu9250* imuIn, volatile Orientation* orientation) {
 #else
 	#error "No ranging module defined as active"
 #endif
@@ -57,6 +58,7 @@ void robotControlInit(volatile Servo* usServo, volatile InfraRed* irSensor, vola
     uart1 = usbUart;
     uart3 = espUart;
     imu = imuIn;
+    r_orientation = orientation;
 }
 
 
@@ -166,6 +168,10 @@ Vec3 getMagData(){
 
 float getTempData(){
 	return mpu9250_readTempData(imu);
+}
+
+Orientation getOrientation(){
+	return *r_orientation;
 }
 
 void delayMs(uint32_t delay) {
