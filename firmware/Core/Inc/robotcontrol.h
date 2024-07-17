@@ -19,9 +19,18 @@
 
 #include "robotcontrol-api.h"
 
+#if US_SENSOR
 void robotControlInit(volatile Servo* usServo, volatile UltraSonic* usSensor, volatile ColorSensor* colorSensor,
                       volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
                       volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
                       volatile Uart* usbUart, volatile Uart* espUart);
+#elif IR_SENSOR
+void robotControlInit(volatile Servo* usServo, volatile InfraRed* irSensor, volatile ColorSensor* colorSensor,
+                      volatile SpeedControl* scLeft, volatile SpeedControl* scRight,
+                      volatile Encoder* encoderLeft, volatile Encoder* encoderRight,
+                      volatile Uart* usbUart, volatile Uart* espUart);
+#else
+	#error "No ranging module defined as active"
+#endif
 
 #endif /* INC_ROBOTCONTROL_H_ */
