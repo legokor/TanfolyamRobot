@@ -18,7 +18,7 @@
  */
 #include "infrared.h"
 
-// Se specification above
+// See specification above
 const uint8_t usToMmDivider = 10;
 
 /**
@@ -27,7 +27,7 @@ const uint8_t usToMmDivider = 10;
  * @param captureTimer timer used for input capture of the sensor's echo signal
  * @param captureTimerFrequencyHz frequency of the captureTimer
  */
-void irInit(volatile InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequencyHz) {
+void irInit(InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequencyHz) {
     ir->captureTimer = captureTimer;
 
     // Calculate the time period of the capture timer
@@ -46,7 +46,7 @@ void irInit(volatile InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t cap
  * @param ir
  * @param captureVal the captured value from the timer channel
  */
-void irHandlerRisingCapture(volatile InfraRed* ir, uint16_t captureVal) {
+void irHandlerRisingCapture(InfraRed* ir, uint16_t captureVal) {
     if (!ir->pwmIsHigh) {
         ir->captureStart = captureVal;
         ir->pwmIsHigh = 1;
@@ -62,7 +62,7 @@ void irHandlerRisingCapture(volatile InfraRed* ir, uint16_t captureVal) {
  * @param ir
  * @param captureVal the captured value from the timer channel
  */
-void irHandlerFallingCapture(volatile InfraRed* ir, uint16_t captureVal) {
+void irHandlerFallingCapture(InfraRed* ir, uint16_t captureVal) {
     if (ir->pwmIsHigh) {
         uint16_t captureStop = captureVal;
         ir->pwmIsHigh = 0;
@@ -80,7 +80,7 @@ void irHandlerFallingCapture(volatile InfraRed* ir, uint16_t captureVal) {
  * @return  -1 if the measurement hasn't finished yet
  *         >=0 if the measurement is done
  */
-uint16_t irGetDistance(volatile InfraRed* ir) {
+uint16_t irGetDistance(InfraRed* ir) {
     return ir->lastDistance;
 }
 

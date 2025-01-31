@@ -37,44 +37,13 @@
  * @param pwm2 drives the other input of the bridge
  * @param reversed reverse the rotation direction
  */
-void motorInit(Motor* motor, Pwm* pwm1, Pwm* pwm2, uint8_t reversed) {
+void motorInit(Motor* motor, Pwm pwm1, Pwm pwm2, uint8_t reversed) {
     motor->pwm1 = pwm1;
     motor->pwm2 = pwm2;
     motor->reversed = reversed;
     motor->runMode = MotorRunMode_Brake;
     motor->speed = 0;
     motorSetSpeed(motor, motor->speed);
-}
-
-/**
- * Create and initialize a motor struct
- * @note This function allocates memory for the struct!
- *
- * @param pwmXTimer timer used for PWM X
- * @param pwmXTimerChannel timer channel for PWM X
- * @param pwmXTimerPeriod counting period of pwmXTimer
- * @param pwmXOutputType which output of PWM X is used
- * @param reversed reverse the rotation direction
- * @return pointer to created and initialized struct, NULL on error
- */
-Motor* motorCreate(TIM_HandleTypeDef* pwm1Timer, uint32_t pwm1TimerChannel, uint16_t pwm1TimerPeriod, PwmOutput pwm1OutputType,
-                   TIM_HandleTypeDef* pwm2Timer, uint32_t pwm2TimerChannel, uint16_t pwm2TimerPeriod, PwmOutput pwm2OutputType,
-                   uint8_t reversed) {
-
-    Pwm* pwm1 = pwmCreate(pwm1Timer, pwm1TimerChannel, pwm1TimerPeriod, pwm1OutputType);
-    if (pwm1 == NULL) {
-        return NULL;
-    }
-
-    Pwm* pwm2 = pwmCreate(pwm2Timer, pwm2TimerChannel, pwm2TimerPeriod, pwm2OutputType);
-    if (pwm2 == NULL) {
-        return NULL;
-    }
-
-    Motor* motor = (Motor*) malloc(sizeof(Motor));
-    motorInit(motor, pwm1, pwm2, reversed);
-
-    return motor;
 }
 
 /**
@@ -107,20 +76,20 @@ void motorSetSpeed(Motor* motor, float speed) {
         if ( (speed > 0 && !motor->reversed) || (speed < 0 && motor->reversed) ) {
 
             if (motor->runMode == MotorRunMode_Coast) {
-                pwmPin = motor->pwm1;
-                fixPin = motor->pwm2;
+                pwmPin = &motor->pwm1;
+                fixPin = &motor->pwm2;
             } else {
-                pwmPin = motor->pwm2;
-                fixPin = motor->pwm1;
+                pwmPin = &motor->pwm2;
+                fixPin = &motor->pwm1;
             }
 
         } else {
             if (motor->runMode == MotorRunMode_Coast) {
-                pwmPin = motor->pwm2;
-                fixPin = motor->pwm1;
+                pwmPin = &motor->pwm2;
+                fixPin = &motor->pwm1;
             } else {
-                pwmPin = motor->pwm1;
-                fixPin = motor->pwm2;
+                pwmPin = &motor->pwm1;
+                fixPin = &motor->pwm2;
             }
         }
 
@@ -158,8 +127,8 @@ void motorSetRunMode(Motor* motor, MotorRunMode mode) {
  * @param motor
  */
 void motorBrake(Motor* motor) {
-    pwmMax(motor->pwm1);
-    pwmMax(motor->pwm2);
+    pwmMax(&motor->pwm1);
+    pwmMax(&motor->pwm2);
 }
 
 /**
@@ -167,6 +136,6 @@ void motorBrake(Motor* motor) {
  * @param motor
  */
 void motorCoast(Motor* motor) {
-    pwmZero(motor->pwm1);
-    pwmZero(motor->pwm2);
+    pwmZero(&motor->pwm1);
+    pwmZero(&motor->pwm2);
 }

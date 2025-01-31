@@ -44,32 +44,6 @@ int pwmInit(Pwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel,
 }
 
 /**
- * Create a Pwm struct
- * @note This function allocates memory for the struct!
- *
- * @param timer to be controlled
- * @param timerChannel to be controlled
- * @param timerPeriod counting period of the timer
- * @param outputType which output is used
- * @return pointer to the created struct, NULL on error
- */
-Pwm* pwmCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t timerPeriod, PwmOutput outputType) {
-    if ((timerChannel != TIM_CHANNEL_1) &&
-        (timerChannel != TIM_CHANNEL_2) &&
-        (timerChannel != TIM_CHANNEL_3) &&
-        (timerChannel != TIM_CHANNEL_4)    ) {
-        return NULL;
-    }
-
-    Pwm* pwm = (Pwm*) malloc(sizeof(Pwm));
-    if (pwm != NULL) {
-        pwmInit(pwm, timer, timerChannel, timerPeriod, outputType);
-    }
-
-    return pwm;
-}
-
-/**
  * Set the output compare value for the timer channel
  * @param pwm
  * @param compareValue

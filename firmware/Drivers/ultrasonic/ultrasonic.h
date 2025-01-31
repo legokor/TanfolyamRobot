@@ -25,14 +25,14 @@ typedef struct {
     uint8_t timerCounter;
 } UltraSonic;
 
-void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t triggerPin,
+void usInit(UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t triggerPin,
             TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequency,
             TIM_HandleTypeDef* delayTimer, uint32_t delayTimerFrequencyHz);
-void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal);
-void usHandlerFallingCapture(volatile UltraSonic* us, uint16_t captureVal);
-void usStartMeasurement(volatile UltraSonic* us);
-void usStartMeasurementPulseAsync(volatile UltraSonic* us);
-void usHandleCompareAsync(volatile UltraSonic* us);
-uint16_t usGetDistance(volatile UltraSonic* us);
+void usHandlerRisingCapture(UltraSonic* us, uint16_t captureVal);
+void usHandlerFallingCapture(UltraSonic* us, uint16_t captureVal);
+void usStartMeasurement(UltraSonic* us);
+void usStartMeasurementPulseAsync(UltraSonic* us);
+void usHandleCompareAsync(UltraSonic* us);
+uint16_t usGetDistance(UltraSonic* us);
 
 #endif /* ULTRASONIC_ULTRASONIC_H_ */

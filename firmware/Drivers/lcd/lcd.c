@@ -75,7 +75,7 @@ typedef struct {
 typedef struct {
     uint8_t currentCol;
     uint8_t currentRow;
-    uint8_t initialized;
+    volatile uint8_t initialized;
 } LcdState;
 
 static LcdSettings lcdSettings;

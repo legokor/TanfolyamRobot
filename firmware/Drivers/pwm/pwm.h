@@ -30,8 +30,6 @@ typedef enum {
 
 int pwmInit(Pwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel,
             uint16_t timerPeriod, PwmOutput outputType);
-Pwm* pwmCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel,
-               uint16_t timerPeriod, PwmOutput outputType);
 void pwmSetCompareValue(Pwm* pwm, uint16_t compareValue);
 void pwmSetDutyCylePercent(Pwm* pwm, float dutyCycle);
 void pwmZero(Pwm* pwm);

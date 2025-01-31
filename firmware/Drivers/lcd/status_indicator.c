@@ -4,9 +4,9 @@
  *  Created on: Nov 15, 2020
  *      Author: ksstms
  */
-#include "battery_indicator.h"
+#include <status_indicator.h>
 #include "lcd.h"
-#include "robotcontrol-api.h"
+#include "../../RobotApi/robotAbstraction-api.h"
 
 #define BATTERY_CELL_COUNT 2
 
@@ -42,19 +42,14 @@ uint16_t voltageThreshold[] = { BATTERY_CELL_COUNT * 3290,  // 5%
 /**
  * Write battery indicator characters to the LCD's CGRAM
  */
-void batteryIndicatorInit() {
+void statusIndicatorInit() {
     for (uint8_t i = 0; i < levelNum; i++) {
         lcdAddCustomCharacter(i, &batteryChar[i][0]);
     }
 }
 
-/**
- * Display battery indicator
- * @param row of the character position
- * @param col of the character position
- * @param batteryVoltage in mV
- */
-void batteryIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage) {
+
+void statusIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage, char espState) {
     if (!enabled) {
         return;
     }
@@ -80,13 +75,29 @@ void batteryIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage) 
     uint8_t originalRow, originalCol;
     lcdGetCursor(&originalRow, &originalCol);
     lcdPutc(row, col, c);
+
+    switch(espState){
+	case 0:
+		lcdPutc(1, 15, 'X');	//ESP not detected
+		break;
+	case 1:
+		lcdPutc(1, 15, '~');	//ESP connecting to WiFi
+		break;
+	case 2:
+		lcdPutc(1, 15, '.');	//ESP connecting to server
+		break;
+	case 3:
+		lcdPutc(1, 15, '+');	//ESP connected to server
+		break;
+	}
+
     lcdSetCursor(originalRow, originalCol);
 }
 
-void batteryIndicatorEnable() {
+void statusIndicatorEnable() {
     enabled = 1;
 }
 
-void batteryIndicatorDisable() {
+void statusIndicatorDisable() {
     enabled = 0;
 }

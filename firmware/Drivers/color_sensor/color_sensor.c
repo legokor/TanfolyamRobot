@@ -13,7 +13,7 @@
  * Set the color filter of the sensor
  * @param colorIndex
  */
-void setColorFilter(volatile ColorSensor* cs, ColorIndex colorIndex) {
+void setColorFilter(ColorSensor* cs, ColorIndex colorIndex) {
     HAL_GPIO_WritePin(cs->s2Port, cs->s2Pin, colorIndex & (1 << 1));
     HAL_GPIO_WritePin(cs->s3Port, cs->s3Pin, colorIndex & (1 << 0));
 }
@@ -22,7 +22,7 @@ void setColorFilter(volatile ColorSensor* cs, ColorIndex colorIndex) {
  * Call this from the sensor output's input capture interrupt handler
  * @param captureVal timer's input capture value
  */
-void colorSensorCaptureHandler(volatile ColorSensor* cs, uint16_t captureVal) {
+void colorSensorCaptureHandler(ColorSensor* cs, uint16_t captureVal) {
     uint16_t elapsed = captureVal - cs->prevCaptureVal;
 
     cs->prevCaptureVal = captureVal;
@@ -51,7 +51,7 @@ void colorSensorCaptureHandler(volatile ColorSensor* cs, uint16_t captureVal) {
  * @param csSxPin pin number of Sx setting pin
  * @param inputFiltering number of capture values to average for each channel
  */
-void colorSensorInit(volatile ColorSensor* cs,
+void colorSensorInit(ColorSensor* cs,
                      GPIO_TypeDef *csS0Port, uint16_t csS0Pin, GPIO_TypeDef *csS1Port, uint16_t csS1Pin,
                      GPIO_TypeDef *csS2Port, uint16_t csS2Pin, GPIO_TypeDef *csS3Port, uint16_t csS3Pin,
                      uint16_t inputFiltering) {
@@ -82,7 +82,7 @@ void colorSensorInit(volatile ColorSensor* cs,
  * @param capBlue
  * @param capClear
  */
-void colorSensorGetPeriods(volatile ColorSensor* cs, uint16_t* capRed, uint16_t* capGreen,
+void colorSensorGetPeriods(ColorSensor* cs, uint16_t* capRed, uint16_t* capGreen,
                            uint16_t* capBlue, uint16_t* capClear) {
     *capRed   = cs->measuredVal[ColorIndex_Red];
     *capGreen = cs->measuredVal[ColorIndex_Green];
@@ -96,7 +96,7 @@ void colorSensorGetPeriods(volatile ColorSensor* cs, uint16_t* capRed, uint16_t*
  * @param g
  * @param b
  */
-void colorSensorGetRgb(volatile ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t* b) {
+void colorSensorGetRgb(ColorSensor* cs, uint8_t* r, uint8_t* g, uint8_t* b) {
     uint16_t pR, pG, pB, pC;
     colorSensorGetPeriods(cs, &pR, &pG, &pB, &pC);
 
@@ -170,7 +170,7 @@ void rgb2hsv(uint8_t r, uint8_t g, uint8_t b, uint16_t* hue, uint8_t* sat, uint8
  * Read calibrated color in HSV
  * @param color
  */
-void colorSensorGetHsv(volatile ColorSensor* cs, ColorHsv* color) {
+void colorSensorGetHsv(ColorSensor* cs, ColorHsv* color) {
     uint8_t r, g, b;
     colorSensorGetRgb(cs, &r, &g, &b);
     rgb2hsv(r, g, b, &(color->h), &(color->s), &(color->v));

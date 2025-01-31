@@ -15,14 +15,13 @@
 
 
 
-void uart_init(volatile Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr, IRQn_Type sendDMAIr, uint16_t writeBufferLenght, uint16_t readBufferLenght, char* ignoreableChars){
+void uart_init(Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr, IRQn_Type sendDMAIr, uint16_t writeBufferLenght, uint16_t readBufferLenght, const char* ignoreableChars){
 	uart->huart = huart;
 	uart->writeBufferLenght = writeBufferLenght;
 	uart->readBufferLenght = readBufferLenght;
 	uart->mostRecentNewLinePos = -1;
 	uart->startOfReadData = 0;
 	uart->readPtr = 0;
-	uart->readPtrOverflow = 0;
 	uart->uartIr = uartIr;
 	uart->sendDMAIr = sendDMAIr;
 
@@ -40,7 +39,7 @@ void uart_init(volatile Uart *uart, UART_HandleTypeDef *huart, IRQn_Type uartIr,
 }
 
 
-void uart_handleTransmitCplt(volatile Uart *uart, UART_HandleTypeDef *huart){
+void uart_handleTransmitCplt(Uart *uart, UART_HandleTypeDef *huart){
 	if(uart->huart != huart || !uart->ok)
 		return;
 	if(uart->startOfWriteData == -1){
@@ -61,7 +60,7 @@ void uart_handleTransmitCplt(volatile Uart *uart, UART_HandleTypeDef *huart){
 }
 
 
-void uart_transmit(volatile Uart *uart, const char *str){
+void uart_transmit(Uart *uart, const char *str){
 	int size = strlen(str);
 
 	int spaceTillBufferEnd = uart->writeBufferLenght - uart->endOfWriteData - 1;
@@ -114,7 +113,7 @@ void uart_transmit(volatile Uart *uart, const char *str){
 	}
 }
 
-char uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart, uint8_t initCplt){
+char uart_handleReceiveCplt(Uart *uart, UART_HandleTypeDef *huart, uint8_t initCplt){
 	if(uart->huart != huart)
 		return 0;
 
@@ -124,7 +123,7 @@ char uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart, uint
 	}
 	char c = uart->readCircularBuffer[uart->readPtr];
 
-	char* ptr = uart->ignoreableChars;
+	const char* ptr = uart->ignoreableChars;
 	while(*ptr){
 		if(c == *ptr){
 			HAL_UART_Receive_IT(uart->huart, (uint8_t*)uart->readCircularBuffer + uart->readPtr, 1);
@@ -139,7 +138,6 @@ char uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart, uint
 
 	uart->readPtr++;
 	if(uart->readPtr == uart->readBufferLenght){
-		uart->readPtrOverflow = 1;
 		uart->readPtr = 0;
 	}
 
@@ -157,7 +155,7 @@ char uart_handleReceiveCplt(volatile Uart *uart, UART_HandleTypeDef *huart, uint
 }
 
 
-uint8_t uart_receive(volatile Uart *uart, char* data){
+uint8_t uart_receive(Uart *uart, char* data){
 	HAL_NVIC_DisableIRQ(uart->uartIr);
 	int32_t newLine = uart->mostRecentNewLinePos;
 	uint16_t startOfData = uart->startOfReadData;
@@ -182,66 +180,5 @@ uint8_t uart_receive(volatile Uart *uart, char* data){
 	}
 
 	return 1;
-}
-
-static volatile char prevData[256] = "";
-static volatile uint8_t sendDataEnabled = 1;
-
-#if US_SENSOR
-void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile UltraSonic* us, Mpu9250* imu, Orientation orientation){
-#elif IR_SENSOR
-void uart_sendDataToEsp(volatile Uart* espUart, volatile ColorSensor* colorSensor, volatile SpeedControl* speedControl1, volatile SpeedControl* speedControl2, volatile Servo* servo, volatile InfraRed* ir, Mpu9250* imu, Orientation orientation){
-#else
-	#error "No ranging module defined as active"
-#endif
-	if(!sendDataEnabled)
-		return;
-	uint8_t r, g, b;
-	colorSensorGetRgb(colorSensor, &r, &g, &b);
-	int cps1 = encoderGetCountsPerSecond(speedControl1->encoder);
-	int cps2 = encoderGetCountsPerSecond(speedControl2->encoder);
-	int cnt1 = encoderGetCounterValue(speedControl1->encoder);
-	int cnt2 = encoderGetCounterValue(speedControl2->encoder);
-
-	Vec3 acc = mpu9250_readAccData(imu);
-	Vec3 gyro = mpu9250_readGyroData(imu);
-	Vec3 mag = mpu9250_readMagData(imu);
-	float temp = mpu9250_readTempData(imu);
-
-	char data[256];
-	//D: R G B Setpoint1 Setpoint2 CPS1 CPS2 CNT1 CNT2 Servo US/IR ACC_X ACC_Y ACC_Z GYRO_X GYRO_Y GYRO_Z MAG_X MAG_Y MAG_Z TEMP
-	//For some reason when sprintf is called from an interrupt handler it cannot contain any %f formatted values
-	//otherwise it sometimes produces garbage output
-	sprintf(prevData, "D: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", (int)r, (int)g, (int)b,
-			(int)speedControl1->setPoint, (int)speedControl2->setPoint,
-			cps1, cps2, cnt1, cnt2, servo->position, 
-#if US_SENSOR
-			us->lastDistance,
-#elif IR_SENSOR
-			ir->lastDistance/10,
-#else
-	#error "No ranging module defined as active"
-#endif
-			(int)(acc.x * 100), (int)(acc.y * 100), (int)(acc.z * 100), (int)gyro.x, (int)gyro.y, (int)gyro.z,
-			(int)(mag.x * 10), (int)(mag.y * 10), (int)(mag.z * 10), (int)(temp * 10), (int)(orientation.pitch * 10), (int)(orientation.roll * 10));
-
-	strcpy(data, prevData);
-	strcat(data, "\n");
-
-	uart_transmit(espUart, data);
-}
-
-void uart_sendTextToEsp(volatile Uart* espUart, const char* text){
-	char data[512];
-	sendDataEnabled = 0;
-	sprintf(data, "%s %s\n", prevData, text);
-	sendDataEnabled = 1;
-	uart_transmit(espUart, data);
-}
-
-void uart_sendConfigToEsp(volatile Uart* espUart, const char* SSID, const char* password, const char* IP){
-	char data[256];
-	sprintf(data, "C:\t%s\t%s\t%s\n", SSID, password, IP);
-	uart_transmit(espUart, data);
 }
 

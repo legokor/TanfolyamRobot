@@ -14,10 +14,6 @@
 #define MOT_R 0
 #define MOT_L 1
 
-extern const char* WIFI_SSID;
-extern const char* WIFI_PASSWORD;
-extern const char* SERVER_IP;
-
 typedef struct {
     uint16_t h;
     uint8_t s;

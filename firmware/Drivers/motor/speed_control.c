@@ -33,23 +33,6 @@ void speedControlInit(SpeedControl* sc, Motor* motor, Encoder* encoder) {
 }
 
 /**
- * Create and initialize a speed control struct
- * @note This function allocates memory for the struct!
- *
- * @param motor to be controlled
- * @param encoder for speed measurement
- * @return pointer to created and initialized struct, NULL on error
- */
-SpeedControl* speedControlCreate(Motor* motor, Encoder* encoder) {
-    SpeedControl* sc = (SpeedControl*) malloc(sizeof(SpeedControl));
-    if (sc == NULL) {
-        return NULL;
-    }
-    speedControlInit(sc, motor, encoder);
-    return sc;
-}
-
-/**
  * Chane the setpoint of the controller
  * @param sc
  * @param speed between -100 and 100

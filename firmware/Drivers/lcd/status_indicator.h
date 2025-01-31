@@ -10,9 +10,9 @@
 
 #include <stdint.h>
 
-void batteryIndicatorInit();
-void batteryIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage);
-void batteryIndicatorEnable();
-void batteryIndicatorDisable();
+void statusIndicatorInit();
+void statusIndicatorDisplay(uint8_t row, uint8_t col, uint16_t batteryVoltage, char espState);
+void statusIndicatorEnable();
+void statusIndicatorDisable();
 
 #endif /* INC_BATTERY_INDICATOR_H_ */

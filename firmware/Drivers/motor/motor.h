@@ -22,17 +22,14 @@ typedef enum {
  * Store resources and settings needed by the driver
  */
 typedef struct {
-    Pwm* pwm1;
-    Pwm* pwm2;
+    Pwm pwm1;
+    Pwm pwm2;
     float speed;
     MotorRunMode runMode;
     uint8_t reversed:1;
 } Motor;
 
-void motorInit(Motor* motor, Pwm* pwm1, Pwm* pwm2, uint8_t reversed);
-Motor* motorCreate(TIM_HandleTypeDef* pwm1Timer, uint32_t pwm1TimerChannel, uint16_t pwm1TimerPeriod, PwmOutput pwm1OutputType,
-                   TIM_HandleTypeDef* pwm2Timer, uint32_t pwm2TimerChannel, uint16_t pwm2TimerPeriod, PwmOutput pwm2OutputType,
-                   uint8_t reversed);
+void motorInit(Motor* motor, Pwm pwm1, Pwm pwm2, uint8_t reversed);
 void motorSetSpeed(Motor* motor, float speed);
 void motorSetRunMode(Motor* motor, MotorRunMode mode);
 void motorBrake(Motor* motor);

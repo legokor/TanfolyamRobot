@@ -21,45 +21,13 @@
  * @param compareStart timer output compare value for -90 degree position (1 ms)
  * @param compareEnd timer output compare value for +90 degree position (2 ms)
  */
-void servoInit(Servo* servo, Pwm* pwm, uint16_t compareStart, uint16_t compareEnd, int8_t position) {
+void servoInit(Servo* servo, Pwm pwm, uint16_t compareStart, uint16_t compareEnd, int8_t position) {
     servo->pwm = pwm;
     servo->compareStart = compareStart;
     servo->compareEnd = compareEnd;
     servo->position = position;
 
     servoSetPosition(servo, position);
-}
-
-/**
- * Create a Servo struct. This also creates the Pwm used for the servo control.
- *
- * @note This function allocates memory for the structs!
- * @note compareStart and compareEnd values can be swapped for inverse rotation
- *
- * @param timer used for PWM generation
- * @param timerChannel used for PWM generation
- * @param timerPeriod counting period of the timer
- * @param outputType which pwm output is used (see pwm.h)
- * @param compareStart timer output compare value for -90 degree position (1 ms)
- * @param compareEnd timer output compare value for +90 degree position (2 ms)
- * @return pointer to the created struct, NULL on error
- */
-Servo* servoCreate(TIM_HandleTypeDef* timer, uint32_t timerChannel, uint16_t timerPeriod,
-                   PwmOutput outputType, uint16_t compareStart, uint16_t compareEnd, int8_t position) {
-
-    Pwm* pwm = pwmCreate(timer, timerChannel, timerPeriod, outputType);
-
-    if (pwm == NULL) {
-        return NULL;
-    }
-
-    Servo* servo = (Servo*) malloc(sizeof(Servo));
-
-    if (servo != NULL) {
-        servoInit(servo, pwm, compareStart, compareEnd, position);
-    }
-
-    return servo;
 }
 
 /**
@@ -83,5 +51,5 @@ void servoSetPosition(Servo* servo, int8_t position) {
     int32_t diff = (e-mid) * position / 90;
     uint16_t compareVal = mid + diff;
 
-    pwmSetCompareValue(servo->pwm, compareVal);
+    pwmSetCompareValue(&servo->pwm, compareVal);
 }

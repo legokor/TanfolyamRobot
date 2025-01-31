@@ -50,7 +50,7 @@ typedef enum {
  * @param intervalTimer timer used for speed measurement
  * @param maxSpeedCps maximum speed in counts/sec.
  */
-void encoderInit(volatile Encoder* encoder,
+void encoderInit(Encoder* encoder,
                  GPIO_TypeDef* portA, uint16_t pinA,
                  GPIO_TypeDef* portB, uint16_t pinB,
                  EncoderResolution resolution, uint8_t reversed,
@@ -85,7 +85,7 @@ void encoderInit(volatile Encoder* encoder,
  * Call this from the GPIO interrupt handler when there's an interrupt on the A terminal
  * @param encoder
  */
-void encoderHandlerA(volatile Encoder* encoder) {
+void encoderHandlerA(Encoder* encoder) {
     if (!encoder->initialized) {
         return;
     }
@@ -143,7 +143,7 @@ void encoderHandlerA(volatile Encoder* encoder) {
  * Call this from the GPIO interrupt handler when there's an interrupt on the B terminal
  * @param encoder
  */
-void encoderHandlerB(volatile Encoder* encoder) {
+void encoderHandlerB(Encoder* encoder) {
     if (!encoder->initialized) {
         return;
     }
@@ -221,7 +221,7 @@ void encoderTimerOverflowHandler(Encoder* encoder) {
  * @param encoder
  * @return counter value
  */
-int32_t encoderGetCounterValue(volatile const Encoder* encoder) {
+int32_t encoderGetCounterValue(Encoder* encoder) {
     return encoder->counter;
 }
 

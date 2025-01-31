@@ -17,14 +17,13 @@ typedef struct {
     Motor* motor;
     Encoder* encoder;
 
-    float setPoint;
+    volatile float setPoint;
     float prevError;
     float prevSpeed;
     float integrator;
 } SpeedControl;
 
 void speedControlInit(SpeedControl* sc, Motor* motor, Encoder* encoder);
-SpeedControl* speedControlCreate(Motor* motor, Encoder* encoder);
 void speedControlSetSpeed(SpeedControl* sc, float speed);
 void speedControlHandler(SpeedControl* sc);
 

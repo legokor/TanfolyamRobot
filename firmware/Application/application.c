@@ -1,29 +1,83 @@
 /*
  * application.c
  */
-#include "robotcontrol-api.h"
+#include "robotAbstraction-api.h"
+#include <string.h>
+#include <stdio.h>
 
 const char* WIFI_SSID = "Tanfrobot";
-const char* WIFI_PASSWORD = "jelszoDani";
+const char* WIFI_PASSWORD = "jelszo1234";
 
 #define MANUAL_IP TRUE
-const char* SERVER_IP = "192.168.137.141";
+const char* SERVER_IP = "192.168.137.3";
+
+char data[500];
+char cmd[100];
 
 int application()
 {
+	lcdPrintf(0, 0, "Gyere LEGO-ba!");
+	lcdPrintf(1, 0, "  JOOOLESZ");
 
+	while(1)
+	{
+		while(!espRead(data)) { }
 
-    while (1)
-    {
-#if US_SENSOR
-    	uint16_t dist=getUsDistance();
-    	lcdPrintf(0, 0, "%03d cm", dist);
-#elif IR_SENSOR
-    	uint16_t dist=getIrDistance();
-    	lcdPrintf(0, 0, "%03d.%01d cm", dist/10, dist%10);
-#endif
-    	delayMs(200);
-    }
+		const char* cmdStart = data;
+		int length = 0;
+
+		while(*cmdStart != '\0')
+		{
+			while(cmdStart[length] != '\n')
+			{
+				length++;
+			}
+
+			char subCmd[100];
+			int time;
+			strncpy(cmd, cmdStart, length);
+			cmd[length] = '\0';
+
+			if(sscanf(cmd, "%s %d\n", subCmd, &time) == 2)
+			{
+				espPrintf("COMMAND: %s %d", subCmd, time);
+
+				if(time > 10000)
+					time = 10000;
+				if(time < 10)
+					time = 10;
+
+				if(strcmp(subCmd, "ELORE") == 0)
+				{
+					setMotorSpeed(MOT_L, 60);
+					setMotorSpeed(MOT_R, 60);
+					delayMs(time);
+				}
+				else if(strcmp(subCmd, "HATRA") == 0)
+				{
+					setMotorSpeed(MOT_L, -60);
+					setMotorSpeed(MOT_R, -60);
+					delayMs(time);
+				}
+				else if(strcmp(subCmd, "JOBBRA") == 0)
+				{
+					setMotorSpeed(MOT_L, 60);
+					setMotorSpeed(MOT_R, -60);
+					delayMs(time);
+				}
+				else if(strcmp(subCmd, "BALRA") == 0)
+				{
+					setMotorSpeed(MOT_L, -60);
+					setMotorSpeed(MOT_R, 60);
+					delayMs(time);
+				}
+				setMotorSpeed(MOT_L, 0);
+				setMotorSpeed(MOT_R, 0);
+			}
+
+			cmdStart += length + 1;
+		}
+	}
 
     return 0;
 }

@@ -31,28 +31,28 @@ typedef struct {
     EncoderResolution resolution;
     int8_t direction;
 
-    uint8_t initialized;
-    int32_t counter;
+    volatile uint8_t initialized;
+    volatile int32_t counter;
 
     TIM_HandleTypeDef* timer;
     uint32_t timerPeriod;
-    uint32_t overflowCount;
-    uint8_t overflowWasReset;
+    volatile uint32_t overflowCount;
+    volatile uint8_t overflowWasReset;
     uint32_t lastTimerVal;
 
-    int32_t countInterval;
+    volatile int32_t countInterval;
     uint16_t maxSpeedCps;
 } Encoder;
 
-void encoderInit(volatile Encoder* encoder,
+void encoderInit(Encoder* encoder,
                  GPIO_TypeDef* portA, uint16_t pinA,
                  GPIO_TypeDef* portB, uint16_t pinB,
                  EncoderResolution resolution, uint8_t reversed,
                  TIM_HandleTypeDef* intervalTimer, uint16_t maxSpeedCps);
-void encoderHandlerA(volatile Encoder* encoder);
-void encoderHandlerB(volatile Encoder* encoder);
+void encoderHandlerA(Encoder* encoder);
+void encoderHandlerB(Encoder* encoder);
 void encoderTimerOverflowHandler(Encoder* encoder);
-int32_t encoderGetCounterValue(volatile const Encoder* encoder);
+int32_t encoderGetCounterValue(Encoder* encoder);
 int32_t encoderGetCountsPerSecond(Encoder* encoder);
 float encoderGetSpeed(Encoder* encoder);
 

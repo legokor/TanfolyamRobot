@@ -13,14 +13,14 @@
 typedef struct {
     TIM_HandleTypeDef* captureTimer;
     uint16_t captureTimerPeriodNs;
-    volatile uint16_t captureStart;
+    uint16_t captureStart;
     volatile uint16_t lastDistance;
-    volatile uint8_t pwmIsHigh;
+    uint8_t pwmIsHigh;
 } InfraRed;
 
-void irInit(volatile InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequency);
-void irHandlerRisingCapture(volatile InfraRed* ir, uint16_t captureVal);
-void irHandlerFallingCapture(volatile InfraRed* ir, uint16_t captureVal);
-uint16_t irGetDistance(volatile InfraRed* ir);
+void irInit(InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequency);
+void irHandlerRisingCapture(InfraRed* ir, uint16_t captureVal);
+void irHandlerFallingCapture(InfraRed* ir, uint16_t captureVal);
+uint16_t irGetDistance(InfraRed* ir);
 
 #endif /* INFRARED_INFRARED_H_ */

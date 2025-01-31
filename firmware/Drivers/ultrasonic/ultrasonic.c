@@ -38,7 +38,7 @@ const uint8_t timerOverflowCountForMeasurement = 3;
  * @param delayTimer timer used for delays
  * @param delayTimerFrequencyHz frequency of the delayTimer
  */
-void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t triggerPin,
+void usInit(UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t triggerPin,
             TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequencyHz,
             TIM_HandleTypeDef* delayTimer, uint32_t delayTimerFrequencyHz) {
     us->triggerPort = triggerPort;
@@ -72,7 +72,7 @@ void usInit(volatile UltraSonic* us, GPIO_TypeDef* triggerPort, uint16_t trigger
  * @param us
  * @param captureVal the captured value from the timer channel
  */
-void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal) {
+void usHandlerRisingCapture(UltraSonic* us, uint16_t captureVal) {
     if (us->measurementValid && !us->echoIsHigh) {
         us->captureStart = captureVal;
         us->echoIsHigh = 1;
@@ -88,7 +88,7 @@ void usHandlerRisingCapture(volatile UltraSonic* us, uint16_t captureVal) {
  * @param us
  * @param captureVal the captured value from the timer channel
  */
-void usHandlerFallingCapture(volatile UltraSonic* us, uint16_t captureVal) {
+void usHandlerFallingCapture(UltraSonic* us, uint16_t captureVal) {
     if (us->measurementValid && us->echoIsHigh) {
         uint16_t captureStop = captureVal;
         us->echoIsHigh = 0;
@@ -104,7 +104,7 @@ void usHandlerFallingCapture(volatile UltraSonic* us, uint16_t captureVal) {
  * Start an async measurement pulse
  * @param us
  */
-void usStartMeasurementPulseAsync(volatile UltraSonic* us) {
+void usStartMeasurementPulseAsync(UltraSonic* us) {
 	us->timerCounter++;
 	if(us->timerCounter==timerOverflowCountForMeasurement){
 		us->timerCounter = 0;
@@ -122,7 +122,7 @@ void usStartMeasurementPulseAsync(volatile UltraSonic* us) {
  * End an async measurement pulse
  * @param us
  */
-void usEndMeasurementPulseAsync(volatile UltraSonic* us) {
+void usEndMeasurementPulseAsync(UltraSonic* us) {
 	HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
 
 	us->echoIsHigh = 0;
@@ -136,7 +136,7 @@ void usEndMeasurementPulseAsync(volatile UltraSonic* us) {
  * Handle compare event (end pulse signal or timeout)
  * @param us
  */
-void usHandleCompareAsync(volatile UltraSonic* us){
+void usHandleCompareAsync(UltraSonic* us){
 	if(us->pulseActive){
 		usEndMeasurementPulseAsync(us);
 	}else{
@@ -150,7 +150,7 @@ void usHandleCompareAsync(volatile UltraSonic* us){
  * @return  -1 if the measurement hasn't finished yet
  *         >=0 if the measurement is done
  */
-uint16_t usGetDistance(volatile UltraSonic* us) {
+uint16_t usGetDistance(UltraSonic* us) {
     return us->lastDistance;
 }
 
