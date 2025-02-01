@@ -29,6 +29,8 @@ void main_initRobot(void)
 {
 	if (HAL_TIM_Base_Start_IT(LCD_IMU_ENCODER_TIMER) != HAL_OK)
 		FAIL;
+	if (HAL_TIM_Base_Start_IT(SERVO_DELAYUS_TIMER) != HAL_OK)
+		FAIL;
 
 	HAL_GPIO_WritePin(LCD_BACKLIGHT_GPIO_Port, LCD_BACKLIGHT_Pin, GPIO_PIN_SET);
 	lcd_init(LCD_RST_GPIO_Port, LCD_RST_Pin, LCD_EN_GPIO_Port, LCD_EN_Pin,
@@ -93,7 +95,7 @@ void main_initRobot(void)
 	HAL_GPIO_WritePin(MOTOR_SLEEPN_GPIO_Port, MOTOR_SLEEPN_Pin, GPIO_PIN_SET);
 
 	{
-		pwm_Pwm pwm; pwm_init(&pwm, SERVO_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P);
+		pwm_Pwm pwm; pwm_init(&pwm, SERVO_DELAYUS_TIMER, SERVO_CHANNEL, SERVO_PWM_PERIOD, PwmOutput_P);
 		srv_init(&main_robotInstance.servo, pwm, SERVO_START_POS, SERVO_END_POS, SERVO_INIT_POS);
 	}
 

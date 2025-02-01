@@ -128,6 +128,11 @@ void delayMs(uint32_t delay) {
     HAL_Delay(delay);
 }
 
+void delayUs(uint32_t delay)
+{
+	main_delayUs(delay);
+}
+
 
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
     va_list args;

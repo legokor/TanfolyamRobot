@@ -14,6 +14,7 @@
 static volatile uint16_t batteryVoltage = 0;
 static volatile char espState = 0;
 static volatile uint8_t batteryAdcBusy = 0;
+extern volatile uint8_t main_usDelayOverflow;
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -43,6 +44,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			orCnt = 0;
 			mpu_updateOrientation(&main_robotInstance.imu, &main_robotInstance.orientation, 0.008125f);
 		}
+    }
+
+    if (htim == SERVO_DELAYUS_TIMER)
+    {
+    	main_usDelayOverflow = 1;
     }
 
     if (htim == VBAT_ADC_TIMER)

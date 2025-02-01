@@ -27,9 +27,9 @@ int app_main()
 		int power;
 		int time;
 
-		if(sscanf(data, "%s %d %d", subCmd, &power, &time) == 3)
+		if(sscanf(data, "%s %d %d", subCmd, &power, &time) >= 1)
 		{
-			espPrintf("COMMAND: %s %d %d", subCmd, power, time);
+			espPrintf("COMMAND: %s", subCmd);
 
 			if(time > 10000)
 				time = 10000;
@@ -76,6 +76,28 @@ int app_main()
 			else if(strcmp(subCmd, "S_ELORE") == 0)
 			{
 				setServoPosition(0);
+			}
+			else if(strcmp(subCmd, "F_JOBBRA") == 0)
+			{
+				float w = 0;
+				setMotorSpeed(MOT_L, 10);
+				setMotorSpeed(MOT_R, -10);
+				while(w >- 90)
+				{
+					w += getGyroData().z * 0.01f;
+					delayUs(10000);
+				}
+			}
+			else if(strcmp(subCmd, "F_BALRA") == 0)
+			{
+				float w = 0;
+				setMotorSpeed(MOT_L, -10);
+				setMotorSpeed(MOT_R, 10);
+				while(w < 90)
+				{
+					w += getGyroData().z * 0.01f;
+					delayUs(10000);
+				}
 			}
 			setMotorSpeed(MOT_L, 0);
 			setMotorSpeed(MOT_R, 0);

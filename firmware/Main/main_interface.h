@@ -59,4 +59,6 @@ void main_runRobot(void);
 
 void main_sendTextToEsp(main_Telemetry* telemetry, main_RobotInstance* robotInstance, const char* text);
 
+void main_delayUs(uint32_t us);
+
 #endif /* MAIN_INTERFACE_H_ */

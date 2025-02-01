@@ -125,4 +125,11 @@ float getTemp();
  */
 void delayMs(uint32_t delay);
 
+/**
+ * Do nothing for the specified time
+ * @param delay in us
+ * WARNING: the delay time might vary +-US_DELAY_TIMER_PERIOD on very rare occasions
+ */
+void delayUs(uint32_t delay);
+
 #endif /* INC_ROBOTCONTROL_API_H_ */
