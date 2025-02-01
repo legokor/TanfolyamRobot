@@ -39,6 +39,7 @@ typedef struct {
     volatile uint32_t overflowCount;
     volatile uint8_t overflowWasReset;
     uint32_t lastTimerVal;
+    uint32_t timerFrequency;
 
     volatile int32_t countInterval;
     uint16_t maxSpeedCps;
@@ -48,7 +49,7 @@ void enc_init(enc_Encoder* encoder,
                  GPIO_TypeDef* portA, uint16_t pinA,
                  GPIO_TypeDef* portB, uint16_t pinB,
                  enc_EncoderResolution resolution, uint8_t reversed,
-                 TIM_HandleTypeDef* intervalTimer, uint16_t maxSpeedCps);
+                 TIM_HandleTypeDef* intervalTimer, uint32_t timerFrequency, uint16_t maxSpeedCps);
 
 void enc_handlerA(enc_Encoder* encoder);
 

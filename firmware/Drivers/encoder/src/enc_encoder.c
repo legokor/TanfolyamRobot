@@ -48,13 +48,14 @@ typedef enum {
  * @param resolution decoding resolution
  * @param reversed 0 will increase counter when A is leading, otherwise increase counter when B is leading
  * @param intervalTimer timer used for speed measurement
+ * @param timerFrequency the frequency of the
  * @param maxSpeedCps maximum speed in counts/sec.
  */
 void enc_init(enc_Encoder* encoder,
                  GPIO_TypeDef* portA, uint16_t pinA,
                  GPIO_TypeDef* portB, uint16_t pinB,
                  enc_EncoderResolution resolution, uint8_t reversed,
-                 TIM_HandleTypeDef* intervalTimer, uint16_t maxSpeedCps) {
+                 TIM_HandleTypeDef* intervalTimer, uint32_t timerFrequency, uint16_t maxSpeedCps) {
 
     encoder->portA = portA;
     encoder->pinA = pinA;
@@ -77,6 +78,7 @@ void enc_init(enc_Encoder* encoder,
     encoder->lastTimerVal = 0;
     encoder->countInterval = 0;
     encoder->maxSpeedCps = maxSpeedCps / 100;
+    encoder->timerFrequency = timerFrequency;
 
     encoder->initialized = 1;
 }
@@ -243,7 +245,7 @@ int32_t enc_getCountsPerSecond(enc_Encoder* encoder) {
         return 0;
     }
 
-    return 64000000.0f / counts;
+    return (int32_t)encoder->timerFrequency / counts;
 }
 
 /**
