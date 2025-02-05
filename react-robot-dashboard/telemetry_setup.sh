@@ -30,6 +30,7 @@ git checkout telemetry_page_rpi
 
 echo START NPM
 cd /WS/TanfolyamRobot/react-robot-dashboard/my-robot-server && npm install
+cd /WS/TanfolyamRobot/react-robot-dashboard/robot-dashboard && npm install
 chmod +x /WS/TanfolyamRobot/react-robot-dashboard/start.sh
 
 echo START SERVICE

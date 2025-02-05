@@ -13,7 +13,7 @@ const IMUSensorDisplay = ({ imuData }) => {
       <h2>IMU Sensor</h2>
       <div className="imu-matrix">
         <div className="imu-column">
-          <div className="imu-header">Acc <br />(m/s²)</div>
+          <div className="imu-header">Acc <br />(g)</div>
           <div className="imu-value">{acc.x.toFixed(3)}</div>
           <div className="imu-value">{acc.y.toFixed(3)}</div>
           <div className="imu-value">{acc.z.toFixed(3)}</div>

@@ -8,18 +8,18 @@ const MotorServoDisplay = ({ motora, motorb, cpsa, cpsb, cnta, cntb, servo }) =>
       <div className="data-matrix">
         <div className="data-column">
           <div className="data-header">Motor Setpoint</div>
-          <div className="data-value">Motor A: {motora}</div>
-          <div className="data-value">Motor B: {motorb}</div>
+          <div className="data-value">Motor R: {motora}</div>
+          <div className="data-value">Motor L: {motorb}</div>
         </div>
         <div className="data-column">
           <div className="data-header">Encoder Speed</div>
-          <div className="data-value">Encoder A: {cpsa} CP/s</div>
-          <div className="data-value">Encoder B: {cpsb} CP/s</div>
+          <div className="data-value">Encoder R: {cpsa} CP/s</div>
+          <div className="data-value">Encoder L: {cpsb} CP/s</div>
         </div>
         <div className="data-column">
           <div className="data-header">Encoder Position</div>
-          <div className="data-value">Encoder A: {cnta}</div>
-          <div className="data-value">Encoder B: {cntb}</div>
+          <div className="data-value">Encoder R: {cnta}</div>
+          <div className="data-value">Encoder L: {cntb}</div>
         </div>
         <div className="data-column">
           <div className="data-header">Servo Position</div>

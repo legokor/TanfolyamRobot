@@ -8,6 +8,8 @@ logs
 node_modules
 bower_components
 
+robot-dashboard/build
+
 *.sublime*
 
 psd
