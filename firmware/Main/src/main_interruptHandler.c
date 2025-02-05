@@ -8,7 +8,7 @@
 #include "main.h"
 #include "main_interface.h"
 #include "main_config.h"
-#include "main_telemetry.h"
+#include "tel_interface.h"
 #include "lcd_interface.h"
 
 static volatile uint16_t batteryVoltage = 0;
@@ -78,7 +78,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     	if (telCnt == 6)
     	{
     		telCnt = 0;
-    		main_sendDataToEsp(&main_telemetry, &main_robotInstance);
+    		tel_sendDataToEsp();
     	}
     }
 }

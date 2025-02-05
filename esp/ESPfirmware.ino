@@ -5,16 +5,15 @@
 #include <ESP8266HTTPClient.h>
 
 constexpr bool DEBUG_ENABLED = false;
-constexpr int bufferSize = 128; 
+constexpr int bufferSize = 250; 
 ESP8266WebServer server(80);
 
 const String COLOR = "red";      //might be red, green, gray, pink, black (according to the server/UI code)
 
 enum class ReceiveState{
-    CONFIG1,
-    CONFIG2,
-    DATA1,
-    DATA2,
+    CONFIG,
+    DATA,
+    TEXT,
     IDLE
 };
 
@@ -30,6 +29,21 @@ enum class ModuleStatus{
     CONNECTING_TO_SERVER,
     CONNECTED_TO_SERVER,
     PRECONFIG
+};
+
+struct __attribute__((__packed__)) tel_OutputData
+{
+	uint8_t r, g, b;
+	int8_t setPointRightM, setPointLeftM;
+	int16_t cpsRightEnc, cpsLeftEnc;
+	int32_t cntRightEnc, cntLeftEnc;
+	int8_t servoPos;
+	uint8_t distance;
+	int16_t accX, accY, accZ;
+	int16_t gyroX, gyroY, gyroZ;
+	int16_t magX, magY, magZ;
+	int16_t temp;
+	int16_t pitch, roll;
 };
 
 void setup() {
@@ -60,8 +74,8 @@ void setup() {
 ModuleStatus moduleStatus = ModuleStatus::PRECONFIG;
 
 void loop() {
-    static ReceiveState receiveState = ReceiveState::IDLE;
     static char receiveOutBuffer[bufferSize];
+    static char textBuffer[bufferSize*4];
     static int serialPtr = 0;
     static EspState espState = EspState::PRECONFIG;
     
@@ -69,9 +83,11 @@ void loop() {
     static char password[bufferSize / 2] = "";
     static char ipAddress[20] = "";
 
+    static tel_OutputData data;
+
     bool configAvailable = false;
     bool dataAvailable = false;
-    bool prevSerialContainsText = false;
+    bool textAvailable = false;
 
     unsigned long now = millis();
     static unsigned long statusSendTime = 0;
@@ -79,63 +95,30 @@ void loop() {
         statusSendTime = now + 300;
         sendStatus(moduleStatus);
     }
-    
-    while(Serial.available()){
-        static char serialBuffer[bufferSize];
-        char c = Serial.read();
 
-        switch(receiveState){
-            case ReceiveState::IDLE:
-                serialPtr = 0;
-                if(c == 'C')
-                    receiveState = ReceiveState::CONFIG1;
-                if(c == 'D' && !configAvailable)
-                    receiveState = ReceiveState::DATA1;
+    ReceiveState receiveState = processSerialData(receiveOutBuffer, bufferSize);
+
+    switch (receiveState)
+    {
+    case ReceiveState::CONFIG:
+        configAvailable = true;
+        break;
+    case ReceiveState::DATA:
+        memcpy(&data, receiveOutBuffer, sizeof(tel_OutputData));
+        dataAvailable = true;
+        break;
+    case ReceiveState::TEXT:
+        if (textBuffer[0] == 0)
+            strcpy(textBuffer, receiveOutBuffer);
+        else
+        {
+            size_t len = strlen(textBuffer);
+            if (4 * bufferSize - len - 2 < strlen(receiveOutBuffer))
                 break;
-            case ReceiveState::CONFIG1:
-                if(c == ':')
-                    receiveState = ReceiveState::CONFIG2;
-                else
-                    receiveState = ReceiveState::IDLE;
-                break;
-            case ReceiveState::DATA1:
-                if(c == ':')
-                    receiveState = ReceiveState::DATA2;
-                else
-                    receiveState = ReceiveState::IDLE;
-                break;
-            case ReceiveState::CONFIG2:
-                if(c == '\n'){
-                    serialBuffer[serialPtr] = 0;
-                    receiveState = ReceiveState::IDLE;
-                    dataAvailable = false;
-                    configAvailable = true;
-                    strcpy(receiveOutBuffer, serialBuffer);
-                }else{
-                    serialBuffer[serialPtr++] = c;
-                    if(serialPtr == bufferSize)
-                        receiveState = ReceiveState::IDLE;
-                }
-                break;
-            case ReceiveState::DATA2:
-                if(c == '\n'){
-                    serialBuffer[serialPtr] = 0;
-                    receiveState = ReceiveState::IDLE;
-                    dataAvailable = true;
-                    bool containsText = serialDataContainsText(serialBuffer);
-                    if(containsText){
-                        strcpy(receiveOutBuffer, serialBuffer);
-                        prevSerialContainsText = true;
-                    }else if(!prevSerialContainsText){
-                        strcpy(receiveOutBuffer, serialBuffer);
-                    }
-                }else{
-                    serialBuffer[serialPtr++] = c;
-                    if(serialPtr == bufferSize)
-                        receiveState = ReceiveState::IDLE;
-                }
-                break;
+            textBuffer[len] = '\n';
+            strcpy(textBuffer + len + 1, receiveOutBuffer);
         }
+        break;
     }
 
     yield();
@@ -198,7 +181,7 @@ void loop() {
         case EspState::CONNECTED:
             if(dataAvailable){
                 dlog("Data received");
-                processSerialData(receiveOutBuffer, ipAddress);
+                processData(&data, textBuffer, ipAddress);
             }
             if(DEBUG_ENABLED){
                 static unsigned long debugSendTime = 0;
@@ -222,6 +205,83 @@ void dlog(const String& str){
     }
 }
 
+ReceiveState processSerialData(char* buffer, size_t maxSize)
+{
+    static int serialPtr = 0;
+    static ReceiveState receiveState = ReceiveState::IDLE;
+    static bool start = true;
+    static bool escapeActive = false;
+
+    while (Serial.available())
+    {
+        char c = Serial.read();
+        if (c == '\n')
+        {
+            buffer[serialPtr] = 0;
+            ReceiveState tmp = receiveState;
+            receiveState = ReceiveState::IDLE;
+            start = true;
+            escapeActive = false;
+            if (serialPtr == 0 || (tmp == ReceiveState::DATA && serialPtr != sizeof(tel_OutputData)))
+            {
+                serialPtr = 0;
+                return ReceiveState::IDLE;
+            }
+            serialPtr = 0;
+            return tmp;
+        }
+        else if (start)
+        {
+            if (c == 'C')
+            {
+                receiveState = ReceiveState::CONFIG;
+                start = false;
+            }
+            else if (c == 'D')
+            {
+                receiveState = ReceiveState::DATA;
+                start = false;
+            }
+            else if (c == 'T')
+            {
+                receiveState = ReceiveState::TEXT;
+                start = false;
+            }
+        }
+        else if (escapeActive)
+        {
+            escapeActive = false;
+            if (c == '0')
+                buffer[serialPtr++] = '\n';
+            else if (c == '1')
+                buffer[serialPtr++] = '~';
+            else
+            {
+                serialPtr = 0;
+                start = true;
+            }
+        }
+        else if (c == '~')
+        {
+            escapeActive = true;
+        }
+        else
+        {
+            buffer[serialPtr++] = c;
+        }
+
+        if (serialPtr >= maxSize)
+        {
+            receiveState = ReceiveState::IDLE;
+            start = true;
+            escapeActive = false;
+            serialPtr = 0;
+        }
+    }
+
+    return ReceiveState::IDLE;
+}
+
 void sendStatus(ModuleStatus status){
     if(DEBUG_ENABLED)
         return;
@@ -240,27 +300,12 @@ void sendStatus(ModuleStatus status){
     }
 }
 
-void processSerialData(const char *data, const char* ipaddr) {
-    int servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, rgb_r, rgb_g, rgb_b, acc_x, acc_y, acc_z, mag_x, mag_y, mag_z, gyro_x, gyro_y, gyro_z, pitch, roll, temp;
-    
-    static char text[256] = "";
-    
-    sscanf(data, " %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %[^\"]", &rgb_r, &rgb_g, &rgb_b, &motora, &motorb, &cpsa, &cpsb, &cnta, &cntb, &servo, &usonic,
-                &acc_x, &acc_y, &acc_z, &gyro_x, &gyro_y, &gyro_z, &mag_x, &mag_y, &mag_z, &temp, &pitch, &roll, text);
-    rgb2hsv(rgb_r, rgb_g, rgb_b, &hsv_h, &hsv_s, &hsv_v);
-    if(sendJson(ipaddr, servo, motora, motorb, cpsa, cpsb, cnta, cntb, usonic, hsv_h, hsv_s, hsv_v, 
-                acc_x / 100.0f, acc_y / 100.0f, acc_z / 100.0f, gyro_x, gyro_y, gyro_z, mag_x / 10.0f, mag_y / 10.0f, mag_z / 10.0f, temp / 10.0f, pitch / 10.0f, roll / 10.0f, text))
-        strcpy(text, "");
-}
-
-bool serialDataContainsText(const char *data){
-    int tokenNum = 0;
-    while(*data){
-        if(*data == ' ')
-            tokenNum++;
-        data++;
-    }
-    return tokenNum > 11;
+void processData(tel_OutputData* data, char* text, const char* ipaddr) {
+    int hsv_h, hsv_s, hsv_v;
+    rgb2hsv(data->r, data->g, data->b, &hsv_h, &hsv_s, &hsv_v);
+    if(sendJson(ipaddr, data->servoPos, data->setPointRightM, data->setPointLeftM, data->cpsRightEnc, data->cpsLeftEnc, data->cntRightEnc, data->cntLeftEnc, data->distance, hsv_h, hsv_s, hsv_v, 
+                data->accX / 100.0f, data->accY / 100.0f, data->accZ / 100.0f, data->gyroX, data->gyroY, data->gyroZ, data->magX / 10.0f, data->magY / 10.0f, data->magZ / 10.0f, data->temp / 10.0f, data->pitch / 10.0f, data->roll / 10.0f, text))
+        text[0] = '\0';
 }
 
 void rgb2hsv(int r, int g, int b, int* hue, int* sat, int* val){

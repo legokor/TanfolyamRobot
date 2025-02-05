@@ -59,11 +59,8 @@ void txt_handleTransmitCplt(txt_Uart *uart, UART_HandleTypeDef *huart){
 	}
 }
 
-
-void txt_transmit(txt_Uart *uart, const char *str){
-	int size = strlen(str);
-
-	if(size > uart->writeBufferLenght)
+void txt_transmit(txt_Uart *uart, const char *str, const size_t size){
+	if(size > uart->writeBufferLenght || size == 0)
 		return;
 
 	int spaceTillBufferEnd = uart->writeBufferLenght - uart->endOfWriteData - 1;

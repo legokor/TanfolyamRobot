@@ -6,6 +6,7 @@
  */
 #include "api_robotAbstraction.h"
 #include "main_interface.h"
+#include "tel_interface.h"
 #include "lcd_interface.h"
 
 #include <stdio.h>
@@ -69,12 +70,11 @@ int uartPrintf(const char *fmt, ...) {
     va_start(args, fmt);
 
     char str[256];
-    int size = vsprintf(str, fmt, args);
+    int size = vsnprintf(str, 256, fmt, args);
     if(size <= 0)
     	return -1;
-    str[size] = '\0';
 
-    txt_transmit(&main_robotInstance.usbUart, str);
+    txt_transmit(&main_robotInstance.usbUart, str, size);
 
     return 0;
 }
@@ -85,17 +85,11 @@ int espPrintf(const char *fmt, ...) {
     va_start(args, fmt);
 
     char str[256];
-    int size = vsprintf(str, fmt, args);
+    int size = vsnprintf(str, 256, fmt, args);
     if(size <= 0)
     	return -1;
-    str[size] = '\0';
 
-    for(int p = 0; p < size; p++){
-    	if(str[p] == '\n')
-    		str[p] = ' ';
-    }
-
-    main_sendTextToEsp(&main_telemetry, &main_robotInstance, str);
+    tel_sendTextToEsp(str);
 
     return 0;
 }

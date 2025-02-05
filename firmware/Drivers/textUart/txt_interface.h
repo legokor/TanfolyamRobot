@@ -54,7 +54,7 @@ char txt_handleReceiveCplt(txt_Uart* uart, UART_HandleTypeDef *huart, uint8_t in
 /*
  * Transmits the data (max lenght is writeBufferLenght)
  */
-void txt_transmit(txt_Uart* uart, const char *str);
+void txt_transmit(txt_Uart* uart, const char *str, const size_t size);
 
 /*
  * Receives the data until the last received \n, ignores \r (max lenght is readBufferLenght)

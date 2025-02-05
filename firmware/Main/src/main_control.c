@@ -8,13 +8,12 @@
 #include "main_interface.h"
 #include "main_config.h"
 #include "main.h"
-#include "main_telemetry.h"
+#include "tel_interface.h"
 #include "lcd_interface.h"
 #include "api_robotAbstraction.h"
 #include "app_interface.h"
 
 
-main_Telemetry main_telemetry;
 main_RobotInstance main_robotInstance = { .initCplt = 0, .espReady = 0 };
 
 #define FAIL fail(__FILE__, __LINE__)
@@ -39,7 +38,7 @@ void main_initRobot(void)
 			2, 16);
 
 	txt_init(&main_robotInstance.usbUart, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500, "\r");
-	txt_init(&main_robotInstance.espUart, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500, "\r\x01\x02\x03");
+	txt_init(&main_robotInstance.espUart, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 30, "\r\x01\x02\x03");
 
 	#if US_SENSOR
 	us_init(&main_robotInstance.us, US_TRIG_GPIO_Port, US_TRIG_Pin,
@@ -102,8 +101,6 @@ void main_initRobot(void)
 	mpu_init(&main_robotInstance.imu, IMU_I2C, 0x68, 0x0C, IMU_I2C_IT_IR);
 	mpu_setDefaultSettings(&main_robotInstance.imu);
 
-	main_telemetryInit(&main_telemetry);
-
 	main_robotInstance.initCplt = 1;
 
 	lcd_puts(0, 4, "LEGO");
@@ -127,7 +124,12 @@ void main_initRobot(void)
 	lcd_clear();
 	lcd_enableStatus();
 
-	main_sendConfigToEsp(&main_robotInstance);
+	if (!tel_initEsp())
+	{
+		lcd_clear();
+		lcd_puts(0, 0, "ESP init failed");
+		while (1) { }
+	}
 }
 
 

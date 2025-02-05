@@ -5,11 +5,11 @@
 #include <string.h>
 #include <stdio.h>
 
-const char* WIFI_SSID = "1619-LegoLab";
+const char* WIFI_SSID = "1619-LegoDora";
 const char* WIFI_PASSWORD = "almaalma";
 
 #define MANUAL_IP TRUE
-const char* SERVER_IP = "10.40.3.191";
+const char* SERVER_IP = "10.4.3.5";
 
 char data[500];
 char cmd[100];
@@ -27,9 +27,12 @@ int app_main()
 		int power;
 		int time;
 
-		if(sscanf(data, "%s %d %d", subCmd, &power, &time) >= 1)
+		if(sscanf(data, "%[^\"] %d %d", subCmd, &power, &time) >= 1)
 		{
 			espPrintf("COMMAND: %s", subCmd);
+			espPrintf("na csáááá");
+			espPrintf("szia");
+			espPrintf("hello");
 
 			if(time > 10000)
 				time = 10000;
