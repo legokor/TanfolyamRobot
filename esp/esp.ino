@@ -8,7 +8,7 @@ constexpr bool DEBUG_ENABLED = false;
 constexpr int bufferSize = 250; 
 ESP8266WebServer server(80);
 
-const String COLOR = "red";      //might be red, green, gray, pink, black (according to the server/UI code)
+const String COLOR = "black";      //might be red, green, gray, pink, black (according to the server/UI code)
 
 enum class ReceiveState{
     CONFIG,
