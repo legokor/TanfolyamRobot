@@ -8,7 +8,6 @@
 const char* WIFI_SSID = "1619-LegoDora";
 const char* WIFI_PASSWORD = "almaalma";
 
-#define MANUAL_IP TRUE
 const char* SERVER_IP = "10.4.3.5";
 
 char data[500];
