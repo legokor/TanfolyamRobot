@@ -6,7 +6,8 @@ const Console = ({ data }) => {
 
   useEffect(() => {
     if (data && data.consolemessage && data.consolemessage !== "") {
-      setMessages(prevMessages => [...prevMessages, data.consolemessage]);
+      let consoleMessageLines = data.consolemessage.split('\n');
+      setMessages(prevMessages => [...prevMessages, ...consoleMessageLines]);
     }
   }, [data]);
 

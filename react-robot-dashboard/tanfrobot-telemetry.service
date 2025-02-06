@@ -1,0 +1,12 @@
+[Unit]
+Description=Tanfolyamrobot frontend service
+After=network.target
+
+[Service]
+User=pi
+Group=pi
+WorkingDirectory=/WS/TanfolyamRobot/react-robot-dashboard
+ExecStart=/WS/TanfolyamRobot/react-robot-dashboard/start.sh
+
+[Install]
+WantedBy=multi-user.target
