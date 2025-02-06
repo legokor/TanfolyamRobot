@@ -29,9 +29,6 @@ int app_main()
 		if(sscanf(data, "%[^\"] %d %d", subCmd, &power, &time) >= 1)
 		{
 			espPrintf("COMMAND: %s", subCmd);
-			espPrintf("na csáááá");
-			espPrintf("szia");
-			espPrintf("hello");
 
 			if(time > 10000)
 				time = 10000;

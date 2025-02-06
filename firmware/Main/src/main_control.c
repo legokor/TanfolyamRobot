@@ -38,7 +38,7 @@ void main_initRobot(void)
 			2, 16);
 
 	txt_init(&main_robotInstance.usbUart, USB_UART, USB_UART_IR, USB_UART_DMA_IR, 500, 500, "\r");
-	txt_init(&main_robotInstance.espUart, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 30, "\r\x01\x02\x03");
+	txt_init(&main_robotInstance.espUart, ESP_UART, ESP_UART_IR, ESP_UART_DMA_IR, 500, 500, "\r\x01\x02\x03");
 
 	#if US_SENSOR
 	us_init(&main_robotInstance.us, US_TRIG_GPIO_Port, US_TRIG_Pin,
