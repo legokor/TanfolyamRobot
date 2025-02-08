@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.eclipse.ui.externaltools.ProgramLaunchConfigurationType">
-    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/tanfolyamrobot/tools/Tanfolyamrobot FTDI.exe}"/>
-    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="500000 ../Debug/tanfolyamrobot.bin"/>
-    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/tanfolyamrobot/tools}"/>
-</launchConfiguration>

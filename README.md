@@ -2,7 +2,7 @@
 
 ## Fejlesztőkörnyezet
 
-A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html). ***FONTOS:*** figyeljünk arra, hogy letöltéskor az `1.10.1`-es verziót kell választani, máskülönben igen körülményes a projekt indítása!
+A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html).
 
 Jelenleg erőforrások hiánya miatt sajnos csak Windows 10/11-en teszteljük a szoftvert. Más platformokon is valószínűleg működni fog, a feltöltő scriptet leszámítva.
 
@@ -14,7 +14,7 @@ Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros por
 
 ## Kiinduló projekt letöltése, importálása
 
-A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a `firmware v2.0` nevű fájlt.
+A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a `firmware v3.0` nevű fájlt.
 
 A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego Tanfolyam` mappába, majd bontsuk ki. Ezek után nyissuk meg a CubeIDE-t, ez először kérni fog tőlünk egy `workspace`-t. Válasszuk azt a mappát, amin belül található a TanfolyamRobot mappa. ***FONTOS:*** figyeljünk arra, hogy a `workspace`-nek választott mappán belül ez legyen az eredményül kapott fájlszerkezet: `./TanfolyamRobot/firmware/...`.
 

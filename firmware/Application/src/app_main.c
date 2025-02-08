@@ -26,7 +26,7 @@ int app_main()
 		int power;
 		int time;
 
-		if(sscanf(data, "%[^\"] %d %d", subCmd, &power, &time) >= 1)
+		if(sscanf(data, "%s %d %d", subCmd, &power, &time) >= 1)
 		{
 			espPrintf("COMMAND: %s", subCmd);
 
@@ -79,8 +79,8 @@ int app_main()
 			else if(strcmp(subCmd, "F_JOBBRA") == 0)
 			{
 				float w = 0;
-				setMotorSpeed(MOT_L, 10);
-				setMotorSpeed(MOT_R, -10);
+				setMotorSpeed(MOT_L, power);
+				setMotorSpeed(MOT_R, -power);
 				while(w >- 90)
 				{
 					w += getGyroData().z * 0.01f;
@@ -90,8 +90,8 @@ int app_main()
 			else if(strcmp(subCmd, "F_BALRA") == 0)
 			{
 				float w = 0;
-				setMotorSpeed(MOT_L, -10);
-				setMotorSpeed(MOT_R, 10);
+				setMotorSpeed(MOT_L, -power);
+				setMotorSpeed(MOT_R, power);
 				while(w < 90)
 				{
 					w += getGyroData().z * 0.01f;
