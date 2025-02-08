@@ -1,0 +1,47 @@
+(footprint "MICROMELF-W" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (descr "<b>Micro Melf Diode Wave soldering</b> VISHAY mcl4148.pdf")
+  (fp_text reference "REF**" (at -1.201 -0.843) (layer "F.SilkS")
+      (effects (font (size 1.1684 1.1684) (thickness 0.1016)) (justify left bottom))
+    (tstamp f8a2b6d1-fbb3-4b69-a4df-b37bf370bd26)
+  )
+  (fp_text value "MICROMELF-W" (at -1.201 2.063) (layer "F.Fab")
+      (effects (font (size 1.1684 1.1684) (thickness 0.1016)) (justify left bottom))
+    (tstamp 88a2649c-75c4-484f-92c9-168e305157c0)
+  )
+  (fp_line (start -0.65 -0.55) (end 0.65 -0.55)
+    (stroke (width 0.1524) (type solid)) (layer "F.Fab") (tstamp e30839e7-9ec0-4788-ac6e-d98ec59afc3d))
+  (fp_line (start -0.65 0.55) (end 0.65 0.55)
+    (stroke (width 0.1524) (type solid)) (layer "F.Fab") (tstamp 9ddb8f0e-c902-4a4e-9b3a-1f40c89a41ec))
+  (fp_poly
+    (pts
+      (xy -0.95 0.65)
+      (xy -0.65 0.65)
+      (xy -0.65 -0.65)
+      (xy -0.95 -0.65)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.Fab") (tstamp 9fe76f19-b0d8-4394-8796-b15f45e8f2e1))
+  (fp_poly
+    (pts
+      (xy -0.5 0.5)
+      (xy -0.2 0.5)
+      (xy -0.2 -0.55)
+      (xy -0.5 -0.55)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.Fab") (tstamp 8fe2e7e7-5892-42ef-abc2-847072e7d8e2))
+  (fp_poly
+    (pts
+      (xy 0.65 0.65)
+      (xy 0.95 0.65)
+      (xy 0.95 -0.65)
+      (xy 0.65 -0.65)
+    )
+
+    (stroke (width 0) (type default)) (fill solid) (layer "F.Fab") (tstamp cf0de9e7-84bb-4986-931f-fdf823b65504))
+  (pad "A" smd rect (at 0.95 0) (size 0.9 1.4) (layers "F.Cu" "F.Paste" "F.Mask")
+    (solder_mask_margin 0.1016) (thermal_bridge_angle 0) (tstamp 17c46493-3845-43e9-ba85-e8cf8b1b8b0d))
+  (pad "C" smd rect (at -0.95 0) (size 0.9 1.4) (layers "F.Cu" "F.Paste" "F.Mask")
+    (solder_mask_margin 0.1016) (thermal_bridge_angle 0) (tstamp 2b70e0f8-3e2d-4dd3-a0d2-0218ce8dd4f7))
+)
