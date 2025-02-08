@@ -37,6 +37,11 @@ int getEncoderPosition(uint8_t mot_lr);
 
 /**
  * Prints text to the LCD. Works just like printf after the position specifiers
+ * WARNING: because of limited available flash memory, currently only either *printf
+ * 			or *scanf can support floats
+ * 			this can be changed under Project -> Properties -> C/C++ build -> Settings -> MCU/MPU settings
+ * DEFAULT: only *scanf float support
+ *
  * @param row of starting position
  * @param col of starting position
  * @param fmt printf-like format string followed by a variable number of arguments
@@ -45,12 +50,22 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
 
 /**
  * Print to the USB serial port. Works just like regular printf.
+ * WARNING: because of limited available flash memory, currently only either *printf
+ * 			or *scanf can support floats
+ * 			this can be changed under Project -> Properties -> C/C++ build -> Settings -> MCU/MPU settings
+ * DEFAULT: only *scanf float support
+ *
  * @param fmt printf-like format string followed by a variable number of arguments
  */
 int uartPrintf(const char *fmt, ...);
 
 /**
  * Print to the telemetry webpage. Works just like regular printf.
+ * WARNING: because of limited available flash memory, currently only either *printf
+ * 			or *scanf can support floats
+ * 			this can be changed under Project -> Properties -> C/C++ build -> Settings -> MCU/MPU settings
+ * DEFAULT: only *scanf float support
+ *
  * @param fmt printf-like format string followed by a variable number of arguments
  */
 int espPrintf(const char *fmt, ...);

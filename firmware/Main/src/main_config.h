@@ -19,15 +19,15 @@
 /**************** Timer stuff ****************/
 #define LCD_IMU_ENCODER_TIMER       (&htim1)
 #define MOTOR12_PWM1_TIMER         	(&htim1)
+#define MOTOR_CONTROL_TIMER       	(&htim1)
 #define SERVO_DELAYUS_TIMER			(&htim2)
 #define MOTOR12_PWM2_TIMER         	(&htim3)
-#define MOTOR_CONTROL_TIMER       	(&htim3)
 #define VBAT_ADC_TIMER           	(&htim4)
 #define RANGE_COLOR_ESP_TIMER		(&htim4)
 
 #define US_DELAY_TIMER_PERIOD		20000
 
-#define MOTOR_CONTROL_PRESCALE    	16
+#define MOTOR_CONTROL_PRESCALE    	8
 
 #define MOTOR1_PWM1_TIMER_CHANNEL 	TIM_CHANNEL_1
 #define MOTOR1_PWM1_TIMER_PERIOD  	4500
@@ -40,7 +40,6 @@
 #define MOTOR2_PWM1_TIMER_CHANNEL 	TIM_CHANNEL_2
 #define MOTOR2_PWM1_TIMER_PERIOD  	4500
 #define MOTOR2_PWM1_OUTPUT_TYPE   	PwmOutput_N
-#define MOTOR2_PWM2_TIMER         	(&htim3)
 #define MOTOR2_PWM2_TIMER_CHANNEL 	TIM_CHANNEL_4
 #define MOTOR2_PWM2_TIMER_PERIOD  	4500
 #define MOTOR2_PWM2_OUTPUT_TYPE   	PwmOutput_P

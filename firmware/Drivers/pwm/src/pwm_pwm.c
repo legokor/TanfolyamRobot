@@ -35,9 +35,9 @@ int pwm_init(pwm_Pwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel,
     pwm->timerPeriod = timerPeriod;
 
     if ( (outputType == PwmOutput_P) || (outputType == PwmOutput_PN) ) {
-        HAL_TIM_PWM_Start_IT(pwm->timer, pwm->channel);                             // TODO: maybe use the period interrupt insted of the pulse finished interrupt
+        HAL_TIM_PWM_Start(pwm->timer, pwm->channel);
     } else if ( (outputType == PwmOutput_N) || (outputType == PwmOutput_PN) ) {
-        HAL_TIMEx_PWMN_Start_IT(pwm->timer, pwm->channel);                          // TODO: maybe use the period interrupt insted of the pulse finished interrupt
+        HAL_TIMEx_PWMN_Start(pwm->timer, pwm->channel);
     }
 
     return 0;

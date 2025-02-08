@@ -93,8 +93,8 @@ void enc_handlerA(enc_Encoder* encoder) {
     }
 
     // Get timer values
-    uint32_t timerVal = encoder->timer->Instance->CNT;
-    uint32_t overflowCount = encoder->overflowCount;
+    int32_t timerVal = encoder->timer->Instance->CNT;
+    int32_t overflowCount = encoder->overflowCount;
 
     encoder->overflowCount = 0;
 
@@ -155,8 +155,8 @@ void enc_handlerB(enc_Encoder* encoder) {
     }
 
     // Get timer values
-    uint32_t timerVal = encoder->timer->Instance->CNT;
-    uint32_t overflowCount = encoder->overflowCount;
+    int32_t timerVal = encoder->timer->Instance->CNT;
+    int32_t overflowCount = encoder->overflowCount;
 
     encoder->overflowCount = 0;
 

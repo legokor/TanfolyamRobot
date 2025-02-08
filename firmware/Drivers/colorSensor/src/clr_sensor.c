@@ -32,7 +32,7 @@ void clr_captureHandler(clr_ColorSensor* cs, uint16_t captureVal) {
     if (cs->itCntr == cs->numOfAverages) {
         cs->itCntr = 0;
 
-        cs->measuredVal[cs->currentCaptureIndex] = cs->captureSum / 16;
+        cs->measuredVal[cs->currentCaptureIndex] = cs->captureSum / cs->numOfAverages;
         cs->captureSum = 0;
 
         cs->currentCaptureIndex++;
