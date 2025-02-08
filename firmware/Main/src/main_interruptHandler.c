@@ -87,7 +87,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 #endif
     	static int telCnt = 0;
 		telCnt++;
-    	if (telCnt == 6)
+    	if (telCnt == 10)
     	{
     		telCnt = 0;
     		tel_sendDataToEsp();
