@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     ftStatus = FT_Open(0, &ftHandle);
     if (ftStatus != FT_OK)
     {
-        std::cout << "FT232 device not found!\n" << std::endl;
+        std::cout << "Cannot open FT232, error code: " << ftStatus << "\n" << std::endl;
         return 1;
     }
     else
@@ -45,22 +45,27 @@ int main(int argc, char* argv[])
         std::cout << "Connection with FT232 successful\n" << std::endl;
     }
 
+    bool success = true;
+    LONG comPortNumber = 0;
+
     try
     {
-        if (FT_SetBitMode(ftHandle, 0xCC, 0x20) != FT_OK)
-            throw std::runtime_error("Failed to reset device");
-        std::cout << "Device reset successful\n" << std::endl;
+        ftStatus = FT_SetBitMode(ftHandle, 0xCC, 0x20);
+        if (ftStatus != FT_OK)
+            throw std::runtime_error("Failed to reset STM32, FTDI error code: " + std::to_string(ftStatus));
+        std::cout << "STM32 reset successful\n" << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-        if (FT_SetBitMode(ftHandle, 0xC4, 0x20) != FT_OK)
-            throw std::runtime_error("Failed to init device");
-        std::cout << "Device in bootloader mode\n" << std::endl;
+        ftStatus = FT_SetBitMode(ftHandle, 0xC4, 0x20);
+        if (ftStatus != FT_OK)
+            throw std::runtime_error("Failed to init STM32, FTDI error code: " + std::to_string(ftStatus));
+        std::cout << "STM32 is in bootloader mode\n" << std::endl;
 
-        LONG comPortNumber = 0;
         if (argc == 3)
         {
-            if ((ftStatus = FT_GetComPortNumber(ftHandle, &comPortNumber)) == FT_OK)
+            ftStatus = FT_GetComPortNumber(ftHandle, &comPortNumber);
+            if (ftStatus == FT_OK)
             {
                 if (comPortNumber == -1)
                 {
@@ -68,43 +73,43 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    std::cout << "Detected device COM port number is " << comPortNumber << std::endl;
+                    std::cout << "Detected device COM port number is " << comPortNumber << "\n" << std::endl;
                 }
             }
             else
             {
-                std::cout << "FT_GetComPortNumber failed with error " << ftStatus << std::endl;
-                return 1;
+                throw std::runtime_error("FT_GetComPortNumber failed, error code: " + std::to_string(ftStatus));
             }
         }
-
-        FT_Close(ftHandle);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
-
-        std::string cmd;
-        if(argc == 4)
-            cmd = std::string("stm32flash") + " -b " + argv[2] + " -w " + argv[3] + " -v -g 0x0 " + argv[1];
-        else
-            cmd = std::string("stm32flash") + " -b " + argv[1] + " -w " + argv[2] + " -v -g 0x0 " + "COM" + std::to_string(comPortNumber);
-        system(cmd.c_str());
-
-        if (FT_Open(0, &ftHandle) != FT_OK || FT_SetBitMode(ftHandle, 0xC8, 0x20) != FT_OK)
-            throw std::runtime_error("Failed to reset device");
-        std::cout << "Device reset successful\n" << std::endl;
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
-        if (FT_SetBitMode(ftHandle, 0x00, 0x20) != FT_OK)
-            throw std::runtime_error("Failed to start device");
-        std::cout << "Device init successful\n" << std::endl;
     }
     catch (std::runtime_error e)
     {
+        success = false;
         std::cout << e.what() << std::endl;
     }
+    
+    ftStatus = FT_Close(ftHandle);
+    if (ftStatus != FT_OK)
+    {
+        std::cout << "Cannot close FT232, error code: " << ftStatus << "\n" << std::endl;
+        return 1;
+    }
 
-    FT_Close(ftHandle);
+    if (!success)
+        return 1;
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(400));
+
+    std::string cmd;
+    if(argc == 4)
+        cmd = std::string("stm32flash") + " -b " + argv[2] + " -w " + argv[3] + " -v -g 0x0 " + argv[1];
+    else
+    #ifdef _WIN32
+        cmd = std::string("stm32flash") + " -b " + argv[1] + " -w " + argv[2] + " -v -g 0x0 " + "COM" + std::to_string(comPortNumber);
+    #else
+        cmd = std::string("stm32flash") + " -b " + argv[1] + " -w " + argv[2] + " -v -g 0x0 " + "/dev/ttyUSB" + std::to_string(comPortNumber);
+    #endif
+    system(cmd.c_str());
 
     return 0;
 }
