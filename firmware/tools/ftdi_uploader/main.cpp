@@ -11,6 +11,8 @@
 #include <chrono>
 #include <thread>
 #include <string>
+#include <filesystem>
+#include <regex>
 
 #include "ftd2xx.h"
 
@@ -60,6 +62,7 @@ int main(int argc, char *argv[]) {
             throw std::runtime_error("Failed to init STM32, FTDI error code: " + std::to_string(ftStatus));
         std::cout << "STM32 is in bootloader mode\n" << std::endl;
 
+#ifdef _WIN32
         if (argc == 3) {
             ftStatus = FT_GetComPortNumber(ftHandle, &comPortNumber);
             if (ftStatus == FT_OK) {
@@ -72,6 +75,7 @@ int main(int argc, char *argv[]) {
                 throw std::runtime_error("FT_GetComPortNumber failed, error code: " + std::to_string(ftStatus));
             }
         }
+#endif
     }
     catch (std::runtime_error e) {
         success = false;
@@ -92,6 +96,30 @@ int main(int argc, char *argv[]) {
 #ifndef _WIN32
     system("sudo modprobe ftdi_sio");
     system("sleep 1");
+
+    std::string highestTtyUSB;
+    int highestNumber = -1;
+    std::regex ttyUSBPattern("/dev/ttyUSB([0-9]+)");
+
+    for (const auto &entry : std::filesystem::directory_iterator("/dev")) {
+        std::smatch match;
+        std::string path = entry.path().string();
+        if (std::regex_search(path, match, ttyUSBPattern)) {
+            int number = std::stoi(match[1].str());
+            if (number > highestNumber) {
+                highestNumber = number;
+                highestTtyUSB = path;
+            }
+        }
+    }
+
+    if (highestNumber == -1) {
+        std::cout << "No /dev/ttyUSB* device found, using 0" << std::endl;
+        comPortNumber = 0;
+    } else {
+        comPortNumber = highestNumber;
+        std::cout << "Detected highest /dev/ttyUSB* device: " << highestTtyUSB << "\n" << std::endl;
+    }
 #endif
 
     std::string cmd;
