@@ -82,6 +82,13 @@ int main(int argc, char *argv[]) {
         std::cout << e.what() << std::endl;
     }
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    ftStatus = FT_SetBitMode(ftHandle, 0x00, 0x20);
+    if (ftStatus != FT_OK)
+    {
+        std::cout << "Failed to restore default GPIO state, error code: " << ftStatus << "\n" << std::endl;
+    }
+
     ftStatus = FT_Close(ftHandle);
     if (ftStatus != FT_OK) {
         std::cout << "Cannot close FT232, error code: " << ftStatus << "\n" << std::endl;
@@ -90,8 +97,6 @@ int main(int argc, char *argv[]) {
 
     if (!success)
         return 1;
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(400));
 
 #ifndef _WIN32
     system("sudo modprobe ftdi_sio");
