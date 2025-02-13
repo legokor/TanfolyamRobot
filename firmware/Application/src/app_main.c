@@ -5,26 +5,23 @@
 #include <string.h>
 #include <stdio.h>
 
-const char* WIFI_SSID = "1619-LegoDora";
+const char* WIFI_SSID = "LegoTanfolyam";
 const char* WIFI_PASSWORD = "almaalma";
 
-const char* SERVER_IP = "10.4.3.5";
-
-char data[500];
-char cmd[100];
+const char* SERVER_IP = "192.168.1.69";
 
 int app_main()
 {
 	lcdPrintf(0, 0, "Gyere LEGO-ba!");
 	lcdPrintf(1, 0, "  JOOOLESZ");
 
+	char data[500];
+	char subCmd[100];
+	int power = 5;
+	int time = 500;
 	while(1)
 	{
 		while(!espRead(data)) { }
-
-		char subCmd[100];
-		int power;
-		int time;
 
 		if(sscanf(data, "%s %d %d", subCmd, &power, &time) >= 1)
 		{
