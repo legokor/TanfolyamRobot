@@ -13,37 +13,19 @@ volatile uint8_t main_usDelayOverflow = 0;
 
 /**
  * This function blocks for a certain number of microseconds
- * WARNING: the delay time might vary +-US_DELAY_TIMER_PERIOD on very rare occasions
+ * WARNING: the delay time might can't be greater than US_DELAY_TIMER_PERIOD - 2000
  */
 void main_delayUs(uint32_t us)
 {
-	main_usDelayOverflow = 0;
+	if (us > US_DELAY_TIMER_PERIOD - 2000)
+		us = US_DELAY_TIMER_PERIOD - 2000;
 	uint32_t now = SERVO_DELAYUS_TIMER->Instance->CNT;
-	uint32_t end = now + us;
-
-	if (us >= US_DELAY_TIMER_PERIOD)
+	while (1)
 	{
-		uint32_t overflowCnt = end / US_DELAY_TIMER_PERIOD;
-		uint32_t timerTicks = end % US_DELAY_TIMER_PERIOD;
-
-		while(overflowCnt)
-		{
-			if (main_usDelayOverflow)
-			{
-				main_usDelayOverflow = 0;
-				overflowCnt--;
-			}
-		}
-		while (!main_usDelayOverflow && SERVO_DELAYUS_TIMER->Instance->CNT < timerTicks) { }
-	}
-	else
-	{
-		if (end >= US_DELAY_TIMER_PERIOD)
-		{
-			end -= US_DELAY_TIMER_PERIOD;
-			while (!main_usDelayOverflow) { }
-			main_usDelayOverflow = 0;
-		}
-		while (!main_usDelayOverflow && SERVO_DELAYUS_TIMER->Instance->CNT < end) { }
+		int32_t diff = (int32_t)SERVO_DELAYUS_TIMER->Instance->CNT - now;
+		if(diff < 0)
+			diff += US_DELAY_TIMER_PERIOD;
+		if(diff > us)
+			return;
 	}
 }

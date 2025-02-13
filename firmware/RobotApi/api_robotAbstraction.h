@@ -143,8 +143,14 @@ void delayMs(uint32_t delay);
 /**
  * Do nothing for the specified time
  * @param delay in us
- * WARNING: the delay time might vary +-US_DELAY_TIMER_PERIOD on very rare occasions
+ * WARNING: the delay time must not exceed 18000us!
  */
 void delayUs(uint32_t delay);
+
+/**
+ * Returns the number of milliseconds that have passed since the last reset
+ * WARNING: the precision is only +-1Ms
+ */
+uint32_t getTimeMs();
 
 #endif /* INC_ROBOTCONTROL_API_H_ */
