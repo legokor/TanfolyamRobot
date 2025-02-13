@@ -127,6 +127,10 @@ void delayUs(uint32_t delay)
 	main_delayUs(delay);
 }
 
+uint32_t getTimeMs()
+{
+	return HAL_GetTick();
+}
 
 int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
     va_list args;

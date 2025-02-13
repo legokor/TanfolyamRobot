@@ -147,4 +147,10 @@ void delayMs(uint32_t delay);
  */
 void delayUs(uint32_t delay);
 
+/**
+ * Returns the number of milliseconds that have passed since the last reset
+ * WARNING: the precision is only +-1Ms
+ */
+uint32_t getTimeMs();
+
 #endif /* INC_ROBOTCONTROL_API_H_ */
