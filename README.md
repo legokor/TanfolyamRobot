@@ -25,6 +25,10 @@ A CubeIDE-ben belül zárjuk be az indításkor megnyílt `Information Center` a
 <p align="center"><img src="docs/img/project_import.jpg" align=center></p>
 <p align="center"><img src="docs/img/project_location.jpg" align=center></p>
 
+--------------------------------------------
+
+--------------------------------------------
+
 ## *Csak a tanfolyamon kell:* projekt áttekintése, build és upload
 
 Az imént megnyitott projektünk fájljait az IDE bal oldalán láthatjuk. A kód számunkra lényegi része a `tanfolyamrobot/Application/src/app_main.c` fájl lesz. Itt kell majd megoldanunk a tanfolyam során a feladatokat. Az itt található `app_main()` függvény gombnyomásra indul. Ha ebből a függvényből visszatér a programunk, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
