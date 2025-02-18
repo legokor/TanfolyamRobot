@@ -9,7 +9,6 @@
 #define INC_ROBOTCONTROL_API_H_
 
 #include <stdint.h>
-#include "mpu_interface.h"
 
 #define MOT_R 0
 #define MOT_L 1
@@ -19,6 +18,15 @@ typedef struct {
     uint8_t s;
     uint8_t v;
 } Color;
+
+typedef struct {
+    float x, y, z;
+} Vec3;
+
+typedef struct {
+    float pitch;
+    float roll;
+} Orientation;
 
 /**
  * Set motor speed
@@ -107,27 +115,27 @@ uint16_t getIrDistance();
 
 /**
  * Get the accelerometer data for all 3 axis. All values are in the +-4g range
- * @return Vec3 with all 3 axis
+ * @param acc a pointer to a Vec3 struct where the data will be stored
  */
-mpu_Vec3 getAccData();
+void getAccData(Vec3* acc);
 
 /**
  * Get the gyroscope data for all 3 axis. All values are in the +-4000°/s range
- * @return Vec3 with all 3 axis
+ * @param gyro a pointer to a Vec3 struct where the data will be stored
  */
-mpu_Vec3 getGyroData();
+void getGyroData(Vec3* gyro);
 
 /**
  * Get the magnetometer data for all 3 axis.
- * @return Vec3 with all 3 axis
+ * @param mag a pointer to a Vec3 struct where the data will be stored
  */
-mpu_Vec3 getMagData();
+void getMagData(Vec3* mag);
 
 /**
  * Get the robot's orientation in terms of pitch and roll (in degrees)
- * @return Orientation with pitch and roll members
+ * @param orientation a pointer to an Orientation struct where the data will be stored
  */
-mpu_Orientation getOrientation();
+void getOrientation(Orientation* orientation);
 
 /**
  * Get the temperature of the IMU IC.
