@@ -1,9 +1,10 @@
 /*
- * api_robotAbstraction.c
+ * api_robotAbstraction.h
  *
- *  Created on: Nov 22, 2020
- *      Author: ksstms
+ *  Created on: Jan 31, 2025
+ *      Author: dkiovics
  */
+
 #include "api_robotAbstraction.h"
 #include "main_interface.h"
 #include "tel_interface.h"
@@ -144,4 +145,31 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...) {
     }
 
     return lcd_puts(row, col, str);
+}
+
+void turnRobot(int degrees, int power)
+{
+	float w = 0;
+	if (degrees > 0)
+	{
+		setMotorSpeed(MOT_L, -power);
+		setMotorSpeed(MOT_R, power);
+		while(w < degrees)
+		{
+			w += getGyroData().z * 0.01f;
+			delayUs(10000);
+		}
+	}
+	else
+	{
+		setMotorSpeed(MOT_L, power);
+		setMotorSpeed(MOT_R, -power);
+		while(w > degrees)
+		{
+			w += getGyroData().z * 0.01f;
+			delayUs(10000);
+		}
+	}
+	setMotorSpeed(MOT_L, 0);
+	setMotorSpeed(MOT_R, 0);
 }

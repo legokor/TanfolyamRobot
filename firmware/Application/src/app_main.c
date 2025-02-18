@@ -73,28 +73,6 @@ int app_main()
 			{
 				setServoPosition(0);
 			}
-			else if(strcmp(subCmd, "F_JOBBRA") == 0)
-			{
-				float w = 0;
-				setMotorSpeed(MOT_L, power);
-				setMotorSpeed(MOT_R, -power);
-				while(w >- 90)
-				{
-					w += getGyroData().z * 0.01f;
-					delayUs(10000);
-				}
-			}
-			else if(strcmp(subCmd, "F_BALRA") == 0)
-			{
-				float w = 0;
-				setMotorSpeed(MOT_L, -power);
-				setMotorSpeed(MOT_R, power);
-				while(w < 90)
-				{
-					w += getGyroData().z * 0.01f;
-					delayUs(10000);
-				}
-			}
 			setMotorSpeed(MOT_L, 0);
 			setMotorSpeed(MOT_R, 0);
 		}

@@ -2,7 +2,7 @@
  * drv_motor.c
  *
  *  Created on: Nov 4, 2020
- *      Author: ksstms
+ *      Author: ksstms, dkiovics
  *
  * Driver for H-bridge motor drivers.
  *

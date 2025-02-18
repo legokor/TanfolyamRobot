@@ -2,7 +2,7 @@
  * pwm_pwm.c
  *
  *  Created on: Nov 4, 2020
- *      Author: ksstms
+ *      Author: ksstms, dkiovics
  *
  * This driver makes it easier to handle PWM outputs.
  * It only starts the PWM channel and provides functions for setting the output compare register.

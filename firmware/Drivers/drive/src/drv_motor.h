@@ -2,7 +2,7 @@
  * drv_motor.h
  *
  *  Created on: Nov 4, 2020
- *      Author: ksstms
+ *      Author: ksstms, dkiovics
  */
 
 #ifndef DRIVE_MOTOR_H_
