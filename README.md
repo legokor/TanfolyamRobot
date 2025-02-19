@@ -2,9 +2,9 @@
 
 ## Fejlesztőkörnyezet
 
-A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html).
+A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk. Sajnos a letöltéshez regisztráció szükséges, ezért feltöltöttük a telepítő fájlokat [a körös drive-ra](https://drive.google.com/drive/folders/1UwxNlO1oCKLx6kzqNkejxS5eRtUtdVUO?usp=sharing), így regisztráció nélkül is telepíteni tudjátok - persze teljesen megértjük, ha nem akartok random drive-os fájlokat telepíteni, viszont ez esetben muszáj regisztrálnotok az [STMicroelectronics weboldalán](https://www.st.com/en/development-tools/stm32cubeide.html), és onnan letölteni.
 
-Jelenleg Windows 10/11-en és Ubuntu-n teszteljük a szoftvert. Más (Linux alapú) platformokon is valószínűleg működni fog - de ezt nem tudjuk garantálni.
+Jelenleg Windows 10/11-en, Ubuntu-n és Fedora-n teszteljük a szoftvert. Más (Linux alapú) platformokon is valószínűleg működni fog - de ezt nem tudjuk garantálni.
 
 ## Robot illesztőszoftver
 
