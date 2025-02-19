@@ -50,8 +50,6 @@ extern "C" {
 
 /* USER CODE END EM */
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -77,6 +75,8 @@ void Error_Handler(void);
 #define ENC1_A_EXTI_IRQn EXTI0_IRQn
 #define ENC1_B_Pin GPIO_PIN_1
 #define ENC1_B_GPIO_Port GPIOA
+#define SERVO_Pin GPIO_PIN_2
+#define SERVO_GPIO_Port GPIOA
 #define VCC_SENSE_Pin GPIO_PIN_5
 #define VCC_SENSE_GPIO_Port GPIOA
 #define ENC2_A_Pin GPIO_PIN_6
@@ -92,8 +92,10 @@ void Error_Handler(void);
 #define MOTOR1_PWM2_GPIO_Port GPIOB
 #define MOTOR2_PWM2_Pin GPIO_PIN_1
 #define MOTOR2_PWM2_GPIO_Port GPIOB
-#define SERVO_Pin GPIO_PIN_10
-#define SERVO_GPIO_Port GPIOB
+#define IMU_SCL_Pin GPIO_PIN_10
+#define IMU_SCL_GPIO_Port GPIOB
+#define IMU_SDA_Pin GPIO_PIN_11
+#define IMU_SDA_GPIO_Port GPIOB
 #define USB_PWR_DET_Pin GPIO_PIN_12
 #define USB_PWR_DET_GPIO_Port GPIOB
 #define MOTOR1_PWM1_Pin GPIO_PIN_13
@@ -118,6 +120,7 @@ void Error_Handler(void);
 #define TIM4_CH3_COLOR_GPIO_Port GPIOB
 #define LCD_BACKLIGHT_Pin GPIO_PIN_9
 #define LCD_BACKLIGHT_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
@@ -127,5 +130,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

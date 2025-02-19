@@ -1,0 +1,15 @@
+.vs
+CMakeFiles
+*.dir
+x64
+out
+
+!build/*.exe
+!libftd2xx/**
+
+*.vcxproj
+*.filters
+*.user
+*.cmake
+CMakeCache.txt
+*.sln

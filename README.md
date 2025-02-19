@@ -2,9 +2,9 @@
 
 ## Fejlesztőkörnyezet
 
-A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk, mely regisztráció után letölthető az [STMicroelectronics weboldaláról](https://www.st.com/en/development-tools/stm32cubeide.html). ***FONTOS:*** figyeljünk arra, hogy letöltéskor az `1.10.1`-es verziót kell választani, máskülönben igen körülményes a projekt indítása!
+A firmware fejlesztéséhez az STM32CubeIDE fejlesztőkörnyezetet használjuk. Sajnos a letöltéshez regisztráció szükséges, ezért feltöltöttük a telepítő fájlokat [a körös drive-ra](https://drive.google.com/drive/folders/1UwxNlO1oCKLx6kzqNkejxS5eRtUtdVUO?usp=sharing), így regisztráció nélkül is telepíteni tudjátok - persze teljesen megértjük, ha nem akartok random drive-os fájlokat telepíteni, viszont ez esetben muszáj regisztrálnotok az [STMicroelectronics weboldalán](https://www.st.com/en/development-tools/stm32cubeide.html), és onnan letölteni.
 
-Jelenleg erőforrások hiánya miatt sajnos csak Windows 10/11-en teszteljük a szoftvert. Más platformokon is valószínűleg működni fog, a feltöltő scriptet leszámítva.
+Jelenleg Windows 10/11-en, Ubuntu-n és Fedora-n teszteljük a szoftvert. Más (Linux alapú) platformokon is valószínűleg működni fog - de ezt nem tudjuk garantálni.
 
 ## Robot illesztőszoftver
 
@@ -14,9 +14,9 @@ Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros por
 
 ## Kiinduló projekt letöltése, importálása
 
-A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a `firmware v2.0` nevű fájlt.
+A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a `firmware v3.0` nevű fájlt.
 
-A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego Tanfolyam` mappába, majd bontsuk ki. Ezek után nyissuk meg a CubeIDE-t, ez először kérni fog tőlünk egy `workspace`-t. Válasszuk azt a mappát, amin belül található a TanfolyamRobot mappa. ***FONTOS:*** figyeljünk arra, hogy a `workspace`-nek választott mappán belül ez legyen az eredményül kapott fájlszerkezet: `./TanfolyamRobot/firmware/...`.
+A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego_Tanfolyam` mappába, majd bontsuk ki. Ezek után nyissuk meg a CubeIDE-t, ez először kérni fog tőlünk egy `workspace`-t. Válasszuk azt a mappát, amin belül található a TanfolyamRobot mappa. ***FONTOS:*** figyeljünk arra, hogy a `workspace`-nek választott mappán belül ez legyen az eredményül kapott fájlszerkezet: `./TanfolyamRobot/firmware/...`.
 
 <p align="center"><img src="docs/img/workspace.jpg" align=center></p>
 
@@ -25,20 +25,24 @@ A CubeIDE-ben belül zárjuk be az indításkor megnyílt `Information Center` a
 <p align="center"><img src="docs/img/project_import.jpg" align=center></p>
 <p align="center"><img src="docs/img/project_location.jpg" align=center></p>
 
-## Telemetria indítása
+--------------------------------------------
 
-A robot különböző futásidejű adatait, debug üzeneteit egy webes felületen tudjuk nyomonkövetni. Ehhez mindössze annyit kell tennünk, hogy egy WiFi hálózatra csatlakozunk fel a robottal, majd pedig duplán klikkelünk a `TanfolyamRobot/start_telemetry.bat` fájlra. Ez utóbbit végezzük el egyszer otthon, mivel első alkalommal sok függőséget fog letölteni a script (miután ezzel megvagyunk és megnyílt a weboldal nyugodtan zárjuk be a megnyílt konzolokat és a weboldalt).
+--------------------------------------------
 
 ## *Csak a tanfolyamon kell:* projekt áttekintése, build és upload
 
-Az imént megnyitott projektünk fájljait az IDE bal oldalán láthatjuk. A kód számunkra lényegi része a `tanfolyamrobot/Application/application.c` fájl lesz. Itt kell majd megoldanunk a tanfolyam során a feladatokat. Az itt található `application()` függvény gombnyomásra indul. Ha ebből a függvényből visszatér a programunk, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
+Az imént megnyitott projektünk fájljait az IDE bal oldalán láthatjuk. A kód számunkra lényegi része a `tanfolyamrobot/Application/src/app_main.c` fájl lesz. Itt kell majd megoldanunk a tanfolyam során a feladatokat. Az itt található `app_main()` függvény gombnyomásra indul. Ha ebből a függvényből visszatér a programunk, akkor a robot leáll és a kijelzőn megjeleníti a visszatérési értéket.
 
-<p align="center"><img src="docs/img/application_c.jpg" align=center></p>
+<p align="center"><img src="docs/img/app_c.png" align=center></p>
 
-Amennyiben ki szeretnénk próbálni az általunk írt kódot a roboton, úgy nyomjunk rá a CubeIDE tetején látható kis táskás zöld play gombra, a felnyíló ablakban pedig válasszuk ki az `Upload with DFU 2.0 - Debug` és nyomjunk rá a `Run` gombra (ezt a kiválasztást csak első alkalommal kell megcsinálnunk).
+A kód fordításához első alkalommal rá kell nyomni a toolbar-on lévő kis kalapács melletti nyilacskára, majd a legördülő menüben rá kell nyomni a `Release` gombra. A továbbiakban már elég csak magára a kalapácsra is rányomni.
 
-<p align="center"><img src="docs/img/upload_button.jpg" align=center></p>
-<p align="center"><img src="docs/img/upload_config.jpg" align=center></p>
+<p align="center"><img src="docs/img/build.png" align=center></p>
+
+Amennyiben ki szeretnénk próbálni az általunk írt kódot a roboton, úgy nyomjunk rá a CubeIDE tetején látható kis táskás zöld play gombra, a felnyíló ablakban pedig válasszuk ki az `Upload with DFU 3.0 - Release` (az operációs rendszerünknek megfelelően a Windows/Linux verziót kiválasztva) és nyomjunk rá a `Run` gombra - ezt a kiválasztást csak első alkalommal kell megcsinálnunk, utána már csak a zöld gombocskára kell rányomni. **FONTOS:** feltöltés előtt mindig fordítsátok le a kódotokat a kis kalapáccsal.
+
+<p align="center"><img src="docs/img/upload.png" align=center></p>
+<p align="center"><img src="docs/img/launch_config.png" align=center></p>
 
 
 

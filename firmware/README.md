@@ -18,15 +18,10 @@ Information about the DFU can be found in [AN2606](https://www.st.com/resource/e
 
 There are two ways to run the DFU:
  - Set pins `BOOT0=1` and `BOOT1=0` on reset
- - Jump to the System Memory from the application. It's explained in [this video](https://www.youtube.com/watch?v=cvKC-4tCRgw). This is implemented in `Drivers/dfu/dfu.c`
+ - Jump to the System Memory from the application. It's explained in [this video](https://www.youtube.com/watch?v=cvKC-4tCRgw).
 
 Once the STM32 is in DFU mode, we can use the `stm32flash` utility to update the firmware.
 The Windows version is included in the `tools` directory. The Linux version can be downloaded [here](https://sourceforge.net/projects/stm32flash/), but it's also avaiable in Ubuntu's Universe repository.
-
-There is an `upload.sh` and an `upload.bat` script in the `tools` directory. These send a command to the firmware running on the MCU, and then use the `stm32flash` utility to download the new firmware and reset the processor.
-
-For easier use these scripts have CubeIDE Launch Configurations in the `LaunchConfig` directory. CubeIDE should be able to find them automatically. 
-The serial port is the single argument of the scripts, and it can be configured in `Run > External Tools > External Tools Configurations`, which is the same as clicking the arrow next to the play button with the little red toolbox on the toolbar. After the first run the selected tool will be the default run option, so you can simply click the play button with the little red toolbox to upload the firmware.
 
 ## Useful documents
  - [STM32F103 Datasheet](https://www.st.com/resource/en/datasheet/stm32f103c8.pdf)
