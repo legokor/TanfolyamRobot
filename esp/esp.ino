@@ -46,6 +46,9 @@ struct __attribute__((__packed__)) tel_OutputData
 	int16_t pitch, roll;
 };
 
+volatile bool newMessageReceived = false;
+volatile char newMessage[bufferSize] = "";
+
 void setup() {
     Serial.setRxBufferSize(2048);
     Serial.begin(115200);
@@ -59,11 +62,10 @@ void setup() {
     server.on("/receiveData", HTTP_POST, []() {
         if (server.hasArg("plain")) {
         String message = server.arg("plain");
-        char msg[500];
         
         dlog("Received message: " + message);
-        sscanf(message.c_str(), "{\"message\":\"%[^\"]\"}", msg);
-        Serial.println(msg);
+        sscanf(message.c_str(), "{\"message\":\"%[^\"]\"}", newMessage);
+        newMessageReceived = true;
         }
         server.send(200, "text/plain", "Data received");
     });
@@ -94,6 +96,12 @@ void loop() {
     if(statusSendTime <= now){
         statusSendTime = now + 300;
         sendStatus(moduleStatus);
+    }
+
+    if (newMessageReceived)
+    {
+        newMessageReceived = false;
+        Serial.println((char*)newMessage);
     }
 
     ReceiveState receiveState = processSerialData(receiveOutBuffer, bufferSize);
