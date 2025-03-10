@@ -193,6 +193,11 @@ static uint8_t mpu_readBlocking(mpu_Mpu9250* mpu, uint8_t devAddress, uint8_t re
  * @param dmaIr - the IRQn_Type handle of the I2C event interrupt
  */
 void mpu_init(mpu_Mpu9250* mpu, I2C_HandleTypeDef* hi2c, uint8_t p_imuAddress, uint8_t p_magAddress, IRQn_Type readIr) {
+	mpu->readIr = readIr;
+	mpu->isReadingImu = 0;
+	mpu->newData = 0;
+	mpu->readEnabled = 0;
+	mpu->readInProgress = 0;
 #else
 /**
  * @brief Constructs the Mpu9250 class for sync (blocking) data retrieval.
@@ -203,11 +208,6 @@ void mpu_init(mpu_Mpu9250* mpu, I2C_HandleTypeDef* hi2c, uint8_t p_imuAddress, u
  * @param magAddress - the magnetometer IC I2C address (generally it is 0x0C).
  */
 void mpu_init(mpu_Mpu9250* mpu, I2C_HandleTypeDef* hi2c, uint8_t p_imuAddress, uint8_t p_magAddress) {
-	mpu->readIr = readIr;
-	mpu->isReadingImu = 0;
-	mpu->newData = 0;
-	mpu->readEnabled = 0;
-	mpu->readInProgress = 0;
 #endif
 	mpu->imuAddress = p_imuAddress << 1;
 	mpu->magAddress = p_magAddress << 1;
