@@ -12162,6 +12162,18 @@
 		)
 		(uuid "6ddbfe41-037f-4750-92ea-5d532add5818")
 	)
+	(text "Ismert problémák és javításuk:\n - FTDI-n keresztüli feltöltés nem megy ha PB2 nincs földrekötve. ->\n    PU helyett PD ellenállás.\n - PB12 boot módban reseteli az FTDI chipet, megszakítva a feltöltést. ->\n    Vagy más pinen kell power detect, vagy el kell hagyni teljesen, vagy kölön feszültségosztó kell neki."
+		(exclude_from_sim no)
+		(at 5.842 -34.29 0)
+		(effects
+			(font
+				(size 7.62 7.62)
+				(color 255 0 0 1)
+			)
+			(justify left)
+		)
+		(uuid "82b78a5f-1d47-4868-9bda-8194e2cb02de")
+	)
 	(text "Notes:\n- BUTTON's pin must be pulled up internally\n- US_TRIG must be operated as open drain output\n- MOTOR_FAULTN must be pulled up internally"
 		(exclude_from_sim no)
 		(at 345.44 185.42 0)
@@ -28639,6 +28651,68 @@
 			(project "tanfolyamrobot"
 				(path "/6a846de4-0b89-4d79-a2ed-e6fc99adef94"
 					(reference "#P+06")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "tanfolyamrobot-eagle-import:A4L-LOC")
+		(at 287.02 198.12 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fe5a1b69-5969-4209-8b47-3ebc57ad4a4c")
+		(property "Reference" "#FRAME3"
+			(at 287.02 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "A4L-LOC"
+			(at 287.02 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 287.02 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 287.02 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 287.02 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "tanfolyamrobot"
+				(path "/6a846de4-0b89-4d79-a2ed-e6fc99adef94"
+					(reference "#FRAME3")
 					(unit 1)
 				)
 			)
