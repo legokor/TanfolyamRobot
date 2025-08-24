@@ -1,0 +1,139 @@
+(footprint "PS1240P02BT"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "PS1240P02BT")
+	(tags "Loudspeaker or Buzzer")
+	(property "Reference" "LS**"
+		(at -0.206 -0.063 0)
+		(layer "F.SilkS")
+		(uuid "a8b3996d-06a7-4d45-8231-2327b9e6aec6")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "PS1240P02BT"
+		(at -0.206 -0.063 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "4637cd46-d023-49db-ba9e-3245a566b46d")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "37839450-f3ca-43f7-9f39-c82b2f536005")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b0f6b5a0-7863-44ba-af21-3ea903f1f219")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "912da8ea-47bf-4f90-a5c9-81a0577c9d91")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_circle
+		(center -0.228 -6.861)
+		(end -0.228 -6.81091)
+		(stroke
+			(width 0.254)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "7cbd65ec-4f09-4121-a87d-ebeb8bac9b7d")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 0 6.1)
+		(stroke
+			(width 0.254)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "6d59d8bf-6f45-46b0-828f-d2ec8681902d")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 0 6.1)
+		(stroke
+			(width 0.254)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "c2252a7b-2ad4-4c6e-ba0a-86454cbcb072")
+	)
+	(fp_text user "${REFERENCE}"
+		(at -0.206 -0.063 0)
+		(layer "F.Fab")
+		(uuid "edea31f7-056b-466c-a620-0d359ff03111")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 -2.5)
+		(size 1.35 1.35)
+		(drill 0.85)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "2a4a1a19-6fd0-4f9c-b820-4f847f2fd521")
+	)
+	(pad "2" thru_hole circle
+		(at 0 2.5)
+		(size 1.35 1.35)
+		(drill 0.85)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "7ef8d54a-8e1e-4bb1-ba50-4f8c6098362e")
+	)
+	(model "PS1240P02BT.stp"
+		(offset
+			(xyz 0 0.02999999888 3.859999837)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 0 -90)
+		)
+	)
+)
