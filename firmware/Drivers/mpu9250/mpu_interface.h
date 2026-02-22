@@ -18,48 +18,54 @@
  *
  */
 typedef struct {
-	I2C_HandleTypeDef* hi2c;
-	uint8_t imuAddress;
-	uint8_t magAddress;
+  I2C_HandleTypeDef* hi2c;
+  uint8_t imuAddress;
+  uint8_t magAddress;
 
-	float magCoeff_x, magCoeff_y, magCoeff_z;
-	float accSensitivity;
-	float gyroSensitivity;
+  float magCoeff_x, magCoeff_y, magCoeff_z;
+  float accSensitivity;
+  float gyroSensitivity;
 
-	float gyroOffsetX, gyroOffsetY, gyroOffsetZ;
-	uint8_t useGyroOffsets;
+  float gyroOffsetX, gyroOffsetY, gyroOffsetZ;
+  uint8_t useGyroOffsets;
 
-	volatile uint8_t imuData[14];
-	volatile uint8_t magData[7];
-	volatile uint8_t initComplete;
+  volatile uint8_t imuData[14];
+  volatile uint8_t magData[7];
+  volatile uint8_t initComplete;
 
 #ifdef ASYNC_IMU
-	volatile uint8_t imuBuffer[14];
-	volatile uint8_t magBuffer[7];
-	volatile uint8_t isReadingImu;
-	volatile uint8_t newData;
+  volatile uint8_t imuBuffer[14];
+  volatile uint8_t magBuffer[7];
+  volatile uint8_t isReadingImu;
+  volatile uint8_t newData;
 
-	IRQn_Type readIr;
+  IRQn_Type readIr;
 
-	volatile uint8_t readEnabled;
-	volatile uint8_t readInProgress;
+  volatile uint8_t readEnabled;
+  volatile uint8_t readInProgress;
 #endif
 } mpu_Mpu9250;
 
 typedef struct {
-	float x, y, z;
+  float x, y, z;
 } mpu_Vec3;
 
 typedef struct {
-	float pitch;
-	float roll;
+  float pitch;
+  float roll;
 } mpu_Orientation;
 
-
 #ifdef ASYNC_IMU
-void mpu_init(mpu_Mpu9250* mpu, I2C_HandleTypeDef* hi2c, uint8_t imuAddress, uint8_t magAddress, IRQn_Type readIr);
+void mpu_init(mpu_Mpu9250* mpu,
+              I2C_HandleTypeDef* hi2c,
+              uint8_t imuAddress,
+              uint8_t magAddress,
+              IRQn_Type readIr);
 #else
-void mpu_init(mpu_Mpu9250* mpu, I2C_HandleTypeDef* hi2c, uint8_t imuAddress, uint8_t magAddress);
+void mpu_init(mpu_Mpu9250* mpu,
+              I2C_HandleTypeDef* hi2c,
+              uint8_t imuAddress,
+              uint8_t magAddress);
 #endif
 
 uint8_t mpu_detectImu(mpu_Mpu9250* mpu);
@@ -102,6 +108,8 @@ float mpu_readTempData(mpu_Mpu9250* mpu);
 
 mpu_Vec3 mpu_readMagData(mpu_Mpu9250* mpu);
 
-void mpu_updateOrientation(mpu_Mpu9250* imu, volatile mpu_Orientation* orientation, float dt);
+void mpu_updateOrientation(mpu_Mpu9250* imu,
+                           volatile mpu_Orientation* orientation,
+                           float dt);
 
 #endif /* MPU9250_MPU_INTERFACE_H_ */

@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32 Debug (Upload and start debugging)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "stlink",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/Debug/tanfolyamrobot.elf",
+            "device": "STM32103XX",
+            "svdFile": "${config:stm32.svdPath}",
+            "stm32cubeprogrammer": "${config:stm32.programmerPath}",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4
+            },
+            "gdbPath": "arm-none-eabi-gdb"
+        },
+        {
+            "name": "STM32 Debug (Attach to running target)",
+            "type": "cortex-debug",
+            "request": "attach",
+            "servertype": "stlink",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/Debug/tanfolyamrobot.elf",
+            "device": "STM32103XX",
+            "svdFile": "${config:stm32.svdPath}",
+            "stm32cubeprogrammer": "${config:stm32.programmerPath}",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4
+            },
+            "gdbPath": "arm-none-eabi-gdb"
+        }
+    ]
+}

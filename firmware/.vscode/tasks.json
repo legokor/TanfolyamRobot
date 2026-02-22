@@ -1,0 +1,100 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake Build",
+      "type": "shell",
+      "windows": {
+        "command": "Tools\\Scripts\\build.cmd",
+        "args": [
+          "${input:buildType}"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Clean Build Files",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "${input:buildType}",
+        "--target",
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "STM32: Flash Firmware (STLink)",
+      "type": "shell",
+      "command": "STM32_Programmer_CLI",
+      "args": [
+        "-c",
+        "port=SWD",
+        "mode=UR",
+        "-w",
+        "${workspaceFolder}/build/${input:buildType}/tanfolyamrobot.elf",
+        "-v",
+        "-rst"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "STM32: Flash Firmware (FTDI)",
+      "type": "shell",
+      "windows": {
+        "command": "${workspaceFolder}/Tools/ftdi_uploader/bin/ftdi_uploader.exe",
+        "args": [
+          "576000",
+          "${workspaceFolder}\\build\\${input:buildType}\\tanfolyamrobot.bin"
+        ]
+      },
+      "linux": {
+        "command": "${workspaceFolder}/Tools/ftdi_uploader/bin/ftdi_uploader",
+        "args": [
+          "576000",
+          "${workspaceFolder}/build/${input:buildType}/tanfolyamrobot.bin"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/Tools/ftdi_uploader/bin"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "buildType",
+      "type": "pickString",
+      "description": "Select the build type",
+      "options": [
+        "Debug",
+        "Release"
+      ],
+      "default": "Release"
+    }
+  ]
+}

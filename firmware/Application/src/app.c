@@ -1,0 +1,72 @@
+/*
+ * app_main.c
+ */
+#include <stdio.h>
+#include <string.h>
+#include "RobotApi/api_interface.h"
+#include "RobotApi/api_misc.h"
+
+const char* WIFI_SSID = "LegoTanfolyam";
+const char* WIFI_PASSWORD = "almaalma";
+
+const char* SERVER_IP = "192.168.1.69";
+
+int app_main() {
+  lcdPrintf(0, 0, "Gyere Simnyiba!");
+  lcdPrintf(1, 0, "  JOOOLESZ");
+
+  char data[500];
+  char subCmd[100];
+  int power = 5;
+  int time = 500;
+  while (1) {
+    while (!espRead(data)) {
+    }
+
+    if (sscanf(data, "%s %d %d", subCmd, &power, &time) >= 1) {
+      espPrintf("COMMAND: %s", subCmd);
+
+      if (time > 10000)
+        time = 10000;
+      if (time < 10)
+        time = 10;
+
+      if (power > 60)
+        power = 60;
+      if (power < 0)
+        power = 0;
+
+      if (strcmp(subCmd, "ELORE") == 0) {
+        setMotorSpeed(MOT_L, power);
+        setMotorSpeed(MOT_R, power);
+        delayMs(time);
+      } else if (strcmp(subCmd, "HATRA") == 0) {
+        setMotorSpeed(MOT_L, -power);
+        setMotorSpeed(MOT_R, -power);
+        delayMs(time);
+      } else if (strcmp(subCmd, "JOBBRA") == 0) {
+        setMotorSpeed(MOT_L, power);
+        setMotorSpeed(MOT_R, -power);
+        delayMs(time);
+      } else if (strcmp(subCmd, "BALRA") == 0) {
+        setMotorSpeed(MOT_L, -power);
+        setMotorSpeed(MOT_R, power);
+        delayMs(time);
+      } else if (strcmp(subCmd, "S_JOBBRA") == 0) {
+        setServoPosition(-90);
+      } else if (strcmp(subCmd, "S_BALRA") == 0) {
+        setServoPosition(90);
+      } else if (strcmp(subCmd, "S_ELORE") == 0) {
+        setServoPosition(0);
+      } else if (strcmp(subCmd, "F_JOBBRA") == 0) {
+        turnRobot(-90, power);
+      } else if (strcmp(subCmd, "F_BALRA") == 0) {
+        turnRobot(90, power);
+      }
+      setMotorSpeed(MOT_L, 0);
+      setMotorSpeed(MOT_R, 0);
+    }
+  }
+
+  return 0;
+}

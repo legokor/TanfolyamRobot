@@ -14,22 +14,25 @@
  * Struct for settings
  */
 typedef struct {
-    TIM_HandleTypeDef* timer;
-    uint32_t channel;
-    uint16_t timerPeriod;
+  TIM_HandleTypeDef* timer;
+  uint32_t channel;
+  uint16_t timerPeriod;
 } pwm_Pwm;
 
 /**
  * PWM output type
  */
 typedef enum {
-    PwmOutput_P,   //!< Use the normal output
-    PwmOutput_N,   //!< Use the complementary output
-    PwmOutput_PN,  //!< Use both outputs
+  PwmOutput_P,   //!< Use the normal output
+  PwmOutput_N,   //!< Use the complementary output
+  PwmOutput_PN,  //!< Use both outputs
 } pwm_PwmOutput;
 
-int pwm_init(pwm_Pwm* pwm, TIM_HandleTypeDef* timer, uint32_t timerChannel,
-            uint16_t timerPeriod, pwm_PwmOutput outputType);
+int pwm_init(pwm_Pwm* pwm,
+             TIM_HandleTypeDef* timer,
+             uint32_t timerChannel,
+             uint16_t timerPeriod,
+             pwm_PwmOutput outputType);
 
 void pwm_setCompareValue(pwm_Pwm* pwm, uint16_t compareValue);
 

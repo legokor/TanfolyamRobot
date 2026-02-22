@@ -1,0 +1,7 @@
+{
+    "stm32.programmerPath": "D:\\Programs\\STM32CubeCLT_1.20.0\\STM32CubeProgrammer\\bin",
+    "stm32.svdPath": "D:\\Programs\\STM32CubeCLT_1.20.0\\STMicroelectronics_CMSIS_SVD\\STM32F103.svd",
+    "editor.formatOnSave": true,
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_fallbackStyle": "Chromium"
+}

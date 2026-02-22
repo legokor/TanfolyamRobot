@@ -11,14 +11,16 @@
 #include "stm32f1xx_hal.h"
 
 typedef struct {
-    TIM_HandleTypeDef* captureTimer;
-    uint16_t captureTimerPeriodNs;
-    uint16_t captureStart;
-    volatile uint16_t lastDistance;
-    uint8_t pwmIsHigh;
+  TIM_HandleTypeDef* captureTimer;
+  uint16_t captureTimerPeriodNs;
+  uint16_t captureStart;
+  volatile uint16_t lastDistance;
+  uint8_t pwmIsHigh;
 } ir_InfraRed;
 
-void ir_init(ir_InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequency);
+void ir_init(ir_InfraRed* ir,
+             TIM_HandleTypeDef* captureTimer,
+             uint32_t captureTimerFrequency);
 
 void ir_handlerRisingCapture(ir_InfraRed* ir, uint16_t captureVal);
 

@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "api_robotabstraction.h": "c",
+        "xutility": "c",
+        "main_interface.h": "c"
+    }
+}

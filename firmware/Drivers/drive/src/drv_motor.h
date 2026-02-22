@@ -8,7 +8,7 @@
 #ifndef DRIVE_MOTOR_H_
 #define DRIVE_MOTOR_H_
 
-#include "drv_interface.h"
+#include "../drv_interface.h"
 
 void drv_motorSetRunMode(drv_Motor* motor, drv_MotorRunMode mode);
 
