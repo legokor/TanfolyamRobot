@@ -11,7 +11,6 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
-#set(CMAKE_MAKE_PROGRAM "${CMAKE_CURRENT_SOURCE_DIR}/Tools/build_tools/ninja.exe")
 
 
 # Define the build type

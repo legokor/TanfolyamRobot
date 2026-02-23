@@ -10,6 +10,12 @@
           "${input:buildType}"
         ]
       },
+      "linux": {
+        "command": "Tools/Scripts/build.sh",
+        "args": [
+          "${input:buildType}"
+        ]
+      },
       "options": {
         "cwd": "${workspaceFolder}"
       },

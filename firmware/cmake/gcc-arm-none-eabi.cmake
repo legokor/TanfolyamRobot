@@ -4,9 +4,17 @@ set(CMAKE_SYSTEM_PROCESSOR          arm)
 set(CMAKE_C_COMPILER_ID GNU)
 set(CMAKE_CXX_COMPILER_ID GNU)
 
+# If the $ENV{GCC_TOOLCHAIN_ROOT} environment variable is set, use it as the root for the toolchain, otherwise assume the tools are in the PATH
+if(DEFINED ENV{GCC_TOOLCHAIN_ROOT})
+    set(TOOLCHAIN_ROOT $ENV{GCC_TOOLCHAIN_ROOT}/)
+    message("GCC_TOOLCHAIN_ROOT set to ${TOOLCHAIN_ROOT}")
+else()
+    set(TOOLCHAIN_ROOT "")
+    message("GCC_TOOLCHAIN_ROOT is not set, assuming gcc is in path")
+endif()
+
 # Some default GCC settings
-# arm-none-eabi- must be part of path environment
-set(TOOLCHAIN_PREFIX                arm-none-eabi-)
+set(TOOLCHAIN_PREFIX                ${TOOLCHAIN_ROOT}arm-none-eabi-)
 
 set(CMAKE_C_COMPILER                ${TOOLCHAIN_PREFIX}gcc)
 set(CMAKE_ASM_COMPILER              ${CMAKE_C_COMPILER})
