@@ -6,22 +6,32 @@ set(CMAKE_CXX_COMPILER_ID GNU)
 
 # If the $ENV{GCC_TOOLCHAIN_ROOT} environment variable is set, use it as the root for the toolchain, otherwise assume the tools are in the PATH
 if(DEFINED ENV{GCC_TOOLCHAIN_ROOT})
-    set(TOOLCHAIN_ROOT $ENV{GCC_TOOLCHAIN_ROOT}/)
-    message("GCC_TOOLCHAIN_ROOT set to ${TOOLCHAIN_ROOT}")
+    set(TOOLCHAIN_ROOT_TMP $ENV{GCC_TOOLCHAIN_ROOT})
+    message("GCC_TOOLCHAIN_ROOT set to ${TOOLCHAIN_ROOT_TMP}")
+    cmake_path(CONVERT "${TOOLCHAIN_ROOT_TMP}" TO_CMAKE_PATH_LIST TOOLCHAIN_ROOT)
+    set(TOOLCHAIN_ROOT "${TOOLCHAIN_ROOT}/")
+    message("LINUX_PATH: ${TOOLCHAIN_ROOT}")
 else()
     set(TOOLCHAIN_ROOT "")
     message("GCC_TOOLCHAIN_ROOT is not set, assuming gcc is in path")
 endif()
 
+# If on windows, the file extension for the toolchain binaries is .exe, otherwise it is empty
+if(WIN32)
+    set(TOOLCHAIN_BIN_EXTENSION ".exe")
+else()
+    set(TOOLCHAIN_BIN_EXTENSION "")
+endif()
+
 # Some default GCC settings
 set(TOOLCHAIN_PREFIX                ${TOOLCHAIN_ROOT}arm-none-eabi-)
 
-set(CMAKE_C_COMPILER                ${TOOLCHAIN_PREFIX}gcc)
+set(CMAKE_C_COMPILER                ${TOOLCHAIN_PREFIX}gcc${TOOLCHAIN_BIN_EXTENSION})
 set(CMAKE_ASM_COMPILER              ${CMAKE_C_COMPILER})
-set(CMAKE_CXX_COMPILER              ${TOOLCHAIN_PREFIX}g++)
-set(CMAKE_LINKER                    ${TOOLCHAIN_PREFIX}g++)
-set(CMAKE_OBJCOPY                   ${TOOLCHAIN_PREFIX}objcopy)
-set(CMAKE_SIZE                      ${TOOLCHAIN_PREFIX}size)
+set(CMAKE_CXX_COMPILER              ${TOOLCHAIN_PREFIX}g++${TOOLCHAIN_BIN_EXTENSION})
+set(CMAKE_LINKER                    ${TOOLCHAIN_PREFIX}g++${TOOLCHAIN_BIN_EXTENSION})
+set(CMAKE_OBJCOPY                   ${TOOLCHAIN_PREFIX}objcopy${TOOLCHAIN_BIN_EXTENSION})
+set(CMAKE_SIZE                      ${TOOLCHAIN_PREFIX}size${TOOLCHAIN_BIN_EXTENSION})
 
 set(CMAKE_EXECUTABLE_SUFFIX_ASM     ".elf")
 set(CMAKE_EXECUTABLE_SUFFIX_C       ".elf")
