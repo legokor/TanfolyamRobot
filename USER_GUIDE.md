@@ -14,7 +14,7 @@ A vezérlésért egy STM32-es mikrovezérlő felel - ez a robot *"szíve"*. A te
 
 A munkátok megkönnyítése érdekében egy olyan szoftveres környezetet alakítottunk ki nektek, ami elrejti szinte teljesen az alacsony szintű hardveres dolgokat, számításokat és lekérdezéseket - így gyakorlatilag klasszikus C-ben, a robot API-nk függvényei segítségével tudtok zökkenőmentesen fejleszteni.
 
-Az `app_main.c` fájlba kell dolgoznotok, ezt szabadon módosíthatjátok.
+Az `app.c` fájlba kell dolgoznotok, ezt szabadon módosíthatjátok.
 
 ### Mozgással kapcsolatos függvények
 
