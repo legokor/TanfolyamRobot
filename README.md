@@ -8,17 +8,21 @@ Korábban az STMicroelectronics által biztosított `STM32CubeIDE`-t használtuk
 
 Az előző fejezetben említett módon a firmware fejlesztéséhez az STMicroelectronics parancsoros eszközeit használjuk. Sajnos ezek letöltése regisztrációhoz kötött, ezért feltöltöttük a telepítő fájlokat [a körös drive-ra](https://drive.google.com/drive/folders/1nJ2nfvr9kbIkVAWmcgEXpbxK1OUlX8sQ?usp=sharing), így regisztráció nélkül is telepíteni tudjátok - persze teljesen megértjük, ha nem akartok random drive-os fájlokat telepíteni, viszont ez esetben muszáj regisztrálnotok az [STMicroelectronics weboldalán](https://www.st.com/en/development-tools/stm32cubeclt.html), és onnan letölteni.
 
+Letöltés után a telepítő fájlt futtatva telepítsétek a `STM32CubeCLT`-t egy kényelmes helyre, például `C:\STM32CubeCLT`-be.
+
+**FONTOS:** az `STM32CubeCLT` telepítése után újra kell indítani a `VSCode`-ot amennyiben az már meg volt nyitva, különben a `VSCode` nem fogja látni a telepített toolchain-t. Ezen felül Linux rendszerek esetében előfordulhat, hogy a gépet is újra kell indítani, hogy a megfelelő környezeti változók beálljanak.
+
 Jelenleg Windows 10/11-en és Ubuntu-n teszteljük a szoftvert. Más (Linux alapú) platformokon is valószínűleg működni fog - de ezt nem tudjuk garantálni.
 
 ## Robot illesztőszoftver
 
 A robotra a firmware letöltése virtuális soros porton történik, a roboton az USB csatlakozó egy `FT232RL` chiphez kapcsolódik.
 
-Előfordulhat, hogy a Windows nem telepíti automatikusan a virtuális soros port driverét. Erre az esetre a fentebbi drive linken elérhető Windows zip-ben találtok egy plusz driver telepítőt, de amúgy ezt is le tudjátok tölteni az [FTDI weboldaláról](https://ftdichip.com/wp-content/uploads/2021/08/CDM212364_Setup.zip), majd pedig kibontani és telepíteni.
+Előfordulhat Windows esetében, hogy az nem telepíti automatikusan a virtuális soros port driverét. Erre az esetre a fentebbi drive linken elérhető Windows zip-ben találtok egy plusz driver telepítőt, de amúgy ezt is le tudjátok tölteni az [FTDI weboldaláról](https://ftdichip.com/wp-content/uploads/2021/08/CDM212364_Setup.zip), majd pedig kibontani és telepíteni.
 
 ## Kiinduló projekt letöltése, megnyitása
 
-A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a `firmware v4.0` nevű kiadást, majd a `tanfrobot.zip` fájlra kell kattintani.
+A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a **legújabb kiadást**, majd a `tanfrobot.zip` fájlra kell kattintani.
 
 A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego_Tanfolyam` mappába, majd bontsuk ki. A kibontás után nyissuk meg a `VSCode`-ot, és a `File -> Open Folder...` menüponttal nyissuk meg a kibontott `firmware` mappát (mely az `Application`, `Drivers`, `Tools` könyvtárakat tartalmazza).
 

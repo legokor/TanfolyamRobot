@@ -8,7 +8,7 @@
             "servertype": "stlink",
             "cwd": "${workspaceFolder}",
             "executable": "./build/Debug/tanfolyamrobot.elf",
-            "device": "STM32103XX",
+            "device": "STM32F103",
             "svdFile": "${config:stm32.svdPath}",
             "stm32cubeprogrammer": "${config:stm32.programmerPath}",
             "liveWatch": {
@@ -24,7 +24,7 @@
             "servertype": "stlink",
             "cwd": "${workspaceFolder}",
             "executable": "./build/Debug/tanfolyamrobot.elf",
-            "device": "STM32103XX",
+            "device": "STM32F103",
             "svdFile": "${config:stm32.svdPath}",
             "stm32cubeprogrammer": "${config:stm32.programmerPath}",
             "liveWatch": {
