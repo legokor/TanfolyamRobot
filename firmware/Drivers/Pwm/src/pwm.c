@@ -24,23 +24,28 @@ int pwm_init(pwm_Pwm* pwm,
              TIM_HandleTypeDef* timer,
              uint32_t timerChannel,
              uint16_t timerPeriod,
-             pwm_PwmOutput outputType) {
-  if ((timerChannel != TIM_CHANNEL_1) && (timerChannel != TIM_CHANNEL_2) &&
-      (timerChannel != TIM_CHANNEL_3) && (timerChannel != TIM_CHANNEL_4)) {
-    return -1;
-  }
+             pwm_PwmOutput outputType)
+{
+    if ((timerChannel != TIM_CHANNEL_1) && (timerChannel != TIM_CHANNEL_2) && (timerChannel != TIM_CHANNEL_3) &&
+        (timerChannel != TIM_CHANNEL_4))
+    {
+        return -1;
+    }
 
-  pwm->timer = timer;
-  pwm->channel = timerChannel;
-  pwm->timerPeriod = timerPeriod;
+    pwm->timer = timer;
+    pwm->channel = timerChannel;
+    pwm->timerPeriod = timerPeriod;
 
-  if ((outputType == PwmOutput_P) || (outputType == PwmOutput_PN)) {
-    HAL_TIM_PWM_Start(pwm->timer, pwm->channel);
-  } else if ((outputType == PwmOutput_N) || (outputType == PwmOutput_PN)) {
-    HAL_TIMEx_PWMN_Start(pwm->timer, pwm->channel);
-  }
+    if ((outputType == PwmOutput_P) || (outputType == PwmOutput_PN))
+    {
+        HAL_TIM_PWM_Start(pwm->timer, pwm->channel);
+    }
+    else if ((outputType == PwmOutput_N) || (outputType == PwmOutput_PN))
+    {
+        HAL_TIMEx_PWMN_Start(pwm->timer, pwm->channel);
+    }
 
-  return 0;
+    return 0;
 }
 
 /**
@@ -48,21 +53,15 @@ int pwm_init(pwm_Pwm* pwm,
  * @param pwm
  * @param compareValue
  */
-void pwm_setCompareValue(pwm_Pwm* pwm, uint16_t compareValue) {
-  switch (pwm->channel) {
-    case TIM_CHANNEL_1:
-      pwm->timer->Instance->CCR1 = compareValue;
-      break;
-    case TIM_CHANNEL_2:
-      pwm->timer->Instance->CCR2 = compareValue;
-      break;
-    case TIM_CHANNEL_3:
-      pwm->timer->Instance->CCR3 = compareValue;
-      break;
-    case TIM_CHANNEL_4:
-      pwm->timer->Instance->CCR4 = compareValue;
-      break;
-  }
+void pwm_setCompareValue(pwm_Pwm* pwm, uint16_t compareValue)
+{
+    switch (pwm->channel)
+    {
+        case TIM_CHANNEL_1: pwm->timer->Instance->CCR1 = compareValue; break;
+        case TIM_CHANNEL_2: pwm->timer->Instance->CCR2 = compareValue; break;
+        case TIM_CHANNEL_3: pwm->timer->Instance->CCR3 = compareValue; break;
+        case TIM_CHANNEL_4: pwm->timer->Instance->CCR4 = compareValue; break;
+    }
 }
 
 /**
@@ -70,30 +69,35 @@ void pwm_setCompareValue(pwm_Pwm* pwm, uint16_t compareValue) {
  * @param pwm
  * @param dutyCycle in percent
  */
-void pwm_setDutyCylePercent(pwm_Pwm* pwm, float dutyCycle) {
-  if (dutyCycle > 100) {
-    dutyCycle = 100;
-  }
-  if (dutyCycle < 0) {
-    dutyCycle = 0;
-  }
+void pwm_setDutyCylePercent(pwm_Pwm* pwm, float dutyCycle)
+{
+    if (dutyCycle > 100)
+    {
+        dutyCycle = 100;
+    }
+    if (dutyCycle < 0)
+    {
+        dutyCycle = 0;
+    }
 
-  uint16_t compareValue = pwm->timerPeriod * dutyCycle / 100;
-  pwm_setCompareValue(pwm, compareValue);
+    uint16_t compareValue = pwm->timerPeriod * dutyCycle / 100;
+    pwm_setCompareValue(pwm, compareValue);
 }
 
 /**
  * Set the duty cycle to 0%
  * @param pwm
  */
-void pwm_zero(pwm_Pwm* pwm) {
-  pwm_setCompareValue(pwm, 0);
+void pwm_zero(pwm_Pwm* pwm)
+{
+    pwm_setCompareValue(pwm, 0);
 }
 
 /**
  * Set the duty cycle to 100%
  * @param pwm
  */
-void pwm_max(pwm_Pwm* pwm) {
-  pwm_setCompareValue(pwm, pwm->timerPeriod);
+void pwm_max(pwm_Pwm* pwm)
+{
+    pwm_setCompareValue(pwm, pwm->timerPeriod);
 }

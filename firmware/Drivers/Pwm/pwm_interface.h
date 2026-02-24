@@ -13,19 +13,21 @@
 /**
  * Struct for settings
  */
-typedef struct {
-  TIM_HandleTypeDef* timer;
-  uint32_t channel;
-  uint16_t timerPeriod;
+typedef struct
+{
+    TIM_HandleTypeDef* timer;
+    uint32_t channel;
+    uint16_t timerPeriod;
 } pwm_Pwm;
 
 /**
  * PWM output type
  */
-typedef enum {
-  PwmOutput_P,   //!< Use the normal output
-  PwmOutput_N,   //!< Use the complementary output
-  PwmOutput_PN,  //!< Use both outputs
+typedef enum
+{
+    PwmOutput_P,  //!< Use the normal output
+    PwmOutput_N,  //!< Use the complementary output
+    PwmOutput_PN, //!< Use both outputs
 } pwm_PwmOutput;
 
 int pwm_init(pwm_Pwm* pwm,

@@ -20,23 +20,24 @@
 #include "Drivers/Servo/srv_interface.h"
 #include "Drivers/TextUart/txt_interface.h"
 
-typedef struct RobotInstance {
-  clr_ColorSensor colorSensor;
-  enc_Encoder rightEncoder, leftEncoder;
-  drv_Motor rightMotor, leftMotor;
-  drv_SpeedControl rightSpeedCtrl, leftSpeedCtrl;
-  srv_Servo servo;
-  txt_Uart espUart, usbUart;
-  mpu_Mpu9250 imu;
-  volatile mpu_Orientation orientation;
+typedef struct RobotInstance
+{
+    clr_ColorSensor colorSensor;
+    enc_Encoder rightEncoder, leftEncoder;
+    drv_Motor rightMotor, leftMotor;
+    drv_SpeedControl rightSpeedCtrl, leftSpeedCtrl;
+    srv_Servo servo;
+    txt_Uart espUart, usbUart;
+    mpu_Mpu9250 imu;
+    volatile mpu_Orientation orientation;
 
-  volatile uint8_t initCplt;
-  volatile uint8_t espReady;
+    volatile uint8_t initCplt;
+    volatile uint8_t espReady;
 
 #if US_SENSOR
-  us_UltraSonic us;
+    us_UltraSonic us;
 #elif IR_SENSOR
-  ir_InfraRed ir;
+    ir_InfraRed ir;
 #endif
 } main_RobotInstance;
 

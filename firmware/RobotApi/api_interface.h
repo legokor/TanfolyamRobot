@@ -13,17 +13,20 @@
 #define MOT_R 0
 #define MOT_L 1
 
-typedef struct {
+typedef struct
+{
     uint16_t h;
     uint8_t s;
     uint8_t v;
 } Color;
 
-typedef struct {
+typedef struct
+{
     float x, y, z;
 } Vec3;
 
-typedef struct {
+typedef struct
+{
     float pitch;
     float roll;
 } Orientation;
@@ -54,7 +57,7 @@ int getEncoderPosition(uint8_t mot_lr);
  * @param col of starting position
  * @param fmt printf-like format string followed by a variable number of arguments
  */
-int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
+int lcdPrintf(uint8_t row, uint8_t col, const char* fmt, ...);
 
 /**
  * Print to the USB serial port. Works just like regular printf.
@@ -65,7 +68,7 @@ int lcdPrintf(uint8_t row, uint8_t col, const char *fmt, ...);
  *
  * @param fmt printf-like format string followed by a variable number of arguments
  */
-int uartPrintf(const char *fmt, ...);
+int uartPrintf(const char* fmt, ...);
 
 /**
  * Print to the telemetry webpage. Works just like regular printf.
@@ -76,7 +79,7 @@ int uartPrintf(const char *fmt, ...);
  *
  * @param fmt printf-like format string followed by a variable number of arguments
  */
-int espPrintf(const char *fmt, ...);
+int espPrintf(const char* fmt, ...);
 
 /**
  * Read input from the telemetry webpage console input.
@@ -110,7 +113,7 @@ uint16_t getUsDistance();
  */
 uint16_t getIrDistance();
 #else
-	#error "No ranging module defined as active"
+#error "No ranging module defined as active"
 #endif
 
 /**

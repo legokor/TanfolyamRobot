@@ -10,19 +10,20 @@
 
 #include "stm32f1xx_hal.h"
 
-typedef struct {
-  GPIO_TypeDef* triggerPort;
-  uint16_t triggerPin;
-  TIM_HandleTypeDef* delayTimer;
-  TIM_HandleTypeDef* captureTimer;
-  uint16_t captureTimerPeriodNs;
-  uint16_t delayTimerPeriodNs;
-  volatile uint16_t captureStart;
-  volatile uint16_t lastDistance;
-  volatile uint8_t measurementValid;
-  volatile uint8_t echoIsHigh;
-  volatile uint8_t pulseActive;
-  uint8_t timerCounter;
+typedef struct
+{
+    GPIO_TypeDef* triggerPort;
+    uint16_t triggerPin;
+    TIM_HandleTypeDef* delayTimer;
+    TIM_HandleTypeDef* captureTimer;
+    uint16_t captureTimerPeriodNs;
+    uint16_t delayTimerPeriodNs;
+    volatile uint16_t captureStart;
+    volatile uint16_t lastDistance;
+    volatile uint8_t measurementValid;
+    volatile uint8_t echoIsHigh;
+    volatile uint8_t pulseActive;
+    uint8_t timerCounter;
 } us_UltraSonic;
 
 void us_init(us_UltraSonic* us,

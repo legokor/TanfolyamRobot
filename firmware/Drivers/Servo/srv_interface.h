@@ -13,18 +13,15 @@
 /**
  * Struct for settings
  */
-typedef struct {
-  pwm_Pwm pwm;
-  uint16_t compareStart;
-  uint16_t compareEnd;
-  int8_t position;
+typedef struct
+{
+    pwm_Pwm pwm;
+    uint16_t compareStart;
+    uint16_t compareEnd;
+    int8_t position;
 } srv_Servo;
 
-void srv_init(srv_Servo* servo,
-              pwm_Pwm pwm,
-              uint16_t compareStart,
-              uint16_t compareEnd,
-              int8_t position);
+void srv_init(srv_Servo* servo, pwm_Pwm pwm, uint16_t compareStart, uint16_t compareEnd, int8_t position);
 
 void srv_setPosition(srv_Servo* servo, int8_t position);
 

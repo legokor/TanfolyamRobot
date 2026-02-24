@@ -47,29 +47,30 @@ void us_init(us_UltraSonic* us,
              TIM_HandleTypeDef* captureTimer,
              uint32_t captureTimerFrequencyHz,
              TIM_HandleTypeDef* delayTimer,
-             uint32_t delayTimerFrequencyHz) {
-  us->triggerPort = triggerPort;
-  us->triggerPin = triggerPin;
+             uint32_t delayTimerFrequencyHz)
+{
+    us->triggerPort = triggerPort;
+    us->triggerPin = triggerPin;
 
-  us->captureTimer = captureTimer;
-  us->delayTimer = delayTimer;
+    us->captureTimer = captureTimer;
+    us->delayTimer = delayTimer;
 
-  // Calculate the number of timer pulses for the required trigger pulse width
-  uint16_t frequencyKHz = delayTimerFrequencyHz / 1000;
-  uint16_t periodNs = 1000 * 1000 / frequencyKHz;
-  us->delayTimerPeriodNs = periodNs;
+    // Calculate the number of timer pulses for the required trigger pulse width
+    uint16_t frequencyKHz = delayTimerFrequencyHz / 1000;
+    uint16_t periodNs = 1000 * 1000 / frequencyKHz;
+    us->delayTimerPeriodNs = periodNs;
 
-  // Calculate the time period of the capture timer
-  frequencyKHz = captureTimerFrequencyHz / 1000;
-  periodNs = 1000 * 1000 / frequencyKHz;
-  us->captureTimerPeriodNs = periodNs;
+    // Calculate the time period of the capture timer
+    frequencyKHz = captureTimerFrequencyHz / 1000;
+    periodNs = 1000 * 1000 / frequencyKHz;
+    us->captureTimerPeriodNs = periodNs;
 
-  us->measurementValid = 0;
-  us->echoIsHigh = 0;
-  us->pulseActive = 0;
-  us->lastDistance = 0;
-  us->timerCounter = 0;
-  HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
+    us->measurementValid = 0;
+    us->echoIsHigh = 0;
+    us->pulseActive = 0;
+    us->lastDistance = 0;
+    us->timerCounter = 0;
+    HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
 }
 
 /**
@@ -77,11 +78,13 @@ void us_init(us_UltraSonic* us,
  * @param us
  * @param captureVal the captured value from the timer channel
  */
-void us_handlerRisingCapture(us_UltraSonic* us, uint16_t captureVal) {
-  if (us->measurementValid && !us->echoIsHigh) {
-    us->captureStart = captureVal;
-    us->echoIsHigh = 1;
-  }
+void us_handlerRisingCapture(us_UltraSonic* us, uint16_t captureVal)
+{
+    if (us->measurementValid && !us->echoIsHigh)
+    {
+        us->captureStart = captureVal;
+        us->echoIsHigh = 1;
+    }
 }
 
 /**
@@ -90,61 +93,69 @@ void us_handlerRisingCapture(us_UltraSonic* us, uint16_t captureVal) {
  * @param us
  * @param captureVal the captured value from the timer channel
  */
-void us_handlerFallingCapture(us_UltraSonic* us, uint16_t captureVal) {
-  if (us->measurementValid && us->echoIsHigh) {
-    uint16_t captureStop = captureVal;
-    us->echoIsHigh = 0;
-    us->measurementValid = 0;
+void us_handlerFallingCapture(us_UltraSonic* us, uint16_t captureVal)
+{
+    if (us->measurementValid && us->echoIsHigh)
+    {
+        uint16_t captureStop = captureVal;
+        us->echoIsHigh = 0;
+        us->measurementValid = 0;
 
-    uint16_t echoWidthTicks = captureStop - us->captureStart;
-    uint32_t echoWidthUs = (echoWidthTicks * us->captureTimerPeriodNs) / 1000;
-    us->lastDistance = echoWidthUs / US_CM_DIVIDER;
-  }
+        uint16_t echoWidthTicks = captureStop - us->captureStart;
+        uint32_t echoWidthUs = (echoWidthTicks * us->captureTimerPeriodNs) / 1000;
+        us->lastDistance = echoWidthUs / US_CM_DIVIDER;
+    }
 }
 
 /**
  * Start an async measurement pulse
  * @param us
  */
-void us_startMeasurementPulseAsync(us_UltraSonic* us) {
-  us->timerCounter++;
-  if (us->timerCounter == TIM_OVERFLOW_CNT) {
-    us->timerCounter = 0;
+void us_startMeasurementPulseAsync(us_UltraSonic* us)
+{
+    us->timerCounter++;
+    if (us->timerCounter == TIM_OVERFLOW_CNT)
+    {
+        us->timerCounter = 0;
 
-    uint16_t triggerDelay = (US_TRIGGER_WIDTH * 1000) / us->delayTimerPeriodNs;
-    us->delayTimer->Instance->CCR4 =
-        us->delayTimer->Instance->CNT + triggerDelay;
+        uint16_t triggerDelay = (US_TRIGGER_WIDTH * 1000) / us->delayTimerPeriodNs;
+        us->delayTimer->Instance->CCR4 = us->delayTimer->Instance->CNT + triggerDelay;
 
-    us->measurementValid = 0;
-    us->pulseActive = 1;
-    HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_SET);
-  }
+        us->measurementValid = 0;
+        us->pulseActive = 1;
+        HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_SET);
+    }
 }
 
 /**
  * End an async measurement pulse
  * @param us
  */
-void usEndMeasurementPulseAsync(us_UltraSonic* us) {
-  HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
+void usEndMeasurementPulseAsync(us_UltraSonic* us)
+{
+    HAL_GPIO_WritePin(us->triggerPort, us->triggerPin, GPIO_PIN_RESET);
 
-  us->echoIsHigh = 0;
-  us->measurementValid = 1;
-  us->pulseActive = 0;
+    us->echoIsHigh = 0;
+    us->measurementValid = 1;
+    us->pulseActive = 0;
 
-  us->delayTimer->Instance->CCR4 = us->captureTimer->Instance->CNT + TIMEOUT;
+    us->delayTimer->Instance->CCR4 = us->captureTimer->Instance->CNT + TIMEOUT;
 }
 
 /**
  * Handle compare event (end pulse signal or timeout)
  * @param us
  */
-void us_handleCompareAsync(us_UltraSonic* us) {
-  if (us->pulseActive) {
-    usEndMeasurementPulseAsync(us);
-  } else {
-    us->measurementValid = 0;
-  }
+void us_handleCompareAsync(us_UltraSonic* us)
+{
+    if (us->pulseActive)
+    {
+        usEndMeasurementPulseAsync(us);
+    }
+    else
+    {
+        us->measurementValid = 0;
+    }
 }
 
 /**
@@ -153,6 +164,7 @@ void us_handleCompareAsync(us_UltraSonic* us) {
  * @return  -1 if the measurement hasn't finished yet
  *         >=0 if the measurement is done
  */
-uint16_t us_getDistance(us_UltraSonic* us) {
-  return us->lastDistance;
+uint16_t us_getDistance(us_UltraSonic* us)
+{
+    return us->lastDistance;
 }

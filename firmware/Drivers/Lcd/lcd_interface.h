@@ -31,10 +31,7 @@ int lcd_clear();
 
 void lcd_handler();
 
-void lcd_displayStatus(uint8_t row,
-                       uint8_t col,
-                       uint16_t batteryVoltage,
-                       char espState);
+void lcd_displayStatus(uint8_t row, uint8_t col, uint16_t batteryVoltage, char espState);
 
 void lcd_enableStatus();
 

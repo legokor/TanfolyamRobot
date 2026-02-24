@@ -10,26 +10,27 @@
 
 #include "stm32f1xx_hal.h"
 
-typedef struct {
-  UART_HandleTypeDef* huart;
-  IRQn_Type uartIr;
-  IRQn_Type sendDMAIr;
+typedef struct
+{
+    UART_HandleTypeDef* huart;
+    IRQn_Type uartIr;
+    IRQn_Type sendDMAIr;
 
-  volatile uint16_t writeBufferLenght;
-  volatile uint16_t readBufferLenght;
+    volatile uint16_t writeBufferLenght;
+    volatile uint16_t readBufferLenght;
 
-  volatile char* writeCircularBuffer;
-  volatile int32_t startOfWriteData;
-  volatile int32_t endOfWriteData;
-  volatile uint8_t transmissionInProgress;
+    volatile char* writeCircularBuffer;
+    volatile int32_t startOfWriteData;
+    volatile int32_t endOfWriteData;
+    volatile uint8_t transmissionInProgress;
 
-  volatile char* readCircularBuffer;
-  volatile uint16_t startOfReadData;
-  uint16_t readPtr;
-  volatile int32_t mostRecentNewLinePos;
-  volatile uint8_t ok;
+    volatile char* readCircularBuffer;
+    volatile uint16_t startOfReadData;
+    uint16_t readPtr;
+    volatile int32_t mostRecentNewLinePos;
+    volatile uint8_t ok;
 
-  const char* ignoreableChars;
+    const char* ignoreableChars;
 } txt_Uart;
 
 /*
@@ -53,9 +54,7 @@ void txt_handleTransmitCplt(txt_Uart* uart, UART_HandleTypeDef* huart);
  * Returns the received char if it is part of ignoreableChars, otherwise returns
  * 0
  */
-char txt_handleReceiveCplt(txt_Uart* uart,
-                           UART_HandleTypeDef* huart,
-                           uint8_t initCplt);
+char txt_handleReceiveCplt(txt_Uart* uart, UART_HandleTypeDef* huart, uint8_t initCplt);
 
 /*
  * Transmits the data (max lenght is writeBufferLenght)

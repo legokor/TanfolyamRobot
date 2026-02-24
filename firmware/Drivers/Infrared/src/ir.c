@@ -30,18 +30,17 @@
  * @param captureTimer timer used for input capture of the sensor's echo signal
  * @param captureTimerFrequencyHz frequency of the captureTimer
  */
-void ir_init(ir_InfraRed* ir,
-             TIM_HandleTypeDef* captureTimer,
-             uint32_t captureTimerFrequencyHz) {
-  ir->captureTimer = captureTimer;
+void ir_init(ir_InfraRed* ir, TIM_HandleTypeDef* captureTimer, uint32_t captureTimerFrequencyHz)
+{
+    ir->captureTimer = captureTimer;
 
-  // Calculate the time period of the capture timer
-  uint16_t frequencyKHz = captureTimerFrequencyHz / 1000;
-  uint16_t periodNs = 1000 * 1000 / frequencyKHz;
-  ir->captureTimerPeriodNs = periodNs;
+    // Calculate the time period of the capture timer
+    uint16_t frequencyKHz = captureTimerFrequencyHz / 1000;
+    uint16_t periodNs = 1000 * 1000 / frequencyKHz;
+    ir->captureTimerPeriodNs = periodNs;
 
-  ir->pwmIsHigh = 0;
-  ir->lastDistance = 0;
+    ir->pwmIsHigh = 0;
+    ir->lastDistance = 0;
 }
 
 /**
@@ -49,11 +48,13 @@ void ir_init(ir_InfraRed* ir,
  * @param ir
  * @param captureVal the captured value from the timer channel
  */
-void ir_handlerRisingCapture(ir_InfraRed* ir, uint16_t captureVal) {
-  if (!ir->pwmIsHigh) {
-    ir->captureStart = captureVal;
-    ir->pwmIsHigh = 1;
-  }
+void ir_handlerRisingCapture(ir_InfraRed* ir, uint16_t captureVal)
+{
+    if (!ir->pwmIsHigh)
+    {
+        ir->captureStart = captureVal;
+        ir->pwmIsHigh = 1;
+    }
 }
 
 /**
@@ -62,15 +63,17 @@ void ir_handlerRisingCapture(ir_InfraRed* ir, uint16_t captureVal) {
  * @param ir
  * @param captureVal the captured value from the timer channel
  */
-void ir_handlerFallingCapture(ir_InfraRed* ir, uint16_t captureVal) {
-  if (ir->pwmIsHigh) {
-    uint16_t captureStop = captureVal;
-    ir->pwmIsHigh = 0;
+void ir_handlerFallingCapture(ir_InfraRed* ir, uint16_t captureVal)
+{
+    if (ir->pwmIsHigh)
+    {
+        uint16_t captureStop = captureVal;
+        ir->pwmIsHigh = 0;
 
-    uint16_t pwmWidthTicks = captureStop - ir->captureStart;
-    uint32_t pwmWidthUs = (pwmWidthTicks * ir->captureTimerPeriodNs) / 1000;
-    ir->lastDistance = pwmWidthUs / IR_US_TO_MM_DIV;
-  }
+        uint16_t pwmWidthTicks = captureStop - ir->captureStart;
+        uint32_t pwmWidthUs = (pwmWidthTicks * ir->captureTimerPeriodNs) / 1000;
+        ir->lastDistance = pwmWidthUs / IR_US_TO_MM_DIV;
+    }
 }
 
 /**
@@ -79,6 +82,7 @@ void ir_handlerFallingCapture(ir_InfraRed* ir, uint16_t captureVal) {
  * @return  -1 if the measurement hasn't finished yet
  *         >=0 if the measurement is done
  */
-uint16_t ir_getDistance(ir_InfraRed* ir) {
-  return ir->lastDistance;
+uint16_t ir_getDistance(ir_InfraRed* ir)
+{
+    return ir->lastDistance;
 }

@@ -21,17 +21,14 @@
  * @param compareStart timer output compare value for -90 degree position (1 ms)
  * @param compareEnd timer output compare value for +90 degree position (2 ms)
  */
-void srv_init(srv_Servo* servo,
-              pwm_Pwm pwm,
-              uint16_t compareStart,
-              uint16_t compareEnd,
-              int8_t position) {
-  servo->pwm = pwm;
-  servo->compareStart = compareStart;
-  servo->compareEnd = compareEnd;
-  servo->position = position;
+void srv_init(srv_Servo* servo, pwm_Pwm pwm, uint16_t compareStart, uint16_t compareEnd, int8_t position)
+{
+    servo->pwm = pwm;
+    servo->compareStart = compareStart;
+    servo->compareEnd = compareEnd;
+    servo->position = position;
 
-  srv_setPosition(servo, position);
+    srv_setPosition(servo, position);
 }
 
 /**
@@ -40,21 +37,24 @@ void srv_init(srv_Servo* servo,
  * @param position must be between -90 and 90. Otherwise it will be clipped to
  * those values.
  */
-void srv_setPosition(srv_Servo* servo, int8_t position) {
-  if (position > 90) {
-    position = 90;
-  }
-  if (position < -90) {
-    position = -90;
-  }
-  servo->position = position;
+void srv_setPosition(srv_Servo* servo, int8_t position)
+{
+    if (position > 90)
+    {
+        position = 90;
+    }
+    if (position < -90)
+    {
+        position = -90;
+    }
+    servo->position = position;
 
-  int32_t s = servo->compareStart;
-  int32_t e = servo->compareEnd;
+    int32_t s = servo->compareStart;
+    int32_t e = servo->compareEnd;
 
-  uint16_t mid = s + (e - s) / 2;
-  int32_t diff = (e - mid) * position / 90;
-  uint16_t compareVal = mid + diff;
+    uint16_t mid = s + (e - s) / 2;
+    int32_t diff = (e - mid) * position / 90;
+    uint16_t compareVal = mid + diff;
 
-  pwm_setCompareValue(&servo->pwm, compareVal);
+    pwm_setCompareValue(&servo->pwm, compareVal);
 }

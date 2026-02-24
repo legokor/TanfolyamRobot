@@ -60,23 +60,25 @@
  * | 0x00     row 1     0x13 | 0x14     row 3     0x27 |
  * | 0x40     row 2     0x53 | 0x54     row 4     0x67 |
  */
-const uint8_t HD44780RowOffsets[] = {0x00, 0x40, 0x14, 0x54};
+const uint8_t HD44780RowOffsets[] = { 0x00, 0x40, 0x14, 0x54 };
 
 /*
  * Store settings and state of the display
  */
-typedef struct {
-  uint8_t displayControl;
-  uint8_t displayFunction;
-  uint8_t displayEntryMode;
-  uint8_t numOfRows;
-  uint8_t numOfCols;
+typedef struct
+{
+    uint8_t displayControl;
+    uint8_t displayFunction;
+    uint8_t displayEntryMode;
+    uint8_t numOfRows;
+    uint8_t numOfCols;
 } LcdSettings;
 
-typedef struct {
-  uint8_t currentCol;
-  uint8_t currentRow;
-  volatile uint8_t initialized;
+typedef struct
+{
+    uint8_t currentCol;
+    uint8_t currentRow;
+    volatile uint8_t initialized;
 } LcdState;
 
 static LcdSettings lcdSettings;
@@ -85,9 +87,10 @@ static LcdState lcdState;
 /*
  * Transfer buffer for storing commands to be sent
  */
-typedef enum {
-  TransferType_Command = 0,
-  TransferType_Data = 1,
+typedef enum
+{
+    TransferType_Command = 0,
+    TransferType_Data = 1,
 } TransferType;
 
 lcd_CircularBuffer transferBuf;
@@ -140,84 +143,84 @@ void lcd_init(GPIO_TypeDef* lcdRsPort,
               GPIO_TypeDef* lcdD7Port,
               uint16_t lcdD7Pin,
               uint8_t lcdRows,
-              uint8_t lcdCols) {
-  lcdState.initialized = 0;
+              uint8_t lcdCols)
+{
+    lcdState.initialized = 0;
 
-  // Save ports and pins
-  rsPort = lcdRsPort;
-  enPort = lcdEnPort;
-  d4Port = lcdD4Port;
-  d5Port = lcdD5Port;
-  d6Port = lcdD6Port;
-  d7Port = lcdD7Port;
-  rsPin = lcdRsPin;
-  enPin = lcdEnPin;
-  d4Pin = lcdD4Pin;
-  d5Pin = lcdD5Pin;
-  d6Pin = lcdD6Pin;
-  d7Pin = lcdD7Pin;
+    // Save ports and pins
+    rsPort = lcdRsPort;
+    enPort = lcdEnPort;
+    d4Port = lcdD4Port;
+    d5Port = lcdD5Port;
+    d6Port = lcdD6Port;
+    d7Port = lcdD7Port;
+    rsPin = lcdRsPin;
+    enPin = lcdEnPin;
+    d4Pin = lcdD4Pin;
+    d5Pin = lcdD5Pin;
+    d6Pin = lcdD6Pin;
+    d7Pin = lcdD7Pin;
 
-  // Initialize GPIOs
-  GPIO_InitTypeDef gpio;
-  gpio.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-  gpio.Pull = GPIO_NOPULL;
+    // Initialize GPIOs
+    GPIO_InitTypeDef gpio;
+    gpio.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+    gpio.Pull = GPIO_NOPULL;
 
-  gpio.Pin = enPin;
-  HAL_GPIO_Init(enPort, &gpio);
-  HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_RESET);
-  enPinState = 0;
+    gpio.Pin = enPin;
+    HAL_GPIO_Init(enPort, &gpio);
+    HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_RESET);
+    enPinState = 0;
 
-  gpio.Pin = rsPin;
-  HAL_GPIO_Init(rsPort, &gpio);
-  gpio.Pin = d4Pin;
-  HAL_GPIO_Init(d4Port, &gpio);
-  gpio.Pin = d5Pin;
-  HAL_GPIO_Init(d5Port, &gpio);
-  gpio.Pin = d6Pin;
-  HAL_GPIO_Init(d6Port, &gpio);
-  gpio.Pin = d7Pin;
-  HAL_GPIO_Init(d7Port, &gpio);
+    gpio.Pin = rsPin;
+    HAL_GPIO_Init(rsPort, &gpio);
+    gpio.Pin = d4Pin;
+    HAL_GPIO_Init(d4Port, &gpio);
+    gpio.Pin = d5Pin;
+    HAL_GPIO_Init(d5Port, &gpio);
+    gpio.Pin = d6Pin;
+    HAL_GPIO_Init(d6Port, &gpio);
+    gpio.Pin = d7Pin;
+    HAL_GPIO_Init(d7Port, &gpio);
 
-  // Initialize transfer buffer
-  lcd_circularBufferInit(&transferBuf, transferBufMem, TRANSFER_BUFFER_SIZE);
+    // Initialize transfer buffer
+    lcd_circularBufferInit(&transferBuf, transferBufMem, TRANSFER_BUFFER_SIZE);
 
-  lcdDelayMs(1);
-  lcdState.currentCol = 0;
-  lcdState.currentRow = 0;
-  lcdSettings.numOfRows = lcdRows;
-  lcdSettings.numOfCols = lcdCols;
-  lcdSettings.displayFunction =
-      HD44780_4BITMODE | HD44780_5x8DOTS | HD44780_2LINE;
-  lcdSettings.displayControl = HD44780_DISPLAYON;
-  lcdSettings.displayEntryMode =
-      HD44780_ENTRYLEFT | HD44780_ENTRYSHIFTDECREMENT;
+    lcdDelayMs(1);
+    lcdState.currentCol = 0;
+    lcdState.currentRow = 0;
+    lcdSettings.numOfRows = lcdRows;
+    lcdSettings.numOfCols = lcdCols;
+    lcdSettings.displayFunction = HD44780_4BITMODE | HD44780_5x8DOTS | HD44780_2LINE;
+    lcdSettings.displayControl = HD44780_DISPLAYON;
+    lcdSettings.displayEntryMode = HD44780_ENTRYLEFT | HD44780_ENTRYSHIFTDECREMENT;
 
-  // Try to set 4bit mode
-  for (uint8_t i = 0; i < 3; i++) {
-    lcdSend4Bit(0x03, TransferType_Command);
+    // Try to set 4bit mode
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        lcdSend4Bit(0x03, TransferType_Command);
+        lcdDelayMs(5);
+    }
+    // Set 4-bit interface
+    lcdSend4Bit(0x02, TransferType_Command);
     lcdDelayMs(5);
-  }
-  // Set 4-bit interface
-  lcdSend4Bit(0x02, TransferType_Command);
-  lcdDelayMs(5);
 
-  // Set functions
-  lcdCmd(HD44780_FUNCTIONSET | lcdSettings.displayFunction);
+    // Set functions
+    lcdCmd(HD44780_FUNCTIONSET | lcdSettings.displayFunction);
 
-  // Turn on display
-  lcdCmd(HD44780_DISPLAYCONTROL | lcdSettings.displayControl);
-  lcdCmd(HD44780_CLEARDISPLAY);
-  lcdDelayMs(5);
+    // Turn on display
+    lcdCmd(HD44780_DISPLAYCONTROL | lcdSettings.displayControl);
+    lcdCmd(HD44780_CLEARDISPLAY);
+    lcdDelayMs(5);
 
-  // Set
-  lcdCmd(HD44780_ENTRYMODESET | lcdSettings.displayEntryMode);
-  lcdDelayMs(5);
+    // Set
+    lcdCmd(HD44780_ENTRYMODESET | lcdSettings.displayEntryMode);
+    lcdDelayMs(5);
 
-  lcd_setCursor(0, 0);
-  lcdState.initialized = 1;
+    lcd_setCursor(0, 0);
+    lcdState.initialized = 1;
 
-  lcd_statusIndicatorInit();
+    lcd_statusIndicatorInit();
 }
 
 /**
@@ -228,29 +231,34 @@ void lcd_init(GPIO_TypeDef* lcdRsPort,
  * @param character 8 rows of 5 bits
  * @return 0 on success
  */
-int lcd_addCustomCharacter(uint8_t address, const uint8_t character[8]) {
-  if (address >= 8) {
-    return -1;
-  }
-
-  int err;
-
-  address *= 8;
-  err = lcdAddCmd(HD44780_SETCGRAMADDR | address);
-  if (err) {
-    return err;
-  }
-
-  for (uint8_t i = 0; i < 8; i++) {
-    err = lcdAddData(character[i]);
-    if (err) {
-      return err;
+int lcd_addCustomCharacter(uint8_t address, const uint8_t character[8])
+{
+    if (address >= 8)
+    {
+        return -1;
     }
-  }
 
-  err = lcd_setCursor(lcdState.currentRow, lcdState.currentCol);
+    int err;
 
-  return err;
+    address *= 8;
+    err = lcdAddCmd(HD44780_SETCGRAMADDR | address);
+    if (err)
+    {
+        return err;
+    }
+
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        err = lcdAddData(character[i]);
+        if (err)
+        {
+            return err;
+        }
+    }
+
+    err = lcd_setCursor(lcdState.currentRow, lcdState.currentCol);
+
+    return err;
 }
 
 /**
@@ -262,52 +270,64 @@ int lcd_addCustomCharacter(uint8_t address, const uint8_t character[8]) {
  * @param col of starting position
  * @param str string to be displayed
  */
-int lcd_puts(uint8_t row, uint8_t col, const char* str) {
-  int err;
+int lcd_puts(uint8_t row, uint8_t col, const char* str)
+{
+    int err;
 
-  if ((lcdState.currentCol != col) || (lcdState.currentRow != row)) {
-    err = lcd_setCursor(row, col);
-    if (err) {
-      return err;
-    }
-  }
-
-  uint8_t printedChars = 0;
-
-  while (*str) {
-    // And the end of line, jump to the next one
-    if (lcdState.currentCol >= lcdSettings.numOfCols) {
-      err = lcd_setCursor(lcdState.currentRow + 1, 0);
-      if (err) {
-        return err;
-      }
+    if ((lcdState.currentCol != col) || (lcdState.currentRow != row))
+    {
+        err = lcd_setCursor(row, col);
+        if (err)
+        {
+            return err;
+        }
     }
 
-    if (*str == '\n') {  // Jump to the beginning of the next line
-      err = lcd_setCursor(lcdState.currentRow + 1, 0);
-      if (err) {
-        return err;
-      }
+    uint8_t printedChars = 0;
 
-    } else if (*str == '\r') {  // Jump to the beginning of the current line
-      err = lcd_setCursor(lcdState.currentRow, 0);
-      if (err) {
-        return err;
-      }
+    while (*str)
+    {
+        // And the end of line, jump to the next one
+        if (lcdState.currentCol >= lcdSettings.numOfCols)
+        {
+            err = lcd_setCursor(lcdState.currentRow + 1, 0);
+            if (err)
+            {
+                return err;
+            }
+        }
 
-    } else {
-      err = lcdAddData(*str);
-      if (err) {
-        return err;
-      }
-      lcdState.currentCol++;
+        if (*str == '\n')
+        { // Jump to the beginning of the next line
+            err = lcd_setCursor(lcdState.currentRow + 1, 0);
+            if (err)
+            {
+                return err;
+            }
+        }
+        else if (*str == '\r')
+        { // Jump to the beginning of the current line
+            err = lcd_setCursor(lcdState.currentRow, 0);
+            if (err)
+            {
+                return err;
+            }
+        }
+        else
+        {
+            err = lcdAddData(*str);
+            if (err)
+            {
+                return err;
+            }
+            lcdState.currentCol++;
+        }
+
+        printedChars++;
+        str++;
     }
 
-    printedChars++;
-    str++;
-  }
-
-  return printedChars;
+    return printedChars;
 }
 
 /**
@@ -316,21 +336,25 @@ int lcd_puts(uint8_t row, uint8_t col, const char* str) {
  * @param col of position
  * @param c character to be displayed
  */
-int lcd_putc(uint8_t row, uint8_t col, char c) {
-  if ((lcdState.currentCol != col) || (lcdState.currentRow != row)) {
-    int err = lcd_setCursor(row, col);
-    if (err) {
-      return err;
+int lcd_putc(uint8_t row, uint8_t col, char c)
+{
+    if ((lcdState.currentCol != col) || (lcdState.currentRow != row))
+    {
+        int err = lcd_setCursor(row, col);
+        if (err)
+        {
+            return err;
+        }
     }
-  }
 
-  int err = lcdAddData(c);
-  if (err) {
-    return err;
-  }
-  lcdState.currentCol++;
+    int err = lcdAddData(c);
+    if (err)
+    {
+        return err;
+    }
+    lcdState.currentCol++;
 
-  return 0;
+    return 0;
 }
 
 /**
@@ -339,81 +363,92 @@ int lcd_putc(uint8_t row, uint8_t col, char c) {
  * the screen is cleared
  * @return 0 on success
  */
-int lcd_clear() {
-  int err = lcdAddCmd(HD44780_CLEARDISPLAY);
-  if (err) {
-    return err;
-  }
-  lcdDelayMs(5);
+int lcd_clear()
+{
+    int err = lcdAddCmd(HD44780_CLEARDISPLAY);
+    if (err)
+    {
+        return err;
+    }
+    lcdDelayMs(5);
 
-  lcdState.currentCol = 0;
-  lcdState.currentRow = 0;
+    lcdState.currentCol = 0;
+    lcdState.currentRow = 0;
 
-  return 0;
+    return 0;
 }
 
 /**
  * This controls the bitbanging. Call it from a timer's interrupt handler!
  */
-void lcd_handler() {
-  if (!lcdState.initialized) {
-    return;
-  }
-
-  if (enPinState == 1) {
-    HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_RESET);
-    enPinState = 0;
-  } else {
-    uint8_t cmd;
-    __disable_irq();
-    int err = lcd_circularBufferRead(&transferBuf, &cmd);
-    __enable_irq();
-
-    if (!err) {
-      HAL_GPIO_WritePin(rsPort, rsPin, (GPIO_PinState)(cmd & (1 << 7)));
-      HAL_GPIO_WritePin(d7Port, d7Pin, (GPIO_PinState)(cmd & (1 << 3)));
-      HAL_GPIO_WritePin(d6Port, d6Pin, (GPIO_PinState)(cmd & (1 << 2)));
-      HAL_GPIO_WritePin(d5Port, d5Pin, (GPIO_PinState)(cmd & (1 << 1)));
-      HAL_GPIO_WritePin(d4Port, d4Pin, (GPIO_PinState)(cmd & (1 << 0)));
-      HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_SET);
-      enPinState = 1;
+void lcd_handler()
+{
+    if (!lcdState.initialized)
+    {
+        return;
     }
-  }
+
+    if (enPinState == 1)
+    {
+        HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_RESET);
+        enPinState = 0;
+    }
+    else
+    {
+        uint8_t cmd;
+        __disable_irq();
+        int err = lcd_circularBufferRead(&transferBuf, &cmd);
+        __enable_irq();
+
+        if (!err)
+        {
+            HAL_GPIO_WritePin(rsPort, rsPin, (GPIO_PinState) (cmd & (1 << 7)));
+            HAL_GPIO_WritePin(d7Port, d7Pin, (GPIO_PinState) (cmd & (1 << 3)));
+            HAL_GPIO_WritePin(d6Port, d6Pin, (GPIO_PinState) (cmd & (1 << 2)));
+            HAL_GPIO_WritePin(d5Port, d5Pin, (GPIO_PinState) (cmd & (1 << 1)));
+            HAL_GPIO_WritePin(d4Port, d4Pin, (GPIO_PinState) (cmd & (1 << 0)));
+            HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_SET);
+            enPinState = 1;
+        }
+    }
 }
 
 /**
  * Blocking function to send a 4-bit command
  * @param cmd 4-bit command
  */
-static void lcdSend4Bit(uint8_t data, TransferType type) {
-  HAL_GPIO_WritePin(rsPort, rsPin, type);
+static void lcdSend4Bit(uint8_t data, TransferType type)
+{
+    HAL_GPIO_WritePin(rsPort, rsPin, type);
 
-  HAL_GPIO_WritePin(d7Port, d7Pin, (GPIO_PinState)(data & (1 << 3)));
-  HAL_GPIO_WritePin(d6Port, d6Pin, (GPIO_PinState)(data & (1 << 2)));
-  HAL_GPIO_WritePin(d5Port, d5Pin, (GPIO_PinState)(data & (1 << 1)));
-  HAL_GPIO_WritePin(d4Port, d4Pin, (GPIO_PinState)(data & (1 << 0)));
+    HAL_GPIO_WritePin(d7Port, d7Pin, (GPIO_PinState) (data & (1 << 3)));
+    HAL_GPIO_WritePin(d6Port, d6Pin, (GPIO_PinState) (data & (1 << 2)));
+    HAL_GPIO_WritePin(d5Port, d5Pin, (GPIO_PinState) (data & (1 << 1)));
+    HAL_GPIO_WritePin(d4Port, d4Pin, (GPIO_PinState) (data & (1 << 0)));
 
-  HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_SET);
-  lcdDelayMs(1);
-  HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_RESET);
-  lcdDelayMs(1);
+    HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_SET);
+    lcdDelayMs(1);
+    HAL_GPIO_WritePin(enPort, enPin, GPIO_PIN_RESET);
+    lcdDelayMs(1);
 }
 
 /**
  * Blocking function to send an 8-bit command
  * @param cmd 8-bit command
  */
-static void lcdCmd(uint8_t cmd) {
-  lcdSend4Bit(cmd >> 4, TransferType_Command);
-  lcdSend4Bit(cmd & 0x0F, TransferType_Command);
+static void lcdCmd(uint8_t cmd)
+{
+    lcdSend4Bit(cmd >> 4, TransferType_Command);
+    lcdSend4Bit(cmd & 0x0F, TransferType_Command);
 }
 
 /**
  * Blocking delay
  * @param ms to wait
  */
-static void lcdDelayMs(uint8_t ms) {
-  HAL_Delay(ms);
+static void lcdDelayMs(uint8_t ms)
+{
+    HAL_Delay(ms);
 }
 
 /**
@@ -422,13 +457,14 @@ static void lcdDelayMs(uint8_t ms) {
  * @param type command or data
  * @return 0 on success
  */
-static int lcdAdd4BitTransfer(uint8_t val, TransferType type) {
-  val &= 0x0F;
-  val = val | (type << 7);
+static int lcdAdd4BitTransfer(uint8_t val, TransferType type)
+{
+    val &= 0x0F;
+    val = val | (type << 7);
 
-  int8_t e = lcd_circularBufferWrite(&transferBuf, val);
+    int8_t e = lcd_circularBufferWrite(&transferBuf, val);
 
-  return e;
+    return e;
 }
 
 /**
@@ -436,26 +472,28 @@ static int lcdAdd4BitTransfer(uint8_t val, TransferType type) {
  * @param cmd 8-bit command
  * @return 0 on success
  */
-static int lcdAddCmd(uint8_t cmd) {
-  // cmd is sent in two 4-bit parts, so check if those will fit in the buffer
-  if (lcd_circularBufferGetAvailable(&transferBuf) < 2) {
-    return -1;
-  }
+static int lcdAddCmd(uint8_t cmd)
+{
+    // cmd is sent in two 4-bit parts, so check if those will fit in the buffer
+    if (lcd_circularBufferGetAvailable(&transferBuf) < 2)
+    {
+        return -1;
+    }
 
-  uint8_t cmd0 = cmd >> 4;
-  uint8_t cmd1 = cmd & 0x0F;
+    uint8_t cmd0 = cmd >> 4;
+    uint8_t cmd1 = cmd & 0x0F;
 
-  __disable_irq();
-  int err;
-  err =
-      lcdAdd4BitTransfer(cmd0, TransferType_Command);  // this should never fail
-  if (!err) {
-    err = lcdAdd4BitTransfer(cmd1,
-                             TransferType_Command);  // this should never fail
-  }
-  __enable_irq();
+    __disable_irq();
+    int err;
+    err = lcdAdd4BitTransfer(cmd0, TransferType_Command); // this should never fail
+    if (!err)
+    {
+        err = lcdAdd4BitTransfer(cmd1,
+                                 TransferType_Command); // this should never fail
+    }
+    __enable_irq();
 
-  return err;
+    return err;
 }
 
 /**
@@ -463,25 +501,27 @@ static int lcdAddCmd(uint8_t cmd) {
  * @param data 8-bit data
  * @return 0 on success
  */
-static int lcdAddData(uint8_t data) {
-  // data is sent in two 4-bit parts, so check if those will fit in the buffer
-  if (lcd_circularBufferGetAvailable(&transferBuf) < 2) {
-    return -1;
-  }
+static int lcdAddData(uint8_t data)
+{
+    // data is sent in two 4-bit parts, so check if those will fit in the buffer
+    if (lcd_circularBufferGetAvailable(&transferBuf) < 2)
+    {
+        return -1;
+    }
 
-  uint8_t data0 = data >> 4;
-  uint8_t data1 = data & 0x0F;
+    uint8_t data0 = data >> 4;
+    uint8_t data1 = data & 0x0F;
 
-  __disable_irq();
-  int err;
-  err = lcdAdd4BitTransfer(data0, TransferType_Data);  // this should never fail
-  if (!err) {
-    err =
-        lcdAdd4BitTransfer(data1, TransferType_Data);  // this should never fail
-  }
-  __enable_irq();
+    __disable_irq();
+    int err;
+    err = lcdAdd4BitTransfer(data0, TransferType_Data); // this should never fail
+    if (!err)
+    {
+        err = lcdAdd4BitTransfer(data1, TransferType_Data); // this should never fail
+    }
+    __enable_irq();
 
-  return err;
+    return err;
 }
 
 /**
@@ -490,20 +530,23 @@ static int lcdAddData(uint8_t data) {
  * @param row 0-based row number
  * @return 0 on success
  */
-int lcd_setCursor(uint8_t row, uint8_t col) {
-  if (row >= lcdSettings.numOfRows) {
-    row = 0;
-  }
+int lcd_setCursor(uint8_t row, uint8_t col)
+{
+    if (row >= lcdSettings.numOfRows)
+    {
+        row = 0;
+    }
 
-  int err = lcdAddCmd(HD44780_SETDDRAMADDR | (col + HD44780RowOffsets[row]));
-  if (err) {
-    return err;
-  }
+    int err = lcdAddCmd(HD44780_SETDDRAMADDR | (col + HD44780RowOffsets[row]));
+    if (err)
+    {
+        return err;
+    }
 
-  lcdState.currentCol = col;
-  lcdState.currentRow = row;
+    lcdState.currentCol = col;
+    lcdState.currentRow = row;
 
-  return 0;
+    return 0;
 }
 
 /**
@@ -511,7 +554,8 @@ int lcd_setCursor(uint8_t row, uint8_t col) {
  * @param row
  * @param col
  */
-void lcd_getCursor(uint8_t* row, uint8_t* col) {
-  *row = lcdState.currentRow;
-  *col = lcdState.currentCol;
+void lcd_getCursor(uint8_t* row, uint8_t* col)
+{
+    *row = lcdState.currentRow;
+    *col = lcdState.currentCol;
 }
