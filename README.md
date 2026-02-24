@@ -24,7 +24,7 @@ Előfordulhat Windows esetében, hogy az nem telepíti automatikusan a virtuáli
 
 A kiinduló projektet a [GitHub repojából](https://github.com/legokor/TanfolyamRobot) tudjuk letölteni, ehhez az oldal megnyitása után jobb oldalt a `Releases` fül alatt kell kiválasztanunk a **legújabb kiadást**, majd a `tanfrobot.zip` fájlra kell kattintani.
 
-A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego_Tanfolyam` mappába, majd bontsuk ki. A kibontás után nyissuk meg a `VSCode`-ot, és a `File -> Open Folder...` menüponttal nyissuk meg a kibontott `firmware` mappát (mely az `Application`, `Drivers`, `Tools` könyvtárakat tartalmazza).
+A letöltött fájlt helyezzük el egy kényelmes helyre, például `Documents/Lego_Tanfolyam` mappába, majd bontsuk ki. A kibontás után nyissuk meg a `VSCode`-ot, és a `File -> Open Folder...` menüponttal nyissuk meg a kibontott `firmware` mappát (mely többek közt az `Application`, `Drivers`, `Tools` könyvtárakat tartalmazza).
 
 *Extra tipp:* a `VSCode`-ban érdemes telepíteni az `ms-vscode.cpptools` nevű bővítményt, mely C/C++ nyelv támogatást ad a szerkesztőhöz, így például szintaxis kiemelést és automatikus kiegészítést biztosít.
 
